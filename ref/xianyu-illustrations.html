@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>咸鱼把脉了 插画图谱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont/style.css">
+<style>
+:root{
+  --paper:#ECEAE1;--sheet:#F8F7F2;--ink:#24231F;--ink-2:#4E4C45;
+  --line:#D6D2C4;--indigo:#1F3A4D;--cinnabar:#B5382A;--brass:#85682F;
+  --kai:"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif;
+  --song:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--song);font-size:15px;line-height:1.7}
+.page{max-width:1080px;margin:0 auto;padding:40px 24px 64px}
+.page h1{margin:0;font-family:var(--kai);font-weight:400;font-size:32px}
+.lead{margin:8px 0 28px;color:var(--ink-2);max-width:40em}
+.atlas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.atlas figure{margin:0;background:var(--sheet);padding:20px 18px 16px}
+.atlas svg{max-width:200px;margin:0 auto 10px}
+.atlas figcaption b{display:block;font-family:var(--kai);font-weight:400;font-size:19px}
+.atlas figcaption span{display:block;font-size:13px;color:var(--ink-2)}
+@media (max-width:860px){.atlas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.page{padding:24px 12px 40px}.atlas figure{padding:14px 10px}}
+
+/* ===== 插画通用样式：开发时放进全局 CSS ===== */
+.il{display:block;width:100%;height:auto;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.il .f-sheet{fill:var(--sheet)}
+.il .f-paper{fill:var(--paper)}
+.il .f-indigo{fill:var(--indigo)}
+.il .f-ink{fill:var(--ink)}
+.il .f-red{fill:var(--cinnabar);stroke:none}
+.il .s-red{stroke:var(--cinnabar)}
+.il .s-brass{stroke:var(--brass)}
+.il .s-sheet{stroke:var(--sheet)}
+.il .thin{stroke-width:1}
+.il .bold{stroke-width:2.6}
+.il .t-seal{fill:var(--sheet);stroke:none;font-family:var(--kai)}
+.il .steam{opacity:0;animation:il-steam 2.8s ease-in-out infinite}
+.il .steam.d2{animation-delay:.9s}
+.il .steam.d3{animation-delay:1.8s}
+@keyframes il-steam{0%{opacity:0;transform:translateY(6px)}35%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+.il .roll{animation:il-roll 3.2s ease-in-out infinite}
+.il .spin{animation:il-spin 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes il-roll{0%,100%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+@keyframes il-spin{0%,100%{transform:rotate(-26deg)}50%{transform:rotate(26deg)}}
+@media (prefers-reduced-motion:reduce){.il .steam,.il .roll,.il .spin{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>插画图谱</h1>
+  <p class="lead">白描线稿，墨线勾勒，素笺、竹纸、函套青填色，每幅只点一处朱砂。用于空状态、加载和完成提示。</p>
+
+  <div class="atlas">
+
+    <!-- 1 悬鱼 -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="悬鱼">
+        <rect class="f-sheet" x="34" y="18" width="132" height="7" rx="3.5"/>
+        <path class="thin" d="M70 18v7M132 18v7"/>
+        <path d="M95 25c1 5 9 5 10 0M100 27v13"/>
+        <path class="f-sheet" d="M100 40c12 4 20 18 19 38-1 20-9 36-16 46l9 19c-6-4-10-5-12-7-2 2-6 3-12 7l9-19c-7-10-15-26-16-46-1-20 7-34 19-38z"/>
+        <path class="thin" d="M88 60q12 8 24 0M100 66v54M100 76l-9 5M100 86l-10 5M100 96l-9 5M100 76l9 5M100 86l10 5M100 96l9 5"/>
+        <path d="M83 70c-7 3-10 8-11 14M117 70c7 3 10 8 11 14"/>
+        <circle class="f-ink" cx="94" cy="52" r="2"/>
+        <circle class="f-ink" cx="106" cy="52" r="2"/>
+        <rect class="f-red" x="138" y="116" width="24" height="24"/>
+        <text class="t-seal" x="150" y="133" text-anchor="middle" font-size="15">脉</text>
+      </svg>
+      <figcaption><b>悬鱼</b><span>用于：登录页、关于页、品牌图形</span><span>配文：咸鱼把脉了</span></figcaption>
+    </figure>
+
+    <!-- 2 脉枕 -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="脉枕与毛笔">
+        <path d="M20 122h150M178 122h8"/>
+        <path class="f-sheet" d="M50 122c-4-16 0-29 13-31h56c13 2 17 15 13 31z"/>
+        <path class="thin" d="M62 97c19-3 39-3 58 0"/>
+        <circle class="thin" cx="91" cy="109" r="9"/>
+        <circle class="f-red" cx="91" cy="109" r="5.5"/>
+        <path class="thin" d="M64 110c2-5 8-4 7 0s-5 3-5 0M118 110c-2-5-8-4-7 0s5 3 5 0"/>
+        <path class="f-sheet" d="M144 122l4-9 4 4 5-10 5 10 4-4 4 9z"/>
+        <path class="f-sheet" d="M146 105l42-6 .5 3.6-42 6z"/>
+        <path class="f-ink" d="M146 105c-6 .8-12 2.5-18 4.4 6 .3 12-.2 18.5-.8z"/>
+        <path class="thin" d="M188.2 100.8c4 1 5 5 1 6"/>
+      </svg>
+      <figcaption><b>脉枕</b><span>用于：问诊列表为空</span><span>配文：医馆清静，尚无问诊记录。点“开始问诊”录下第一场会。</span></figcaption>
+    </figure>
+
+    <!-- 3 药碾（动效） -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="药碾">
+        <path d="M16 126h158M182 126h8"/>
+        <g class="roll">
+          <circle class="f-sheet" cx="100" cy="94" r="23"/>
+          <circle class="thin" cx="100" cy="94" r="16"/>
+          <g class="spin"><path class="thin" d="M90.1 84.1l19.8 19.8M109.9 84.1l-19.8 19.8"/></g>
+          <path class="bold" d="M66 94h68"/>
+          <rect class="f-sheet" x="56" y="90.5" width="12" height="7" rx="3.5"/>
+          <rect class="f-sheet" x="132" y="90.5" width="12" height="7" rx="3.5"/>
+          <circle class="f-sheet" cx="100" cy="94" r="3.5"/>
+        </g>
+        <path class="f-sheet" d="M28 104c18 9 126 9 144 0l-7 22H35z"/>
+        <path class="thin" d="M42 109c24 6 92 6 116 0"/>
+        <ellipse class="f-red" cx="179" cy="122.5" rx="2.8" ry="2" transform="rotate(-20 179 122.5)"/>
+        <ellipse class="f-red" cx="185" cy="121" rx="2.8" ry="2" transform="rotate(15 185 121)"/>
+        <ellipse class="f-red" cx="188" cy="124" rx="2.8" ry="2"/>
+      </svg>
+      <figcaption><b>药碾（动效）</b><span>用于：录音转写处理中</span><span>配文：正在整理脉案…</span></figcaption>
+    </figure>
+
+    <!-- 4 药炉（动效） -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="药炉煎药">
+        <path d="M36 128h128M170 128h8"/>
+        <path class="steam thin" d="M92 40c-4-8 4-12 0-20"/>
+        <path class="steam d2 thin" d="M100 38c-4-9 4-14 0-24"/>
+        <path class="steam d3 thin" d="M108 40c4-8-4-12 0-20"/>
+        <path class="f-sheet" d="M127 76c9-1 15-6 20-14l3 2.5c-4 10-12 17-22 19z"/>
+        <path class="f-sheet" d="M75 73l-21-7-1.5 4.5 21 8z"/>
+        <path class="f-sheet" d="M72 93c-4-18 4-32 28-32s32 14 28 32z"/>
+        <path class="thin" d="M78 80c14 3 30 3 44 0"/>
+        <rect class="f-sheet" x="84" y="53" width="32" height="8" rx="3"/>
+        <circle class="f-sheet" cx="100" cy="49.5" r="3.5"/>
+        <path class="f-paper" d="M66 128l6-30h56l6 30z"/>
+        <rect class="f-sheet" x="66" y="93" width="68" height="6" rx="2"/>
+        <path class="f-ink" d="M88 128v-11a12 12 0 0 1 24 0v11z"/>
+        <path class="f-red" d="M100 126c-6-3-5-9 0-14 1 4 5 5 3 9 3-1 3 3 1 5z"/>
+        <path class="thin" d="M150 128l8-25"/>
+        <ellipse class="f-sheet" cx="160" cy="91" rx="11" ry="14" transform="rotate(18 160 91)"/>
+        <path class="thin" d="M157 103l4-22M157 103l-6-18M157 103l11-17"/>
+      </svg>
+      <figcaption><b>药炉（动效）</b><span>用于：生成 Word / PPT 中</span><span>配文：煎药中，请稍候</span></figcaption>
+    </figure>
+
+    <!-- 5 药包 -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="药包">
+        <path d="M30 128h140M176 128h8"/>
+        <path class="f-paper" d="M50 96l40 10v22l-40-10z"/>
+        <path class="f-sheet" d="M90 106l60-12v22l-60 12z"/>
+        <path class="f-sheet" d="M50 96l60-12 40 10-60 12z"/>
+        <path class="thin" d="M80 90l40 10M130 89l-60 12M70 101v22M120 100v22"/>
+        <path class="f-paper" d="M68 79l26 7v13l-26-7z"/>
+        <path class="f-sheet" d="M94 86l38-8v13l-38 8z"/>
+        <path class="f-sheet" d="M68 79l38-8 26 7-38 8z"/>
+        <path class="thin" d="M87 75l26 7M119 74.5l-38 8M81 82.5v13M113 82v13"/>
+        <path d="M100 78.5c-7-8-13-3-6 1.5M100 78.5c7-8 13-3 6 1.5"/>
+        <path class="thin" d="M100 78.5l6 12"/>
+        <g transform="rotate(-10 108.5 98.5)">
+          <rect class="f-red" x="102" y="90" width="13" height="17"/>
+          <text class="t-seal" x="108.5" y="103" text-anchor="middle" font-size="10">方</text>
+        </g>
+      </svg>
+      <figcaption><b>药包</b><span>用于：文档生成完成</span><span>配文：药已备好，可以下载</span></figcaption>
+    </figure>
+
+    <!-- 6 线装书 -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="线装书">
+        <path d="M26 126h150M182 126h8"/>
+        <path class="f-indigo" d="M44 114l20-10h112l-20 10z"/>
+        <path class="f-sheet" d="M156 114l20-10v12l-20 10z"/>
+        <rect class="f-sheet" x="44" y="114" width="112" height="12"/>
+        <path class="f-indigo" d="M50 102l20-10h104l-20 10z"/>
+        <path class="f-sheet" d="M154 102l20-10v12l-20 10z"/>
+        <rect class="f-sheet" x="50" y="102" width="104" height="12"/>
+        <path class="f-indigo" d="M56 90l20-10h96l-20 10z"/>
+        <path class="f-sheet" d="M152 90l20-10v12l-20 10z"/>
+        <rect class="f-sheet" x="56" y="90" width="96" height="12"/>
+        <path class="f-sheet thin" d="M68 89h6l15-7.5h-6z"/>
+        <path class="s-sheet thin" d="M144 90l20-10M147 88.5h8M151.6 86.2h8M156.4 83.8h8M161 81.5h8"/>
+        <path class="thin" d="M44 120h112M50 108h104M56 96h96"/>
+        <path class="s-red bold" d="M126 96v20"/>
+        <path class="f-red" d="M123.5 116h5l-1 8h-3z"/>
+      </svg>
+      <figcaption><b>线装书</b><span>用于：复诊时没有历史文档</span><span>配文：病历库里还没有旧材料，先上传一份再复诊。</span></figcaption>
+    </figure>
+
+    <!-- 7 百子柜 -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="百子柜">
+        <defs>
+          <g id="il-bz-drawer">
+            <rect width="24" height="19" style="fill:var(--sheet)"/>
+            <rect x="7" y="3" width="10" height="6" style="fill:var(--paper);stroke-width:1"/>
+            <circle cx="12" cy="13.5" r="2.4" style="stroke:var(--brass)"/>
+          </g>
+        </defs>
+        <path d="M22 132h156M184 132h6"/>
+        <rect class="f-paper" x="40" y="26" width="120" height="98"/>
+        <rect class="f-sheet" x="36" y="20" width="128" height="6"/>
+        <rect class="f-sheet" x="36" y="124" width="128" height="8"/>
+        <use href="#il-bz-drawer" x="47.5" y="31.5"/>
+        <use href="#il-bz-drawer" x="74.5" y="31.5"/>
+        <use href="#il-bz-drawer" x="101.5" y="31.5"/>
+        <use href="#il-bz-drawer" x="128.5" y="31.5"/>
+        <use href="#il-bz-drawer" x="47.5" y="53.5"/>
+        <use href="#il-bz-drawer" x="74.5" y="53.5"/>
+        <use href="#il-bz-drawer" x="101.5" y="53.5"/>
+        <use href="#il-bz-drawer" x="128.5" y="53.5"/>
+        <use href="#il-bz-drawer" x="47.5" y="75.5"/>
+        <use href="#il-bz-drawer" x="74.5" y="75.5"/>
+        <use href="#il-bz-drawer" x="128.5" y="75.5"/>
+        <use href="#il-bz-drawer" x="47.5" y="97.5"/>
+        <use href="#il-bz-drawer" x="74.5" y="97.5"/>
+        <use href="#il-bz-drawer" x="101.5" y="97.5"/>
+        <use href="#il-bz-drawer" x="128.5" y="97.5"/>
+        <rect class="f-ink" x="101.5" y="75.5" width="24" height="19"/>
+        <path class="f-paper" d="M101.5 75.5h24l3.5 12.5h-32z"/>
+        <path class="thin" d="M106 83l4-2M114 85l3 1M120 82l3-2"/>
+        <rect class="f-sheet" x="97" y="88" width="32" height="22"/>
+        <rect class="f-red" x="107" y="91.5" width="12" height="7"/>
+        <circle class="s-brass" cx="113" cy="104" r="2.8"/>
+      </svg>
+      <figcaption><b>百子柜</b><span>用于：病历库页头、病历库为空</span><span>配文：百子柜尚空，治疗完成的文档会自动存进来。</span></figcaption>
+    </figure>
+
+    <!-- 8 悬壶 -->
+    <figure>
+      <svg class="il" viewBox="0 0 200 160" role="img" aria-label="悬壶">
+        <rect class="f-paper" x="93" y="10" width="14" height="7" rx="2"/>
+        <path class="thin" d="M100 17v20"/>
+        <path class="f-sheet" d="M92 46c-8 4-8 20 0 26-18 6-22 32-10 44 10 10 26 10 36 0 12-12 8-38-10-44 8-6 8-22 0-26-3-3-13-3-16 0z"/>
+        <path class="f-sheet" d="M103 38c6-7 14-5 17 1-7 4-13 4-17-1z"/>
+        <rect class="f-sheet" x="97" y="35" width="6" height="9" rx="2"/>
+        <path class="thin" d="M84 100c2-10 8-16 14-18"/>
+        <path class="s-red bold" d="M91 73c6 3 12 3 18 0"/>
+        <path class="s-red" d="M108 74c8 9 10 19 8 29"/>
+        <rect class="f-red" x="112" y="101" width="8" height="4"/>
+        <path class="s-red thin" d="M113 105l-1 12M116 105v13M119 105l1 12"/>
+      </svg>
+      <figcaption><b>悬壶</b><span>用于：药房（插件）为空</span><span>配文：药房还没有上架插件。</span></figcaption>
+    </figure>
+
+  </div>
+</main>
+</body>
+</html>

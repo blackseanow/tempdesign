@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>咸鱼把脉了 设计稿 v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont/style.css">
+<style>
+:root{
+  --paper:#ECEAE1;--sheet:#F8F7F2;--ink:#24231F;--ink-2:#4E4C45;--ink-3:#6B685F;
+  --line:#D6D2C4;--line-2:#E4E0D4;
+  --indigo:#1F3A4D;--indigo-2:#2B4D65;--cinnabar:#B5382A;--brass:#85682F;
+  --velvet:#A72F24;--gold:#D9B865;--wood:#6B4A2B;
+  --kai:"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif;
+  --song:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--song);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+button,select,textarea,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+h1,h2,h3{margin:0;font-family:var(--kai);font-weight:400}
+
+/* ---------- 骨架 ---------- */
+.shell{display:grid;grid-template-columns:78px minmax(0,1fr);min-height:100vh}
+.main{min-width:0}
+.rail{position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px 0 14px;background:var(--indigo)}
+.tiqian{writing-mode:vertical-rl;font-family:var(--kai);font-size:21px;letter-spacing:.3em;color:var(--ink);background:var(--sheet);padding:14px 8px;box-shadow:inset 0 0 0 3px var(--sheet),inset 0 0 0 4px #A79F88}
+.nav{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+.nav button,.rail .admin{position:relative;writing-mode:vertical-rl;font-family:var(--kai);font-size:17px;letter-spacing:.2em;background:none;border:0;color:rgba(236,234,225,.62);padding:12px 14px}
+.nav button:hover,.rail .admin:hover{color:#F4F2EA}
+.rail [aria-current="page"]{color:#fff}
+.rail [aria-current="page"]::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;background:#C9A86A}
+.view{display:none}
+.view.on{display:block}
+.page{max-width:1040px;margin:0 auto;padding:36px 36px 72px}
+.page>h1{font-size:30px}
+.lead{margin:6px 0 24px;color:var(--ink-2);max-width:42em}
+.note{min-height:1.7em;margin:12px 0 0;font-size:14px;color:var(--brass)}
+.ph{max-width:34em;padding:64px 40px;font-family:var(--kai);font-size:20px;color:var(--ink-2)}
+
+/* ---------- 按钮 ---------- */
+.btn{border:1px solid var(--ink-3);background:var(--sheet);padding:6px 14px;border-radius:2px;font-size:14px;line-height:1.6}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--indigo);border-color:var(--indigo);color:#F4F2EA}
+.btn.primary:hover{background:var(--indigo-2);border-color:var(--indigo-2)}
+.btn:disabled{opacity:.45}
+.btn.ghost,.link{background:none;border:0;padding:6px 0;color:var(--ink-2);font-size:14px;text-decoration:underline;text-underline-offset:4px}
+.link{padding:0;color:var(--indigo)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:22px}
+
+/* ---------- 医馆大堂 ---------- */
+.plaque{display:inline-block;padding:14px 40px;background:var(--indigo);color:#F4F2EA;box-shadow:inset 0 0 0 5px var(--indigo),inset 0 0 0 6px #C9A86A}
+.plaque span{font-size:34px;letter-spacing:.35em;margin-right:-.35em}
+.greet{margin:14px 0 26px;color:var(--ink-2)}
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.door{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 18px 20px;background:var(--sheet);border:1px solid var(--line)}
+.door:hover{border-color:var(--ink)}
+.door-plaque{align-self:stretch;margin:0 -18px 14px;padding:10px 0 10px .3em;background:var(--indigo);color:#F4F2EA;font-family:var(--kai);font-size:22px;letter-spacing:.3em}
+.door .il{max-width:170px;height:136px}
+.door .flag{--fs:4.7px}
+.door-desc{display:block;margin:10px 0;color:var(--ink-2);font-size:14px}
+.door-go{font-family:var(--kai);font-size:16px;color:var(--indigo);text-decoration:underline;text-underline-offset:5px}
+.inward{margin-top:36px}
+.inward h2{font-size:22px;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px 18px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.row-t b{display:block;font-family:var(--kai);font-weight:400;font-size:18px}
+.row-t span{font-size:13px;color:var(--ink-2)}
+.row-a{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.state{white-space:nowrap;font-family:var(--kai);font-size:14px;line-height:24px;padding:0 8px;border:1px solid var(--indigo);color:var(--indigo)}
+.state.closed{border-color:var(--cinnabar);color:var(--cinnabar)}
+.empty{display:flex;align-items:center;gap:18px;padding:12px 0;color:var(--ink-2)}
+.empty .il{width:110px;flex:none}
+.tip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;margin-bottom:8px;padding:12px 16px;background:var(--sheet);border:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.tip p{margin:0}
+
+/* ---------- 诊程 ---------- */
+.case-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 28px;padding:22px 36px 14px;border-bottom:1px solid var(--line)}
+.case-title{display:flex;align-items:center;gap:12px}
+.case-title h1{font-size:26px;line-height:1.3}
+.round{font-family:var(--kai);font-size:15px;line-height:24px;padding:0 8px;color:var(--cinnabar);border:1px solid var(--cinnabar)}
+.stepper{display:flex;list-style:none;margin:0;padding:0}
+.stepper li{display:flex;align-items:center}
+.stepper li+li::before{content:"";width:34px;height:1px;margin:0 6px;background:var(--line)}
+.stepper li.done+li::before{background:var(--ink-2)}
+.stepper button{display:grid;justify-items:center;padding:4px 6px;background:none;border:0;color:var(--ink-3)}
+.stepper b{font-family:var(--kai);font-weight:400;font-size:19px;letter-spacing:.1em;border-bottom:2px solid transparent}
+.stepper small{font-size:12px;line-height:1.5}
+.stepper .done button{color:var(--ink-2)}
+.stepper .cur button{color:var(--indigo)}
+.stepper .cur b{border-bottom-color:var(--indigo)}
+.step{display:none}
+.step.on{display:block}
+.base-bar{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;padding:10px 36px;background:var(--sheet);border-bottom:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.base-bar b{font-weight:600;color:var(--ink)}
+.p-ctrl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding:14px 36px}
+.c-meta{display:flex;flex-wrap:wrap;gap:2px 20px;font-size:14px;color:var(--ink-2)}
+.c-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.rec{display:inline-flex;align-items:center;gap:8px;font-family:var(--kai);font-size:16px;color:var(--cinnabar)}
+.rec b{font-weight:400}
+.rec i{width:9px;height:9px;background:var(--cinnabar)}
+.rec.off{color:var(--ink-3)}
+.rec.off i{background:var(--ink-3)}
+.timer{font-size:22px;font-variant-numeric:tabular-nums;letter-spacing:.03em;margin-right:6px}
+.pulse{display:block;width:100%;height:44px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pulse polyline{fill:none;stroke:var(--ink);stroke-width:1.1;vector-effect:non-scaling-stroke}
+.c-body{display:grid;grid-template-columns:minmax(0,1fr) 360px}
+.maian{min-height:60vh;padding:10px 36px 96px;border-right:1px solid var(--line)}
+.u{display:grid;grid-template-columns:48px 112px minmax(0,1fr);gap:0 14px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.u .t{padding-top:4px;font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.u .who{display:flex;align-items:flex-start;gap:8px;padding-top:2px;font-family:var(--kai);font-size:16px;color:var(--ink-2)}
+.u .who.pending{font-size:14px;color:var(--ink-3)}
+.seal{flex:none;display:grid;place-items:center;width:30px;height:30px;margin-top:-2px;border:2px solid var(--cinnabar);color:var(--cinnabar);font-size:18px;line-height:1}
+.u .say{margin:0;font-size:16px;line-height:1.9;color:var(--ink-2)}
+.u.leader .who,.u.leader .say{color:var(--ink)}
+.u.partial .say{color:var(--ink-3)}
+.u.note .who{color:var(--brass)}
+.u.note .say{font-size:14px}
+.mark-req{text-decoration:underline;text-decoration-color:var(--cinnabar);text-decoration-thickness:1px;text-underline-offset:6px}
+.mark-req sup{margin-left:1px;font-family:var(--kai);font-size:12px;color:var(--cinnabar)}
+.u.flash .say{animation:flash 1.8s ease-out}
+@keyframes flash{from{background:#EBDCD3}to{background:transparent}}
+.maixiang{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;padding:18px 22px 28px}
+.mx-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-head h2{font-size:22px}
+.mx-head p{margin:0;font-size:14px;color:var(--ink-2)}
+.mx-toggle{display:none}
+.mx-sub{margin:10px 0 14px;font-size:13px;color:var(--ink-2)}
+.mx-empty{font-size:14px;color:var(--ink-3)}
+.slip{margin-bottom:10px;padding:12px 14px 10px;background:var(--sheet);border:1px solid var(--line);border-left:2px solid var(--cinnabar)}
+.slip.unsure{border-left-color:var(--brass)}
+.slip.new{animation:ink 1.6s ease-out}
+@keyframes ink{from{background:#EFDDD4}to{background:var(--sheet)}}
+.slip p{margin:0 0 8px;font-size:15px;line-height:1.75}
+.slip .no,.rx .no{font-family:var(--kai);color:var(--cinnabar)}
+.slip .no{margin-right:6px;font-size:17px}
+.slip.unsure .no,.rx li.unsure .no{color:var(--brass)}
+.upd{margin-left:6px;font-family:var(--kai);font-size:13px;color:var(--brass)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:13px;color:var(--ink-2)}
+.tag{padding:0 6px;font-family:var(--kai);font-size:13px;line-height:20px;border:1px solid var(--ink-3)}
+.ask{font-style:normal;color:var(--brass)}
+.src{padding:0;background:none;border:0;font-size:13px;color:var(--indigo);text-decoration:underline;text-underline-offset:3px}
+.mx-foot{margin-top:14px}
+
+/* ---------- 开方、治疗 ---------- */
+.rx-wrap,.cure{padding:32px 24px 72px}
+.rx,.sheet{max-width:800px;margin:0 auto;padding:40px 52px 34px;background:var(--sheet);border:1px solid #CFCABA}
+.rx-top{display:flex;align-items:flex-end;gap:40px;padding-bottom:14px;border-bottom:3px double var(--ink)}
+.rx-top h1{font-size:46px;line-height:1;letter-spacing:.24em}
+.rx-info{flex:1;display:grid;grid-template-columns:auto 1fr auto 1fr;gap:4px 12px;margin:0;font-size:14px}
+.rx-info dt{color:var(--ink-3)}
+.rx-info dd{margin:0}
+.rx h2{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:28px 0 8px;font-size:21px}
+.rx h2 small{font-family:var(--song);font-size:13px;color:var(--ink-3)}
+.rx ol{list-style:none;margin:0;padding:0}
+.rx li{display:grid;grid-template-columns:22px 28px minmax(0,1fr);gap:0 8px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.rx li input{width:15px;height:15px;margin:7px 0 0;accent-color:var(--indigo)}
+.rx li .no{font-size:19px;line-height:1.6}
+.rx li p{margin:0 0 4px;font-size:16px;line-height:1.8}
+.rx li:not(:has(input:checked)) p{color:var(--ink-3)}
+.file{display:flex;align-items:center;gap:14px;padding:12px 14px;background:#FBFAF6;border:1px solid var(--line)}
+.file+.file{margin-top:8px}
+.fbadge{flex:none;display:grid;place-items:center;width:34px;height:40px;background:var(--indigo);color:#F4F2EA;font-family:var(--kai);font-size:18px}
+.fbadge.ppt{background:var(--brass)}
+.fmeta{flex:1;min-width:0}
+.fmeta b{display:block;font-weight:600;overflow-wrap:anywhere}
+.fmeta span{font-size:13px;color:var(--ink-2)}
+.yizhu{display:block;width:100%;min-height:290px;padding:0 14px;border:1px solid var(--line);border-radius:0;resize:vertical;font-size:15px;line-height:32px;color:var(--ink);background-color:#FBFAF6;background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--line-2) 31px 32px);background-attachment:local}
+.rx-foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:22px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.choose{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;font-size:14px}
+.choose .lbl{font-family:var(--kai);font-size:18px}
+.opt{display:inline-flex;align-items:center;gap:6px}
+.opt input{accent-color:var(--indigo)}
+.choose select{padding:4px 8px;border:1px solid var(--ink-3);border-radius:2px;background:var(--sheet);font-size:14px}
+.fixed-cure{color:var(--ink-2)}
+.sign{display:flex;align-items:center;gap:18px}
+.signer{position:relative;display:grid;text-align:right;font-size:13px;color:var(--ink-2)}
+.signer b{font-family:var(--kai);font-weight:400;font-size:20px;color:var(--ink)}
+.seal-btn{flex:none;display:grid;place-items:center;width:76px;height:76px;writing-mode:vertical-rl;letter-spacing:.14em;font-family:var(--kai);font-size:24px;color:var(--cinnabar);background:var(--sheet);border:2px solid var(--cinnabar);border-radius:2px;box-shadow:inset 0 0 0 3px var(--sheet),inset 0 0 0 4px var(--cinnabar)}
+.seal-btn:hover{background:#F5E8E3}
+.stamp{position:absolute;right:calc(100% + 12px);top:-6px;display:grid;place-items:center;width:58px;height:58px;writing-mode:vertical-rl;letter-spacing:.06em;font-family:var(--kai);font-size:21px;color:var(--cinnabar);border:2px solid var(--cinnabar);opacity:0;transform:rotate(-6deg) scale(1.35);transition:opacity .18s ease-out,transform .18s ease-out;pointer-events:none}
+.stamp.on{opacity:.92;transform:rotate(-6deg) scale(1)}
+.rx-status{min-height:1.7em;margin:12px 0 0;text-align:right;font-size:14px;color:var(--ink-2)}
+.sheet h2{font-size:26px}
+.hint{margin:4px 0 16px;font-size:14px;color:var(--ink-2)}
+.outline{list-style:none;margin:0;padding:0}
+.outline li{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.outline b{font-family:var(--kai);font-weight:400;font-size:18px}
+.outline span{font-size:13px;color:var(--ink-3)}
+.boil,.ready{display:grid;justify-items:center;text-align:center}
+.boil{padding:20px 0 10px}
+.boil .il{width:200px}
+.boil p{margin:4px 0 0;color:var(--ink-2)}
+.boil .boil-t{margin-top:8px;font-family:var(--kai);font-size:22px;color:var(--ink)}
+.ready{margin-bottom:18px}
+.ready .il{width:170px}
+.chg{padding:14px 0;border-bottom:1px solid var(--line-2)}
+.chg-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px}
+.chg-h b{font-family:var(--kai);font-weight:400;font-size:17px}
+.chg-h span{font-size:13px;color:var(--ink-3)}
+.chg del{display:block;margin-top:6px;color:var(--ink-3);text-decoration-color:var(--cinnabar)}
+.chg ins{display:block;margin-top:4px;text-decoration:underline;text-decoration-color:var(--indigo);text-underline-offset:5px}
+.chg.off ins{color:var(--ink-3);text-decoration-color:var(--line)}
+.seg{display:inline-flex;margin-top:10px;border:1px solid var(--ink-3)}
+.seg button{padding:2px 12px;background:none;border:0;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--indigo);color:#F4F2EA}
+
+/* ---------- 交差：锦旗 ---------- */
+.trophy{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:32px 52px;max-width:980px;margin:0 auto;padding:32px 36px 72px}
+.trophy-flag{display:grid;justify-items:center;gap:6px}
+.trophy .flag{--fs:12px}
+.trophy-info h2{font-size:30px}
+.trophy-info h3{margin:24px 0 8px;padding-bottom:6px;font-size:19px;border-bottom:1px solid var(--line)}
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:0 12px;padding:6px 0}
+.timeline b{font-family:var(--kai);font-weight:400;font-size:17px;color:var(--cinnabar)}
+.timeline span{font-size:14px;color:var(--ink-2)}
+.flag{--fs:10px;display:inline-flex;flex-direction:column;align-items:center;font-size:var(--fs)}
+.flag-top{display:block;width:17.5em;height:4em}
+.flag-body{display:flex;flex-direction:column;justify-content:space-between;width:15em;height:22.5em;margin-top:-.3em;padding:1.4em 1.1em;writing-mode:vertical-rl;background:var(--velvet);color:var(--gold);font-family:var(--kai);box-shadow:inset 0 0 0 .45em var(--velvet),inset 0 0 0 .55em var(--gold)}
+.flag-to,.flag-from{font-size:1.15em;line-height:1.3;letter-spacing:.15em}
+.flag-to{align-self:flex-start}
+.flag-from{align-self:flex-end}
+.flag-word{align-self:center;font-size:3.6em;line-height:1;letter-spacing:.18em}
+.flag-fringe{width:15em;height:2.4em;border-top:.25em solid var(--gold);background:repeating-linear-gradient(90deg,var(--gold) 0 .16em,transparent .16em .5em)}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:28px 18px}
+.wall-item{display:grid;justify-items:center;gap:4px;padding:12px 6px;background:none;border:0;text-align:center}
+.wall-item .flag{--fs:7px;margin-bottom:8px}
+.wall-item b{font-family:var(--kai);font-weight:400;font-size:17px}
+.wall-item:hover b{color:var(--indigo)}
+.wall-item .cap{font-size:13px;color:var(--ink-2)}
+
+/* ---------- 插画 ---------- */
+.il{display:block;width:100%;height:auto;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.il .f-sheet{fill:var(--sheet)}
+.il .f-paper{fill:var(--paper)}
+.il .f-indigo{fill:var(--indigo)}
+.il .f-ink{fill:var(--ink)}
+.il .f-red{fill:var(--cinnabar);stroke:none}
+.il .s-red{stroke:var(--cinnabar)}
+.il .s-sheet{stroke:var(--sheet)}
+.il .thin{stroke-width:1}
+.il .bold{stroke-width:2.6}
+.il .t-seal{fill:var(--sheet);stroke:none;font-family:var(--kai)}
+.il .steam{opacity:0;animation:il-steam 2.8s ease-in-out infinite}
+.il .steam.d2{animation-delay:.9s}
+.il .steam.d3{animation-delay:1.8s}
+@keyframes il-steam{0%{opacity:0;transform:translateY(6px)}35%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.il .steam{opacity:1}}
+
+/* ---------- H5 ---------- */
+@media (max-width:820px){
+  .shell{display:block}
+  .rail{position:fixed;inset:auto 0 0 0;z-index:30;height:auto;flex-direction:row;gap:0;padding:0 0 env(safe-area-inset-bottom);overflow:visible}
+  .tiqian,.desk{display:none}
+  .nav{flex-direction:row;justify-content:space-around;width:100%;gap:0}
+  .nav button{flex:1;writing-mode:horizontal-tb;padding:13px 0 12px;font-size:15px;letter-spacing:.06em}
+  .rail [aria-current="page"]::before{left:32%;right:32%;top:0;bottom:auto;width:auto;height:2px}
+  .main{padding-bottom:calc(52px + env(safe-area-inset-bottom))}
+  .page{padding:20px 16px 40px}
+  .plaque{padding:10px 22px}
+  .plaque span{font-size:24px}
+  .doors{grid-template-columns:1fr;gap:12px}
+  .door{display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-areas:"pl pl" "ill desc" "ill go";align-items:center;column-gap:14px;padding:0 14px 12px;text-align:left}
+  .door-plaque{grid-area:pl;margin:0 -14px 10px;font-size:19px;text-align:center}
+  .door .il,.door .flag{grid-area:ill;justify-self:center}
+  .door .il{width:96px;height:auto}
+  .door .flag{--fs:3.4px}
+  .door-desc{grid-area:desc;margin:0}
+  .door-go{grid-area:go;align-self:start}
+  .row{grid-template-columns:minmax(0,1fr) auto}
+  .row-a{grid-column:1/-1;justify-content:flex-start}
+  .case-head{padding:14px 16px 10px}
+  .case-title h1{font-size:21px}
+  .stepper{width:100%;justify-content:space-between}
+  .stepper li+li::before{width:12px;margin:0 2px}
+  .stepper b{font-size:17px}
+  .base-bar,.p-ctrl{padding-left:16px;padding-right:16px}
+  .c-ctrl{width:100%;gap:8px}
+  .timer{margin-right:auto;font-size:18px}
+  .c-body{display:block}
+  .maian{min-height:0;padding:4px 16px 130px;border-right:0}
+  .u{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"who t" "say say";gap:4px 0}
+  .u .who{grid-area:who}
+  .u .t{grid-area:t}
+  .u .say{grid-area:say}
+  .maixiang{position:fixed;left:0;right:0;top:auto;bottom:calc(52px + env(safe-area-inset-bottom));z-index:20;max-height:62vh;padding:0 16px 16px;background:var(--paper);border-top:1px solid var(--ink);transform:translateY(calc(100% - 54px));transition:transform .25s ease}
+  .maixiang.open{transform:none}
+  .mx-head{position:sticky;top:0;z-index:1;margin:0 0 4px;padding:0;background:var(--paper);border-bottom-color:var(--line)}
+  .mx-head h2,.mx-head p{display:none}
+  .mx-toggle{display:flex;align-items:center;gap:6px;width:100%;height:54px;padding:0;background:none;border:0;font-family:var(--kai);font-size:17px}
+  .mx-toggle em{margin-left:auto;font-style:normal;font-size:14px;color:var(--ink-2)}
+  .rx-wrap,.cure{padding:12px 8px 28px}
+  .rx,.sheet{padding:22px 16px}
+  .rx-top{flex-direction:column;align-items:flex-start;gap:14px}
+  .rx-top h1{font-size:36px}
+  .rx-info{grid-template-columns:auto 1fr;width:100%}
+  .rx-foot{flex-direction:column;align-items:stretch}
+  .sign{justify-content:flex-end}
+  .trophy{grid-template-columns:1fr;justify-items:center;padding:20px 16px 40px}
+  .trophy-info{width:100%}
+  .trophy .flag{--fs:9px}
+  .ph{padding:40px 20px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="tiqian">咸鱼把脉了</div>
+    <nav class="nav" aria-label="主导航">
+      <button data-go="home" aria-current="page">医馆</button>
+      <button data-go="records">病历</button>
+      <button data-go="leaders">先生</button>
+      <button data-go="plugins">药房</button>
+    </nav>
+    <button class="admin desk" data-go="admin">后台</button>
+  </aside>
+
+  <main class="main">
+
+    <!-- 医馆大堂 -->
+    <section class="view on" id="v-home" aria-label="医馆">
+      <div class="page">
+        <h1 class="plaque"><span>咸鱼把脉了</span></h1>
+        <p class="greet">张伟，医馆今日照常坐诊。领导开会就来把脉，交差了挂一面锦旗。</p>
+        <div class="doors">
+          <button class="door" data-act="start">
+            <span class="door-plaque">开始把脉</span>
+            <svg class="il" viewBox="0 0 200 160" aria-hidden="true"><path d="M20 122h150M178 122h8"/><path class="f-sheet" d="M50 122c-4-16 0-29 13-31h56c13 2 17 15 13 31z"/><path class="thin" d="M62 97c19-3 39-3 58 0"/><circle class="thin" cx="91" cy="109" r="9"/><circle class="f-red" cx="91" cy="109" r="5.5"/><path class="thin" d="M64 110c2-5 8-4 7 0s-5 3-5 0M118 110c-2-5-8-4-7 0s5 3 5 0"/><path class="f-sheet" d="M144 122l4-9 4 4 5-10 5 10 4-4 4 9z"/><path class="f-sheet" d="M146 105l42-6 .5 3.6-42 6z"/><path class="f-ink" d="M146 105c-6 .8-12 2.5-18 4.4 6 .3 12-.2 18.5-.8z"/><path class="thin" d="M188.2 100.8c4 1 5 5 1 6"/></svg>
+            <span class="door-desc">新会议开始，录下领导的要求</span>
+            <span class="door-go">进诊室</span>
+          </button>
+          <button class="door" data-go="revisit">
+            <span class="door-plaque">复诊</span>
+            <svg class="il" viewBox="0 0 200 160" aria-hidden="true"><path d="M26 126h150M182 126h8"/><path class="f-indigo" d="M44 114l20-10h112l-20 10z"/><path class="f-sheet" d="M156 114l20-10v12l-20 10z"/><rect class="f-sheet" x="44" y="114" width="112" height="12"/><path class="f-indigo" d="M50 102l20-10h104l-20 10z"/><path class="f-sheet" d="M154 102l20-10v12l-20 10z"/><rect class="f-sheet" x="50" y="102" width="104" height="12"/><path class="f-indigo" d="M56 90l20-10h96l-20 10z"/><path class="f-sheet" d="M152 90l20-10v12l-20 10z"/><rect class="f-sheet" x="56" y="90" width="96" height="12"/><path class="f-sheet thin" d="M68 89h6l15-7.5h-6z"/><path class="s-sheet thin" d="M144 90l20-10M147 88.5h8M151.6 86.2h8M156.4 83.8h8M161 81.5h8"/><path class="thin" d="M44 120h112M50 108h104M56 96h96"/><path class="s-red bold" d="M126 96v20"/><path class="f-red" d="M123.5 116h5l-1 8h-3z"/></svg>
+            <span class="door-desc">已交差的材料，领导又提了意见</span>
+            <span class="door-go">选病例</span>
+          </button>
+          <button class="door" data-go="wall">
+            <span class="door-plaque">把脉成功</span>
+            <span id="door-flag"></span>
+            <span class="door-desc">交差的成果，一面面锦旗</span>
+            <span class="door-go">看锦旗墙</span>
+          </button>
+        </div>
+        <section class="inward" aria-label="在诊病例">
+          <h2>在诊病例</h2>
+          <div id="home-active"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- 诊程 -->
+    <section class="view" id="v-case" aria-label="诊程">
+      <header class="case-head">
+        <div class="case-title"><h1>三季度安全生产专题会</h1><span class="round" id="case-round">初诊</span></div>
+        <ol class="stepper" id="stepper" aria-label="诊程步骤">
+          <li><button data-stepgo="pulse"><b>把脉</b><small></small></button></li>
+          <li><button data-stepgo="rx"><b>开方</b><small></small></button></li>
+          <li><button data-stepgo="cure"><b>治疗</b><small></small></button></li>
+          <li><button data-stepgo="done"><b>交差</b><small></small></button></li>
+        </ol>
+      </header>
+
+      <div class="step on" id="s-pulse">
+        <div class="base-bar" id="base-bar" hidden>
+          <span>本次复诊针对：<b id="base-name"></b></span>
+          <button class="link" data-act="skip-pulse">没有录音？直接填写领导意见</button>
+        </div>
+        <div class="p-ctrl">
+          <div class="c-meta" id="p-meta"></div>
+          <div class="c-ctrl">
+            <span class="rec" id="rec"><i></i><b id="rec-text">把脉中</b></span>
+            <span class="timer" id="timer">00:00:00</span>
+            <button class="btn" id="btn-mark">此处要紧</button>
+            <button class="btn" id="btn-pause">暂停</button>
+            <button class="btn primary" data-act="pulse-done">把脉完成</button>
+          </div>
+        </div>
+        <svg class="pulse" viewBox="0 0 1000 44" preserveAspectRatio="none" aria-hidden="true"><polyline id="pulse-line" points=""/></svg>
+        <div class="c-body">
+          <div class="maian" id="maian" aria-live="polite" aria-label="脉案，实时转写"></div>
+          <aside class="maixiang" id="maixiang" aria-label="脉象">
+            <div class="mx-head">
+              <h2>脉象</h2>
+              <p id="mx-count">尚无</p>
+              <button class="mx-toggle" id="mx-toggle" aria-expanded="false" aria-controls="slips">脉象 <span id="mx-n">0</span> 条<em id="mx-state">展开</em></button>
+            </div>
+            <p class="mx-sub" id="mx-sub"></p>
+            <div id="slips"><p class="mx-empty" id="mx-empty"></p></div>
+            <div class="mx-foot"><button class="btn ghost" id="btn-replay">重放演示</button></div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="step" id="s-rx"><div class="rx-wrap"><article class="rx" id="rx"></article></div></div>
+      <div class="step" id="s-cure"><div class="cure" id="cure"></div></div>
+      <div class="step" id="s-done"><div id="done"></div></div>
+    </section>
+
+    <!-- 复诊：选病例 -->
+    <section class="view" id="v-revisit" aria-label="复诊">
+      <div class="page">
+        <h1>复诊</h1>
+        <p class="lead">领导对已交差的材料又提了意见：选中对应的病例，开始下一诊。上次的产物会自动作为底方。</p>
+        <div class="tip" id="revisit-tip">
+          <p>演示提示：先在医馆点“开始把脉”走完初诊，交差后就能在这里复诊；也可以直接演示。</p>
+          <button class="btn primary" data-act="quick-revisit">直接演示复诊</button>
+        </div>
+        <div id="revisit-list"></div>
+        <p class="note" data-note></p>
+      </div>
+    </section>
+
+    <!-- 锦旗墙 -->
+    <section class="view" id="v-wall" aria-label="锦旗墙">
+      <div class="page">
+        <h1>锦旗墙</h1>
+        <p class="lead">每交一次差，挂一面锦旗。点开锦旗，看成果和诊疗经过。</p>
+        <div class="wall" id="wall"></div>
+      </div>
+    </section>
+
+    <!-- 成果（从锦旗墙、病历打开） -->
+    <section class="view" id="v-trophy" aria-label="成果"><div id="trophy-view"></div></section>
+
+    <!-- 病历 -->
+    <section class="view" id="v-records" aria-label="病历">
+      <div class="page">
+        <h1>病历</h1>
+        <p class="lead">所有病例都在这里，每一诊的处方和产物都按版本留存。</p>
+        <div id="records"></div>
+        <p class="note" data-note></p>
+      </div>
+    </section>
+
+    <section class="view" id="v-ph" aria-label="未绘制页面">
+      <p class="ph"><span id="ph-name"></span>在本稿中暂未绘制。</p>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ========== 插画 ========== */
+  const IL = {
+    fish: '<svg class="il" viewBox="0 0 200 160" aria-hidden="true"><rect class="f-sheet" x="34" y="18" width="132" height="7" rx="3.5"/><path class="thin" d="M70 18v7M132 18v7"/><path d="M95 25c1 5 9 5 10 0M100 27v13"/><path class="f-sheet" d="M100 40c12 4 20 18 19 38-1 20-9 36-16 46l9 19c-6-4-10-5-12-7-2 2-6 3-12 7l9-19c-7-10-15-26-16-46-1-20 7-34 19-38z"/><path class="thin" d="M88 60q12 8 24 0M100 66v54M100 76l-9 5M100 86l-10 5M100 96l-9 5M100 76l9 5M100 86l10 5M100 96l9 5"/><path d="M83 70c-7 3-10 8-11 14M117 70c7 3 10 8 11 14"/><circle class="f-ink" cx="94" cy="52" r="2"/><circle class="f-ink" cx="106" cy="52" r="2"/><rect class="f-red" x="138" y="116" width="24" height="24"/><text class="t-seal" x="150" y="133" text-anchor="middle" font-size="15">脉</text></svg>',
+    stove: '<svg class="il" viewBox="0 0 200 160" aria-hidden="true"><path d="M36 128h128M170 128h8"/><path class="steam thin" d="M92 40c-4-8 4-12 0-20"/><path class="steam d2 thin" d="M100 38c-4-9 4-14 0-24"/><path class="steam d3 thin" d="M108 40c4-8-4-12 0-20"/><path class="f-sheet" d="M127 76c9-1 15-6 20-14l3 2.5c-4 10-12 17-22 19z"/><path class="f-sheet" d="M75 73l-21-7-1.5 4.5 21 8z"/><path class="f-sheet" d="M72 93c-4-18 4-32 28-32s32 14 28 32z"/><path class="thin" d="M78 80c14 3 30 3 44 0"/><rect class="f-sheet" x="84" y="53" width="32" height="8" rx="3"/><circle class="f-sheet" cx="100" cy="49.5" r="3.5"/><path class="f-paper" d="M66 128l6-30h56l6 30z"/><rect class="f-sheet" x="66" y="93" width="68" height="6" rx="2"/><path class="f-ink" d="M88 128v-11a12 12 0 0 1 24 0v11z"/><path class="f-red" d="M100 126c-6-3-5-9 0-14 1 4 5 5 3 9 3-1 3 3 1 5z"/><path class="thin" d="M150 128l8-25"/><ellipse class="f-sheet" cx="160" cy="91" rx="11" ry="14" transform="rotate(18 160 91)"/><path class="thin" d="M157 103l4-22M157 103l-6-18M157 103l11-17"/></svg>',
+    pack: '<svg class="il" viewBox="0 0 200 160" aria-hidden="true"><path d="M30 128h140M176 128h8"/><path class="f-paper" d="M50 96l40 10v22l-40-10z"/><path class="f-sheet" d="M90 106l60-12v22l-60 12z"/><path class="f-sheet" d="M50 96l60-12 40 10-60 12z"/><path class="thin" d="M80 90l40 10M130 89l-60 12M70 101v22M120 100v22"/><path class="f-paper" d="M68 79l26 7v13l-26-7z"/><path class="f-sheet" d="M94 86l38-8v13l-38 8z"/><path class="f-sheet" d="M68 79l38-8 26 7-38 8z"/><path class="thin" d="M87 75l26 7M119 74.5l-38 8M81 82.5v13M113 82v13"/><path d="M100 78.5c-7-8-13-3-6 1.5M100 78.5c7-8 13-3 6 1.5"/><path class="thin" d="M100 78.5l6 12"/><g transform="rotate(-10 108.5 98.5)"><rect class="f-red" x="102" y="90" width="13" height="17"/><text class="t-seal" x="108.5" y="103" text-anchor="middle" font-size="10">方</text></g></svg>'
+  };
+  const FLAG_TOP = '<svg class="flag-top" viewBox="0 0 175 40" aria-hidden="true"><path d="M87.5 5L30 33M87.5 5L145 33" fill="none" stroke="#6B4A2B" stroke-width="1.6"/><circle cx="87.5" cy="5" r="3" fill="none" stroke="#6B4A2B" stroke-width="1.6"/><rect x="10" y="31" width="155" height="6" rx="3" fill="#6B4A2B"/><circle cx="8" cy="34" r="4.5" fill="#D9B865"/><circle cx="167" cy="34" r="4.5" fill="#D9B865"/></svg>';
+  const flagHTML = c => `<span class="flag" aria-hidden="true">${FLAG_TOP}<span class="flag-body"><span class="flag-to">赠张伟同志</span><span class="flag-word">${c.phrase}</span><span class="flag-from">${c.from}<br>${c.month}</span></span><span class="flag-fringe"></span></span>`;
+
+  /* ========== 演示数据 ========== */
+  const DOC = '《二号车间重大隐患整改工作方案》';
+  const PEOPLE = { wang: { name: '王建国', seal: '王' }, li: { name: '李明', seal: '李' }, zhang: { name: '张伟' }, x1: { name: '旁人甲' } };
+  const SCRIPTS = {
+    first: [
+      { at: 500, t: '10:31', who: 'zhang', text: '王总，三季度隐患排查我简单汇报一下，台账上还有十二项没有闭环。' },
+      { at: 4000, t: '10:42', who: 'wang', text: '[[年底前必须把隐患排查台账全部闭环|一]]，综合部牵头。[[下周一先把没闭环的清单报给我|二]]。', reqs: ['r1', 'r2'] },
+      { at: 9500, t: '10:58', who: 'zhang', text: '好的。十二项里有两项是重大隐患，都在二号车间。' },
+      { at: 13000, t: '11:05', who: 'wang', text: '这两项单独拿出来盯，[[月底前整改到位|三]]。[[整改方案这周五前给我，责任人和时间节点要写清楚|四]]。', reqs: ['r3', 'r4'] },
+      { at: 18500, t: '11:20', who: 'x1', text: '二号车间的设备要停机才能整改，生产计划可能要调整。' },
+      { at: 22500, t: '11:31', who: 'wang', text: '停机的事你们和生产部商量。另外，[[做个 PPT，下月初给集团汇报用，十页以内，把整改前后的对比放进去|五]]。', reqs: ['r5'] },
+      { at: 28500, t: '11:48', who: 'li', text: '我补充一点，[[各车间夜班巡检记录要拍照留痕|六]]，以后作为常规要求。', reqs: ['r6'] }
+    ],
+    revisit: [
+      { at: 500, t: '03:12', who: 'zhang', text: '王总，整改方案第1版您看过了，还有哪些地方要改？' },
+      { at: 4000, t: '03:25', who: 'wang', text: '整体可以。[[责任分工还是太笼统，每一项都要落到具体的人|一]]。', reqs: ['r1'] },
+      { at: 9000, t: '03:41', who: 'wang', text: '[[时间安排再细一点，按周排出节点|二]]。另外，[[最后加一段风险提示|三]]。', reqs: ['r2', 'r3'] },
+      { at: 15000, t: '04:05', who: 'li', text: '[[风险提示里把可能的延误因素写进去|三]]，比如天气和设备停机。', upd: 'r3' }
+    ]
+  };
+  const REQS = {
+    first: {
+      r1: { no: '一', type: '任务', text: '年底前完成隐患排查台账全部闭环。', owner: '综合部牵头', due: '12月31日', src: '10:42' },
+      r2: { no: '二', type: '任务', text: '报送未闭环的隐患清单。', owner: '综合部', due: '11月2日', src: '10:42' },
+      r3: { no: '三', type: '任务', text: '二号车间两项重大隐患单独督办，整改到位。', owner: '二号车间', due: '10月31日', src: '11:05' },
+      r4: { no: '四', type: '任务', text: '提交整改方案，写明每项的责任人和时间节点。', owner: '综合部', due: '10月30日', src: '11:05' },
+      r5: { no: '五', type: '任务', text: '制作集团汇报 PPT，十页以内，含整改前后对比。', owner: '未点名', unsure: '“下月初”未说具体日期', src: '11:31' },
+      r6: { no: '六', type: '指示', text: '各车间夜班巡检记录拍照留痕，作为常规要求。', owner: '各车间', due: '长期', src: '11:48' }
+    },
+    revisit: {
+      r1: { no: '一', type: '修改', text: '责任分工落到具体的人，每项隐患写明责任人。', where: '第三部分 责任分工', src: '03:25' },
+      r2: { no: '二', type: '修改', text: '时间安排按周排出节点。', where: '第四部分 时间安排', src: '03:41' },
+      r3: { no: '三', type: '新增', text: '文末增加风险提示。', where: '文末', src: '03:41', upd: { text: '文末增加风险提示，写明天气、设备停机等延误因素。', by: '李明补充' } }
+    }
+  };
+  const PROMPTS = {
+    first: `你是一名国企综合部的材料撰写人员。请依据下列领导要求，起草${DOC}，使用单位公文格式。
+
+领导要求：
+一、年底前完成隐患排查台账全部闭环，综合部牵头；
+二、11月2日前报送未闭环隐患清单；
+三、二号车间两项重大隐患单独督办，10月31日前整改到位；
+四、10月30日前提交整改方案，写明每项整改的责任人和时间节点；
+六、各车间夜班巡检记录拍照留痕，作为常规要求。
+
+写作要求：
+1. 结构为总体要求、整改任务、责任分工、时间安排、保障措施五部分；
+2. 责任分工与时间安排用表格呈现；
+3. 不编造数据，脉案中没有的数字一律写成【待补充】。`,
+    revisit: `你是一名国企综合部的材料撰写人员。附件是${DOC}第1版（底方）。请按领导的修改意见出第2版：保持原有结构和格式，只改动意见涉及的部分，并用修订痕迹标出每一处改动。
+
+修改意见：
+一、责任分工落到具体的人，每项隐患写明责任人；
+二、时间安排按周排出节点；
+三、文末增加风险提示，写明天气、设备停机等延误因素。
+
+注意：不编造姓名和数据，脉案中没有的一律写成【待补充】。`
+  };
+  const OUTLINE = [['一、总体要求', '对应要求一、二'], ['二、整改任务', '对应要求三'], ['三、责任分工', '对应要求一、四'], ['四、时间安排', '对应要求二、三、四'], ['五、保障措施', '对应要求六']];
+  const CHANGES = [
+    { where: '第三部分 责任分工', basis: '意见一', old: '由综合部牵头，各车间配合落实。', neu: '两项重大隐患分别由二号车间【待补充】、设备科【待补充】负责，综合部统筹督办，每周汇总进度。' },
+    { where: '第四部分 时间安排', basis: '意见二', old: '10月31日前完成整改。', neu: '第1周（10月27日至11月2日）完成两项重大隐患整改；第2周完成验收；第3周完成台账销号。' },
+    { where: '文末 新增', basis: '意见三', old: '', neu: '风险提示：如遇恶劣天气或设备停机时间延长，整改可能顺延，综合部将提前报告。' }
+  ];
+  const PHRASES = ['药到病除', '妙手回春', '妙笔生花', '使命必达', '交差圆满'];
+  const STATIC = {
+    b: { id: 'b', title: '九月经营分析会', product: '《三季度经营分析汇报》第2版', files: ['《三季度经营分析汇报》第2版.pptx'], type: 'PPT', round: '二诊', date: '9月28日', phrase: '妙笔生花', from: '李明敬赠', month: '二〇二六年九月',
+      timeline: [['初诊', '9月20日', '把脉 38 分钟，开方 4 条要求，出第1版'], ['二诊', '9月28日', '复诊把脉 9 分钟，2 条修改意见，出第2版']] },
+    c: { id: 'c', title: '国庆值班部署会', product: '《国庆假期值班安排》第1版', files: ['《国庆假期值班安排》第1版.docx'], type: 'Word', round: '初诊', date: '9月26日', phrase: '使命必达', from: '王建国敬赠', month: '二〇二六年九月',
+      timeline: [['初诊', '9月26日', '把脉 21 分钟，开方 3 条要求，出第1版']] }
+  };
+  const STEPS = ['pulse', 'rx', 'cure', 'done'];
+  const STEP_NAME = { pulse: '把脉', rx: '开方', cure: '治疗', done: '交差' };
+  const STEP_WORD = { pulse: ['把脉中', '已把脉'], rx: ['待开方', '已签方'], cure: ['待治疗', '已出药'], done: ['待交差', '已交差'] };
+  const DEMO_MSG = '演示中，这一条只作示意。';
+  const FILE_MSG = '原型中不生成真实文件。';
+
+  /* ========== 状态 ========== */
+  const S = { mode: null, active: false, step: 'pulse', reached: 0, signed: false, skipped: false, revSkipped: false, cure: '', accepted: [true, true, true], taken: 3, aRound: 0, phrase: 0 };
+  function caseA() {
+    const two = S.aRound >= 2;
+    const timeline = [['初诊', '10月29日', '把脉 47 分钟，开方 5 条要求，出第1版']];
+    if (two) timeline.push(['二诊', '10月29日', `${S.revSkipped ? '未录音，手动填写 3 条修改意见' : '复诊把脉 6 分钟，3 条修改意见'}，采纳 ${S.taken} 处修订，出第2版`]);
+    return { id: 'a', title: '三季度安全生产专题会', product: `${DOC}第${two ? 2 : 1}版`, type: 'Word', round: two ? '二诊' : '初诊', date: '10月29日',
+      files: two ? [`${DOC}第2版（带修订痕迹）.docx`, `${DOC}第1版.docx`] : [`${DOC}第1版.docx`],
+      phrase: PHRASES[S.phrase], from: '王建国敬赠', month: '二〇二六年十月', timeline };
+  }
+  const getCase = id => (id === 'a' ? caseA() : STATIC[id]);
+
+  /* ========== 导航与列表页 ========== */
+  const vCase = $('#v-case');
+  const NAV = { home: 'home', case: 'home', revisit: 'home', wall: 'home', trophy: 'home', records: 'records' };
+  const PH = { leaders: '先生档案（领导声纹）', plugins: '药房（插件）', admin: '医馆后台（模型、语音、方剂、模板）' };
+  function show(v) {
+    const id = PH[v] ? 'ph' : v;
+    $$('.view').forEach(s => s.classList.toggle('on', s.id === 'v-' + id));
+    if (PH[v]) $('#ph-name').textContent = PH[v];
+    const key = NAV[v] || v;
+    $$('.rail [data-go]').forEach(b => (b.dataset.go === key ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current')));
+    if (v === 'home') renderHome();
+    if (v === 'revisit') renderRevisit();
+    if (v === 'wall') renderWall();
+    if (v === 'records') renderRecords();
+    if (v === 'case') renderStepper();
+    closeSheet();
+    window.scrollTo(0, 0);
+  }
+  function caseRow(c, state, actions) {
+    return `<div class="row"><div class="row-t"><b>${c.title}</b><span>${c.product}　${c.type}　${c.round}交差于 ${c.date}</span></div>${state}<div class="row-a">${actions}</div></div>`;
+  }
+  function renderHome() {
+    $('#home-active').innerHTML = S.active
+      ? `<div class="row"><div class="row-t"><b>三季度安全生产专题会</b><span>${S.mode === 'first' ? '初诊' : '二诊'}　停在：${STEP_NAME[S.step]}</span></div><span class="state">在诊</span><div class="row-a"><button class="btn primary" data-go="case">继续</button></div></div>`
+      : `<div class="empty">${IL.fish}<p>医馆清静，暂无在诊病例。领导一开会，就点“开始把脉”。</p></div>`;
+  }
+  function renderRevisit() {
+    const rows = [];
+    if (S.aRound > 0) {
+      const a = caseA();
+      rows.push(S.active
+        ? caseRow(a, '<span class="state">在诊</span>', '<button class="btn primary" data-go="case">继续</button>')
+        : caseRow(a, '<span class="state closed">已交差</span>', '<button class="btn primary" data-act="revisit-a">复诊</button>'));
+    }
+    ['b', 'c'].forEach(id => rows.push(caseRow(STATIC[id], '<span class="state closed">已交差</span>', '<button class="btn" data-act="demo-only">复诊</button>')));
+    $('#revisit-list').innerHTML = rows.join('');
+    $('#revisit-tip').hidden = S.aRound > 0;
+    $('#v-revisit [data-note]').textContent = '';
+  }
+  function renderWall() {
+    const list = (S.aRound > 0 ? [caseA()] : []).concat([STATIC.b, STATIC.c]);
+    $('#wall').innerHTML = list.map(c => `<button class="wall-item" data-trophy="${c.id}">${flagHTML(c)}<b>${c.title}</b><span class="cap">${c.product}</span></button>`).join('');
+  }
+  function renderRecords() {
+    const rows = [];
+    if (S.active || S.aRound > 0) {
+      const a = caseA();
+      if (S.active) {
+        const prod = S.aRound > 0 ? `${a.product}，正在出下一版` : '初诊进行中，尚未出药';
+        rows.push(`<div class="row"><div class="row-t"><b>${a.title}</b><span>${prod}</span></div><span class="state">${S.mode === 'first' ? '初诊' : '二诊'}在诊</span><div class="row-a"><button class="btn primary" data-go="case">继续</button></div></div>`);
+      } else {
+        rows.push(caseRow(a, `<span class="state closed">${a.round}交差</span>`, '<button class="btn" data-trophy="a">看锦旗</button><button class="btn" data-act="revisit-a">复诊</button>'));
+      }
+    }
+    ['b', 'c'].forEach(id => rows.push(caseRow(STATIC[id], `<span class="state closed">${STATIC[id].round}交差</span>`, `<button class="btn" data-trophy="${id}">看锦旗</button><button class="btn" data-act="demo-only">复诊</button>`)));
+    $('#records').innerHTML = rows.join('');
+    $('#v-records [data-note]').textContent = '';
+  }
+
+  /* ========== 把脉：实时转写演示 ========== */
+  const maian = $('#maian'), slips = $('#slips'), empty = $('#mx-empty'), sheet = $('#maixiang'), line = $('#pulse-line');
+  let SCRIPT = [], RQ = {}, base = 628, events = [], idx = 0, vclock = 0, paused = false, speaking = 0, count = 0, last = 0;
+  const strip = s => s.replace(/\[\[(.+?)\|.+?\]\]/g, '$1');
+  const marked = s => s.replace(/\[\[(.+?)\|(.+?)\]\]/g, '<span class="mark-req">$1<sup>$2</sup></span>');
+  const pad = n => String(n).padStart(2, '0');
+  const elapsed = () => base + Math.floor(vclock / 1000 * 2.8);
+  function updateTimer() {
+    const s = elapsed();
+    $('#timer').textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s % 3600 / 60))}:${pad(s % 60)}`;
+  }
+  function follow(el) {
+    if (!vCase.classList.contains('on')) return;
+    const limit = innerHeight - (innerWidth <= 820 ? 130 : 40);
+    const r = el.getBoundingClientRect();
+    if (r.bottom > limit) window.scrollBy({ top: r.bottom - limit, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  function partial(i) {
+    const u = SCRIPT[i], plain = strip(u.text);
+    const el = document.createElement('div');
+    el.className = 'u partial';
+    el.id = 'u' + i;
+    el.innerHTML = `<span class="t">${u.t}</span><span class="who pending">辨声中</span><p class="say">${plain.slice(0, Math.ceil(plain.length * 0.55))}…</p>`;
+    maian.appendChild(el);
+    speaking++;
+    follow(el);
+  }
+  function final(i) {
+    const el = $('#u' + i);
+    el.classList.remove('partial');
+    el.querySelector('.say').innerHTML = marked(SCRIPT[i].text);
+    speaking = Math.max(0, speaking - 1);
+  }
+  function resolve(i) {
+    const el = $('#u' + i), p = PEOPLE[SCRIPT[i].who], who = el.querySelector('.who');
+    who.classList.remove('pending');
+    if (p.seal) { el.classList.add('leader'); who.innerHTML = `<span class="seal">${p.seal}</span>${p.name}`; }
+    else who.textContent = p.name;
+  }
+  function slipMeta(q) {
+    if (S.mode === 'revisit') return `<span class="tag">${q.type}</span><span>位置：${q.where}</span><button class="src" data-src="${q.src}">原话 ${q.src}</button>`;
+    const due = q.unsure ? `<em class="ask">${q.unsure}，待确认</em>` : `<span>时限：${q.due}</span>`;
+    return `<span class="tag">${q.type}</span><span>责任：${q.owner}</span>${due}<button class="src" data-src="${q.src}">原话 ${q.src}</button>`;
+  }
+  function updateCount() {
+    $('#mx-count').textContent = count ? `共 ${count} 条` : '尚无';
+    $('#mx-n').textContent = count;
+  }
+  function addSlip(id) {
+    const q = RQ[id];
+    empty.hidden = true;
+    const d = document.createElement('div');
+    d.className = 'slip' + (q.unsure ? ' unsure' : '') + (reduce ? '' : ' new');
+    d.id = 'slip-' + id;
+    d.innerHTML = `<p><span class="no">${q.no}</span><span class="txt">${q.text}</span></p><div class="meta">${slipMeta(q)}</div>`;
+    slips.appendChild(d);
+    count++;
+    updateCount();
+  }
+  function updSlip(id) {
+    const q = RQ[id], d = $('#slip-' + id);
+    if (!d) return;
+    d.querySelector('.txt').textContent = q.upd.text;
+    d.querySelector('p').insertAdjacentHTML('beforeend', `<span class="upd">${q.upd.by}</span>`);
+    if (!reduce) { d.classList.remove('new'); void d.offsetWidth; d.classList.add('new'); }
+  }
+  function build() {
+    events = [];
+    SCRIPT.forEach((u, i) => {
+      events.push({ at: u.at, fn: () => partial(i) }, { at: u.at + 1500, fn: () => final(i) }, { at: u.at + 2100, fn: () => resolve(i) });
+      (u.reqs || []).forEach((r, k) => events.push({ at: u.at + 3600 + k * 600, fn: () => addSlip(r) }));
+      if (u.upd) events.push({ at: u.at + 3600, fn: () => updSlip(u.upd) });
+    });
+    events.sort((a, b) => a.at - b.at);
+  }
+  function setPaused(p) {
+    paused = p;
+    $('#btn-pause').textContent = p ? '继续' : '暂停';
+    $('#rec-text').textContent = p ? '已暂停' : '把脉中';
+    $('#rec').classList.toggle('off', p);
+  }
+  function flushSim() {
+    while (idx < events.length) events[idx++].fn();
+    if (events.length) vclock = Math.max(vclock, events[events.length - 1].at);
+    speaking = 0;
+  }
+  function resetSim() {
+    maian.innerHTML = '';
+    slips.querySelectorAll('.slip').forEach(n => n.remove());
+    empty.hidden = false;
+    count = 0; updateCount();
+    idx = 0; vclock = 0; speaking = 0; S.skipped = false;
+    $('#btn-mark').disabled = $('#btn-pause').disabled = false;
+    setPaused(false);
+    build();
+    if (reduce) flushSim();
+    updateTimer();
+  }
+  function finishPulse() {
+    if (S.skipped) return;
+    flushSim(); updateTimer(); setPaused(true);
+    $('#rec-text').textContent = '把脉完成';
+    $('#btn-mark').disabled = $('#btn-pause').disabled = true;
+  }
+  function skipPulse() {
+    maian.innerHTML = '';
+    slips.querySelectorAll('.slip').forEach(n => n.remove());
+    empty.hidden = false;
+    idx = events.length; speaking = 0; count = 0; updateCount();
+    setPaused(true);
+    $('#rec-text').textContent = '未录音';
+    $('#btn-mark').disabled = $('#btn-pause').disabled = true;
+    S.skipped = true;
+    goStep('rx');
+  }
+
+  // 脉搏线：录音音量示意
+  const N = 150, pts = new Array(N).fill(0);
+  let lp = 0, prev = 0;
+  function renderPulse() { line.setAttribute('points', pts.map((y, i) => `${(i * 1000 / (N - 1)).toFixed(1)},${(22 + y).toFixed(1)}`).join(' ')); }
+  function stepPulse(now, running) {
+    if (now - lp < 55) return;
+    lp = now;
+    const amp = running ? (speaking > 0 ? 15 : 2) : 0;
+    prev = prev * 0.45 + (Math.random() * 2 - 1) * amp * 0.55;
+    pts.shift(); pts.push(prev);
+    renderPulse();
+  }
+  function drawStatic() { for (let i = 0; i < N; i++) pts[i] = Math.sin(i / 3) * 4 * Math.sin(i / 25); renderPulse(); }
+  function loop(now) {
+    const dt = Math.min(now - last, 250);
+    last = now;
+    const running = !paused && S.active && S.step === 'pulse' && vCase.classList.contains('on');
+    if (running) {
+      vclock += dt;
+      while (idx < events.length && events[idx].at <= vclock) events[idx++].fn();
+      updateTimer();
+    }
+    stepPulse(now, running);
+    requestAnimationFrame(loop);
+  }
+
+  /* ========== 诊程 ========== */
+  function startFlow(mode) {
+    const rv = mode === 'revisit';
+    Object.assign(S, { mode, active: true, step: 'pulse', reached: 0, signed: false, skipped: false, cure: rv ? 'changes' : 'outline', accepted: [true, true, true] });
+    $('#case-round').textContent = rv ? '二诊' : '初诊';
+    $('#base-bar').hidden = !rv;
+    $('#base-name').textContent = `${DOC}第1版`;
+    $('#p-meta').innerHTML = `<span>2026年10月29日</span><span>${rv ? '王总办公室' : '第三会议室'}</span><span>已载入声纹：王建国、李明</span>`;
+    $('#mx-sub').textContent = rv ? '把脉时实时提取的修改意见，开方时对照底方逐条落实。' : '把脉时实时提取的领导要求。把脉完成后，以整场复核后的脉案为准。';
+    empty.textContent = rv ? '领导提出修改意见后，会出现在这里。' : '领导提出要求后，会出现在这里。';
+    SCRIPT = SCRIPTS[mode]; RQ = REQS[mode]; base = rv ? 188 : 628;
+    resetSim();
+    show('case');
+    goStep('pulse');
+  }
+  function goStep(st) {
+    S.step = st;
+    S.reached = Math.max(S.reached, STEPS.indexOf(st));
+    $$('.step').forEach(el => el.classList.toggle('on', el.id === 's-' + st));
+    if (st === 'rx') renderRx();
+    if (st === 'cure') renderCure();
+    if (st === 'done') renderTrophy($('#done'), caseA(), true);
+    renderStepper();
+    closeSheet();
+    window.scrollTo(0, 0);
+  }
+  function renderStepper() {
+    const cur = STEPS.indexOf(S.step);
+    $$('#stepper li').forEach((li, i) => {
+      const st = STEPS[i];
+      const fin = i < S.reached || (st === 'rx' && S.signed) || (st === 'cure' && S.cure === 'ready') || (st === 'done' && !S.active && S.reached === 3);
+      li.classList.toggle('cur', i === cur);
+      li.classList.toggle('done', fin && i !== cur);
+      const b = li.querySelector('button');
+      b.disabled = i > S.reached;
+      b.querySelector('small').textContent = STEP_WORD[st][fin ? 1 : 0];
+      if (i === cur) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+    });
+  }
+
+  function renderRx() {
+    const rv = S.mode === 'revisit';
+    const items = Object.values(RQ).map(q => {
+      const text = q.upd ? q.upd.text : q.text;
+      return `<li class="${q.unsure ? 'unsure' : ''}"><input type="checkbox" ${q.unsure ? '' : 'checked'} aria-label="将${rv ? '意见' : '要求'}${q.no}写入本方"><span class="no">${q.no}</span><div><p>${text}</p><div class="meta">${slipMeta(q)}${q.upd ? `<span class="upd">${q.upd.by}</span>` : ''}</div></div></li>`;
+    }).join('');
+    const maiAn = S.skipped ? '未录音，意见手动填写' : `${rv ? 6 : 47} 分钟，已复核`;
+    const baseBlock = rv ? `<h2>底方<small>上次交差的产物，本次在它的基础上修改</small></h2><div class="file"><span class="fbadge">文</span><span class="fmeta"><b>${DOC}第1版.docx</b><span>Word　10月29日初诊交差　共 9 页</span></span><button class="link" data-act="demo-only" data-msg="${FILE_MSG}">预览</button></div>` : '';
+    const cureBlock = rv
+      ? '<div class="choose"><span class="lbl">疗法</span><span class="fixed-cure">沿用底方：Word 工作方案，出第2版并标出修订痕迹</span></div>'
+      : '<div class="choose" role="group" aria-labelledby="lbl-cure"><span class="lbl" id="lbl-cure">疗法</span><label class="opt"><input type="radio" name="out" checked>Word 工作方案</label><label class="opt"><input type="radio" name="out">PPT 汇报材料</label><label class="opt">执行<select><option>内置，单位公文模板</option><option>药房插件：Dify 工作流</option></select></label></div>';
+    const signer = `<div class="signer"><span class="stamp${S.signed ? ' on' : ''}" aria-hidden="true">张伟</span><span>签方人</span><b>张伟</b><span>2026年10月29日</span></div>`;
+    const signBtn = S.signed ? '<button class="btn primary" data-act="to-cure">开始治疗</button>' : '<button class="seal-btn" data-act="sign" aria-label="签方，确认这张处方">签方</button>';
+    $('#rx').innerHTML = `
+      <header class="rx-top"><h1>处方</h1><dl class="rx-info"><dt>病例</dt><dd>三季度安全生产专题会</dd><dt>诊次</dt><dd>${rv ? '二诊' : '初诊'}</dd><dt>领导</dt><dd>王建国、李明</dd><dt>脉案</dt><dd>${maiAn}</dd></dl></header>
+      ${baseBlock}
+      <h2>${rv ? '复诊所见' : '脉象所见'}<small>勾选的${rv ? '意见' : '要求'}写入本方</small></h2>
+      <ol>${items}</ol>
+      <h2>医嘱<small>据此生成文档的提示词，可直接修改</small></h2>
+      <textarea class="yizhu" aria-label="医嘱，生成文档的提示词">${PROMPTS[S.mode]}</textarea>
+      <footer class="rx-foot">${cureBlock}<div class="sign">${signer}${signBtn}</div></footer>
+      <p class="rx-status" role="status">${S.signed ? '已签方，可以开始治疗。' : ''}</p>`;
+  }
+  function sign() {
+    S.signed = true;
+    $('#rx .stamp').classList.add('on');
+    const btn = $('#rx [data-act="sign"]');
+    btn.insertAdjacentHTML('afterend', '<button class="btn primary" data-act="to-cure">开始治疗</button>');
+    btn.remove();
+    $('#rx .rx-status').textContent = '已签方，可以开始治疗。';
+    $('#rx [data-act="to-cure"]').focus();
+    renderStepper();
+  }
+
+  function renderCure() {
+    const rv = S.mode === 'revisit';
+    let html;
+    if (S.cure === 'outline') {
+      html = `<h2>先定大纲</h2><p class="hint">确认大纲后再出全文，免得整篇返工。</p><ol class="outline">${OUTLINE.map(([t, s]) => `<li><b>${t}</b><span>${s}</span></li>`).join('')}</ol><div class="actions"><button class="btn primary" data-act="boil">确认大纲，开始治疗</button><button class="btn ghost" data-stepgo="rx">回去改方</button></div>`;
+    } else if (S.cure === 'changes') {
+      html = `<h2>修订清单</h2><p class="hint">对照底方逐条确认，只改你同意的地方。</p>${CHANGES.map((c, i) => `<div class="chg${S.accepted[i] ? '' : ' off'}"><div class="chg-h"><b>${c.where}</b><span>依据${c.basis}</span></div>${c.old ? `<del>${c.old}</del>` : ''}<ins>${c.neu}</ins><div class="seg" role="group" aria-label="是否采纳"><button data-act="accept" data-i="${i}" data-v="1" aria-pressed="${S.accepted[i]}">采纳</button><button data-act="accept" data-i="${i}" data-v="0" aria-pressed="${!S.accepted[i]}">不采纳</button></div></div>`).join('')}<div class="actions"><button class="btn primary" data-act="boil" ${S.accepted.some(Boolean) ? '' : 'disabled'}>按采纳的修订出第2版</button></div>`;
+    } else if (S.cure === 'boiling') {
+      html = `<div class="boil">${IL.stove}<p class="boil-t">煎药中，请稍候</p><p id="boil-step"></p></div>`;
+    } else {
+      const n = S.accepted.filter(Boolean).length;
+      const name = rv ? `${DOC}第2版（带修订痕迹）.docx` : `${DOC}第1版.docx`;
+      const meta = rv ? `Word　采纳 ${n} 处修订　刚刚生成` : 'Word　9 页　刚刚生成';
+      const extra = rv
+        ? `<button class="btn ghost" data-act="demo-only" data-msg="${FILE_MSG}">与第1版对比</button>`
+        : '<button class="btn ghost" data-act="demo-only" data-msg="正式版可以在同一病例下再开一方，出 PPT 汇报材料。">再开一方：出 PPT 汇报材料</button>';
+      html = `<div class="ready">${IL.pack}<h2>药已备好</h2></div><div class="file"><span class="fbadge">文</span><span class="fmeta"><b>${name}</b><span>${meta}</span></span><button class="link" data-act="demo-only" data-msg="${FILE_MSG}">预览</button><button class="link" data-act="demo-only" data-msg="${FILE_MSG}">下载</button></div><div class="actions"><button class="btn primary" data-act="deliver">交差</button>${extra}</div><p class="note" data-note></p>`;
+    }
+    $('#cure').innerHTML = `<div class="sheet">${html}</div>`;
+  }
+  function boil() {
+    S.cure = 'boiling';
+    renderCure(); renderStepper();
+    const steps = S.mode === 'revisit'
+      ? ['正在修订 责任分工', '正在修订 时间安排', '正在补写 风险提示'].filter((_, i) => S.accepted[i])
+      : ['正在拟写 总体要求', '正在拟写 整改任务', '正在拟写 责任分工', '正在拟写 时间安排', '正在拟写 保障措施'];
+    let k = 0;
+    const tick = () => {
+      if (S.cure !== 'boiling') return;
+      if (k < steps.length) {
+        const el = $('#boil-step');
+        if (el) el.textContent = steps[k];
+        k++;
+        setTimeout(tick, reduce ? 0 : 700);
+      } else {
+        S.cure = 'ready';
+        if (S.step === 'cure') renderCure();
+        renderStepper();
+      }
+    };
+    tick();
+  }
+  function deliver() {
+    S.active = false;
+    if (S.mode === 'first') { S.aRound = 1; S.phrase = 0; }
+    else { S.aRound = 2; S.phrase = 1; S.taken = S.accepted.filter(Boolean).length; S.revSkipped = S.skipped; }
+    goStep('done');
+  }
+
+  /* ========== 交差：锦旗与成果 ========== */
+  function renderTrophy(el, c, inFlow) {
+    const files = c.files.map(n => {
+      const ppt = n.endsWith('.pptx');
+      return `<div class="file"><span class="fbadge${ppt ? ' ppt' : ''}">${ppt ? '演' : '文'}</span><span class="fmeta"><b>${n}</b><span>${ppt ? 'PPT' : 'Word'}</span></span><button class="link" data-act="demo-only" data-msg="${FILE_MSG}">下载</button></div>`;
+    }).join('');
+    let again = '<button class="btn" data-act="demo-only">领导又有意见？发起复诊</button>';
+    if (c.id === 'a') again = S.active ? '' : '<button class="btn" data-act="revisit-a">领导又有意见？发起复诊</button>';
+    el.innerHTML = `<div class="trophy">
+      <div class="trophy-flag">${flagHTML(c)}${c.id === 'a' ? '<button class="btn ghost" data-act="phrase">换一句</button>' : ''}</div>
+      <div class="trophy-info">
+        <h2>把脉成功，交差了</h2>
+        <p class="lead">${c.title}，${c.round}交差。${inFlow ? '这面锦旗已挂上锦旗墙。' : ''}</p>
+        <h3>成果</h3>${files}
+        <h3>诊疗经过</h3>
+        <ol class="timeline">${c.timeline.map(([r, d, t]) => `<li><b>${r}</b><span>${d}　${t}</span></li>`).join('')}</ol>
+        <div class="actions"><button class="btn primary" data-act="demo-only" data-msg="${FILE_MSG}">下载全部成果</button>${again}<button class="btn ghost" data-go="${inFlow ? 'home' : 'wall'}">${inFlow ? '回医馆' : '回锦旗墙'}</button></div>
+        <p class="note" data-note></p>
+      </div>
+    </div>`;
+  }
+  function cyclePhrase() {
+    S.phrase = (S.phrase + 1) % PHRASES.length;
+    if (vCase.classList.contains('on')) renderTrophy($('#done'), caseA(), true);
+    else renderTrophy($('#trophy-view'), caseA(), false);
+  }
+
+  /* ========== 交互 ========== */
+  function closeSheet() {
+    sheet.classList.remove('open');
+    $('#mx-toggle').setAttribute('aria-expanded', 'false');
+    $('#mx-state').textContent = '展开';
+  }
+  function note(btn, msg) {
+    const box = btn.closest('.sheet, .trophy-info, .page, .rx');
+    const el = box && box.querySelector('[data-note], .rx-status');
+    if (el) el.textContent = msg;
+  }
+  function goSrc(t) {
+    goStep('pulse');
+    const row = [...maian.querySelectorAll('.u:not(.note)')].find(r => r.querySelector('.t').textContent === t);
+    if (!row) return;
+    row.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+    row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target;
+    let el;
+    if ((el = t.closest('[data-go]'))) return show(el.dataset.go);
+    if ((el = t.closest('[data-stepgo]'))) return goStep(el.dataset.stepgo);
+    if ((el = t.closest('[data-trophy]'))) { renderTrophy($('#trophy-view'), getCase(el.dataset.trophy), false); return show('trophy'); }
+    if ((el = t.closest('[data-src]'))) return goSrc(el.dataset.src);
+    if (!(el = t.closest('[data-act]'))) return;
+    switch (el.dataset.act) {
+      case 'start': startFlow('first'); break;
+      case 'revisit-a': startFlow('revisit'); break;
+      case 'quick-revisit': S.aRound = Math.max(S.aRound, 1); startFlow('revisit'); break;
+      case 'pulse-done': finishPulse(); goStep('rx'); break;
+      case 'skip-pulse': skipPulse(); break;
+      case 'sign': sign(); break;
+      case 'to-cure': goStep('cure'); break;
+      case 'boil': boil(); break;
+      case 'accept': S.accepted[+el.dataset.i] = el.dataset.v === '1'; renderCure(); break;
+      case 'deliver': deliver(); break;
+      case 'phrase': cyclePhrase(); break;
+      case 'demo-only': note(el, el.dataset.msg || DEMO_MSG); break;
+    }
+  });
+  $('#btn-pause').addEventListener('click', () => setPaused(!paused));
+  $('#btn-replay').addEventListener('click', () => { if (S.active) resetSim(); });
+  $('#btn-mark').addEventListener('click', () => {
+    const s = elapsed();
+    const n = document.createElement('div');
+    n.className = 'u note';
+    n.innerHTML = `<span class="t">${pad(Math.floor(s / 60))}:${pad(s % 60)}</span><span class="who">要紧</span><p class="say">已在此处打点，开方时优先参考这一段。</p>`;
+    maian.appendChild(n);
+    follow(n);
+  });
+  $('#mx-toggle').addEventListener('click', () => {
+    const open = sheet.classList.toggle('open');
+    $('#mx-toggle').setAttribute('aria-expanded', String(open));
+    $('#mx-state').textContent = open ? '收起' : '展开';
+  });
+
+  /* ========== 启动 ========== */
+  $('#door-flag').outerHTML = flagHTML({ phrase: '交差圆满', from: '王建国敬赠', month: '二〇二六年十月' });
+  renderHome();
+  if (reduce) drawStatic();
+  else { last = performance.now(); requestAnimationFrame(loop); }
+})();
+</script>
+</body>
+</html>
