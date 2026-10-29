@@ -6,6 +6,7 @@
 import re
 import subprocess
 import sys
+import textwrap
 from pathlib import Path
 
 import vtracer
@@ -81,6 +82,45 @@ def inside(bb, box):
     return bb[0] >= box[0] and bb[1] >= box[1] and bb[2] <= box[2] and bb[3] <= box[3]
 
 
+VUE_HEAD = """<!--
+  HeroSignboard：首页招牌（牌匾“咸鱼把脉了”、标语、插画），规格见 hero-a/README.md。
+  由 hero-a/tools/build.py 从 hero.svg 和 index.html 生成，不要手改；改插画或版式后重新运行 build.py。
+
+  <HeroSignboard />
+
+  依赖：全局已加载霞鹜文楷；色值读 --paper --sheet --indigo --ink --ink-2 --cinnabar --skin --hair --gray --mount 和 --kai，
+  未定义时用设计稿的值。样式不加 scoped：选择器都带 hero- 前缀，只作用于本组件，也不会被全站的 .plaque 等规则影响。
+-->
+"""
+
+
+def css_rules(css):
+    """把压缩成一行的 CSS 按顶层规则拆成一行一条"""
+    out, depth, start = [], 0, 0
+    for i, ch in enumerate(css):
+        if ch == '{':
+            depth += 1
+        elif ch == '}':
+            depth -= 1
+            if depth == 0:
+                out.append(css[start:i + 1].strip())
+                start = i + 1
+    return '\n'.join(out)
+
+
+def write_vue(art, html):
+    """Vue 模板里的 <style> 会被编译器丢掉，所以把插画的样式挪进组件的 <style> 块"""
+    m = re.search(r'<style>(.*?)</style>', art, re.S)
+    art_css, art = m.group(1), art[:m.start()] + art[m.end():]
+    header = re.search(r'<header class="hero-signboard">.*?</header>', html, re.S).group(0)
+    header = re.sub(r'<!-- hero\.svg:start -->.*?<!-- hero\.svg:end -->', lambda _: art, header, flags=re.S)
+    layout = re.search(r'/\* hero-signboard:start[^\n]*\n(.*?)/\* hero-signboard:end \*/', html, re.S).group(1)
+    vue = (VUE_HEAD + '<template>\n' + textwrap.indent(header, '  ') + '\n</template>\n\n<style>\n'
+           + '/* ---------- 插画：配色和动效（来自 hero.svg） ---------- */\n' + css_rules(art_css) + '\n\n'
+           + layout.strip() + '\n</style>\n')
+    (ROOT / 'HeroSignboard.vue').write_text(vue)
+
+
 def main():
     labels = WORK / 'labels.png'
     traced = WORK / 'traced.svg'
@@ -146,13 +186,14 @@ def main():
     out = ROOT / 'hero.svg'
     subprocess.run(['npx', '-y', SVGO, '--config', str(HERE / 'svgo.config.mjs'), '-i', str(pre), '-o', str(out)], check=True)
 
-    # 同步进 index.html（两处标记之间）
+    # 同步进 index.html（两处标记之间），再由 index.html + hero.svg 生成 Vue 组件
     html_path = ROOT / 'index.html'
     if html_path.exists():
         html = html_path.read_text()
         art = out.read_text().strip()
         html = re.sub(r'(<!-- hero\.svg:start -->).*?(<!-- hero\.svg:end -->)', lambda m: m.group(1) + art + m.group(2), html, flags=re.S)
         html_path.write_text(html)
+        write_vue(art, html)
 
     final = out.read_text()
     used = sorted(set(re.findall(r'class="f-(\w+)', final)))
