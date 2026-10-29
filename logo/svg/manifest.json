@@ -1,0 +1,115 @@
+{
+  "font": {
+    "family": "LXGW WenKai",
+    "style": "Bold",
+    "version": "Version 1.250;January 17, 2023",
+    "upem": 1000,
+    "typo_ascender": 880,
+    "typo_descender": -120
+  },
+  "weight": "bold",
+  "candidates": [
+    {
+      "key": "A1",
+      "direction": "A 三指按脉",
+      "name": "略斜三指",
+      "margin": 6.45,
+      "files": {
+        "seal-color": "svg/A1/A1-seal-color.svg",
+        "h-color": "svg/A1/A1-h-color.svg",
+        "v-color": "svg/A1/A1-v-color.svg",
+        "seal-mono": "svg/A1/A1-seal-mono.svg",
+        "h-mono": "svg/A1/A1-h-mono.svg",
+        "v-mono": "svg/A1/A1-v-mono.svg",
+        "seal-reverse": "svg/A1/A1-seal-reverse.svg",
+        "h-reverse": "svg/A1/A1-h-reverse.svg",
+        "v-reverse": "svg/A1/A1-v-reverse.svg"
+      }
+    },
+    {
+      "key": "A2",
+      "direction": "A 三指按脉",
+      "name": "斜入三指",
+      "margin": 6.44,
+      "files": {
+        "seal-color": "svg/A2/A2-seal-color.svg",
+        "h-color": "svg/A2/A2-h-color.svg",
+        "v-color": "svg/A2/A2-v-color.svg",
+        "seal-mono": "svg/A2/A2-seal-mono.svg",
+        "h-mono": "svg/A2/A2-h-mono.svg",
+        "v-mono": "svg/A2/A2-v-mono.svg",
+        "seal-reverse": "svg/A2/A2-seal-reverse.svg",
+        "h-reverse": "svg/A2/A2-h-reverse.svg",
+        "v-reverse": "svg/A2/A2-v-reverse.svg"
+      }
+    },
+    {
+      "key": "B1",
+      "direction": "B 寸关尺",
+      "name": "指腹压线",
+      "margin": 6.45,
+      "files": {
+        "seal-color": "svg/B1/B1-seal-color.svg",
+        "h-color": "svg/B1/B1-h-color.svg",
+        "v-color": "svg/B1/B1-v-color.svg",
+        "seal-mono": "svg/B1/B1-seal-mono.svg",
+        "h-mono": "svg/B1/B1-h-mono.svg",
+        "v-mono": "svg/B1/B1-v-mono.svg",
+        "seal-reverse": "svg/B1/B1-seal-reverse.svg",
+        "h-reverse": "svg/B1/B1-h-reverse.svg",
+        "v-reverse": "svg/B1/B1-v-reverse.svg"
+      }
+    },
+    {
+      "key": "B2",
+      "direction": "B 寸关尺",
+      "name": "指腹留红",
+      "margin": 6.51,
+      "files": {
+        "seal-color": "svg/B2/B2-seal-color.svg",
+        "h-color": "svg/B2/B2-h-color.svg",
+        "v-color": "svg/B2/B2-v-color.svg",
+        "seal-mono": "svg/B2/B2-seal-mono.svg",
+        "h-mono": "svg/B2/B2-h-mono.svg",
+        "v-mono": "svg/B2/B2-v-mono.svg",
+        "seal-reverse": "svg/B2/B2-seal-reverse.svg",
+        "h-reverse": "svg/B2/B2-h-reverse.svg",
+        "v-reverse": "svg/B2/B2-v-reverse.svg"
+      }
+    },
+    {
+      "key": "C1",
+      "direction": "C 一笔搭脉",
+      "name": "点按指尖",
+      "margin": 6.73,
+      "files": {
+        "seal-color": "svg/C1/C1-seal-color.svg",
+        "h-color": "svg/C1/C1-h-color.svg",
+        "v-color": "svg/C1/C1-v-color.svg",
+        "seal-mono": "svg/C1/C1-seal-mono.svg",
+        "h-mono": "svg/C1/C1-h-mono.svg",
+        "v-mono": "svg/C1/C1-v-mono.svg",
+        "seal-reverse": "svg/C1/C1-seal-reverse.svg",
+        "h-reverse": "svg/C1/C1-h-reverse.svg",
+        "v-reverse": "svg/C1/C1-v-reverse.svg"
+      }
+    },
+    {
+      "key": "C2",
+      "direction": "C 一笔搭脉",
+      "name": "斜按指尖",
+      "margin": 6.7,
+      "files": {
+        "seal-color": "svg/C2/C2-seal-color.svg",
+        "h-color": "svg/C2/C2-h-color.svg",
+        "v-color": "svg/C2/C2-v-color.svg",
+        "seal-mono": "svg/C2/C2-seal-mono.svg",
+        "h-mono": "svg/C2/C2-h-mono.svg",
+        "v-mono": "svg/C2/C2-v-mono.svg",
+        "seal-reverse": "svg/C2/C2-seal-reverse.svg",
+        "h-reverse": "svg/C2/C2-h-reverse.svg",
+        "v-reverse": "svg/C2/C2-v-reverse.svg"
+      }
+    }
+  ]
+}

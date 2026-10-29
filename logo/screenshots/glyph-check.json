@@ -1,0 +1,12 @@
+{
+  "weight": "bold",
+  "em": 200,
+  "loadedFonts": [
+    "LXGW WenKai 700"
+  ],
+  "pixels": 200000,
+  "inkPixels": 53597,
+  "maxDiff": 68,
+  "meanDiff": 0.17607,
+  "pixelsOver8": 658
+}

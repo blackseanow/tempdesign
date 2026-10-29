@@ -1,0 +1,12 @@
+{
+  "name": "xianyu-bamai-logo",
+  "private": true,
+  "description": "咸鱼把脉了 Logo 候选稿：生成脚本依赖",
+  "scripts": {
+    "build": "python3 tools/build.py && node tools/render.cjs && python3 tools/explore.py",
+    "verify": "node tools/verify-glyphs.cjs"
+  },
+  "devDependencies": {
+    "lxgw-wenkai-webfont": "1.7.0"
+  }
+}
