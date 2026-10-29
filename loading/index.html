@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>煎药中 加载动效</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont/style.css">
+<style>
+:root{
+  --paper:#ECEAE1;--sheet:#F8F7F2;--ink:#24231F;--ink-2:#4E4C45;--indigo:#1F3A4D;--cinnabar:#B5382A;
+  --ink-3:#6B685F;--line:#D6D2C4;--brass:#85682F;
+  --kai:"LXGW WenKai","KaiTi","STKaiti",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--kai);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+/* ===== 组件 LoadingBrew：开发时连同模板、脚本一起搬走 ===== */
+.brew{width:320px;max-width:100%;margin:0 auto}
+.brew-art{display:block;width:100%;height:auto;overflow:visible}
+.brew-sheet{fill:var(--sheet);stroke:var(--ink);stroke-width:1}
+.brew-line{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.brew-pen{fill:var(--ink)}
+.brew-seal{opacity:0;transform:rotate(-6deg) scale(1.3);transform-box:fill-box;transform-origin:center}
+.brew.is-done .brew-seal{opacity:1;transform:rotate(-6deg) scale(1);transition:opacity .2s ease-out,transform .2s ease-out}
+.brew-seal rect{fill:var(--cinnabar)}
+.brew-seal text{fill:var(--sheet);font-family:var(--kai);font-size:14.5px;text-anchor:middle;dominant-baseline:central}
+.brew-text{margin-top:14px;text-align:center}
+.brew-title,.brew-step{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .18s ease-out}
+.brew-title{height:30px;font-size:20px;line-height:30px;color:var(--ink)}
+.brew-step{height:22px;margin-top:2px;font-size:14px;line-height:22px;color:var(--ink-2)}
+.brew-step-t:not(:empty)+.brew-step-n:not(:empty){margin-left:1em}
+.brew-step-n{font-variant-numeric:tabular-nums}
+.brew .is-out{opacity:0;transition:opacity .14s ease-in}
+@media (prefers-reduced-motion:reduce){.brew *{transition:none!important}}
+
+/* ===== 原型页 ===== */
+.page{max-width:880px;margin:0 auto;padding:40px 24px 64px}
+h1,h2{margin:0;font-weight:400}
+h1{font-size:30px}
+h2{margin:40px 0 12px;padding-bottom:8px;font-size:21px;border-bottom:1px solid var(--ink)}
+.lead{margin:6px 0 24px;color:var(--ink-2);max-width:40em}
+.stage{display:grid;place-items:center;margin:0;padding:44px 16px 36px;border:1px solid var(--line)}
+.ctrl{display:grid;gap:14px;margin-top:18px}
+.ctrl-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.lbl{font-size:17px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--ink-3)}
+.seg button{padding:3px 12px;background:none;border:0;font-size:14px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--indigo);color:#F4F2EA}
+.seg button:disabled{opacity:.45}
+.opt{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-2)}
+.opt input{margin:0;accent-color:var(--indigo)}
+.btn{border:1px solid var(--ink-3);background:var(--sheet);padding:5px 16px;border-radius:2px;font-size:15px;line-height:1.6}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--indigo);border-color:var(--indigo);color:#F4F2EA}
+.btn.ghost{padding:4px 0;background:none;border:0;font-size:14px;color:var(--ink-2);text-decoration:underline;text-underline-offset:4px}
+.variants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.variants .stage{padding:36px 12px 18px}
+.variants figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;width:100%;max-width:320px;margin-top:22px;padding-top:10px;border-top:1px solid var(--line)}
+.variants figcaption b{font-weight:400;font-size:17px}
+.variants figcaption span{flex:1;font-size:13px;color:var(--ink-2)}
+.variants figcaption div{display:flex;gap:14px}
+.api{margin:0;padding:14px 16px;overflow-x:auto;background:var(--sheet);border:1px solid var(--line);font:13px/1.7 ui-monospace,"SFMono-Regular",Menlo,monospace;color:var(--ink-2)}
+@media (max-width:720px){
+  .page{padding:24px 16px 40px}
+  h1{font-size:26px}
+  .stage{padding:32px 0 26px}
+  .ctrl-row:first-child .lbl{width:100%}
+  .seg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%}
+  .seg button{padding:4px 0}
+  .variants{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>煎药中</h1>
+  <p class="lead">加载动效原型。一根脉搏线由起伏到平稳，写成一张素笺上的三行字；写完淡去，周而复始。完成时盖一枚朱砂印。</p>
+
+  <section class="stage" aria-label="组件演示">
+    <div id="brew-main"></div>
+  </section>
+
+  <section class="ctrl" aria-label="演示控制">
+    <div class="ctrl-row">
+      <span class="lbl" id="lbl-step">步骤</span>
+      <div class="seg" id="steps" role="group" aria-labelledby="lbl-step"></div>
+      <label class="opt"><input type="checkbox" id="show-n" checked>显示进度</label>
+    </div>
+    <div class="ctrl-row">
+      <button class="btn primary" id="btn-done">标记完成</button>
+      <button class="btn" id="btn-restart">重新开始</button>
+    </div>
+  </section>
+
+  <h2>文案变体</h2>
+  <div class="variants">
+    <figure class="stage">
+      <div id="brew-transcribe"></div>
+      <figcaption><b>转写</b><span>录音转写处理中</span><div><button class="btn ghost" data-v="transcribe" data-act="done">完成</button><button class="btn ghost" data-v="transcribe" data-act="restart">重来</button></div></figcaption>
+    </figure>
+    <figure class="stage">
+      <div id="brew-rx"></div>
+      <figcaption><b>开方</b><span>整理要求、拟写医嘱中</span><div><button class="btn ghost" data-v="rx" data-act="done">完成</button><button class="btn ghost" data-v="rx" data-act="restart">重来</button></div></figcaption>
+    </figure>
+  </div>
+
+  <h2>接口</h2>
+<pre class="api">// 挂载；opts 可省，字段见 README
+const brew = LoadingBrew.mount(el, opts)
+// 开始循环
+brew.start()
+// 第二行文案；后两个数可省，省略时不显示进度
+brew.setStep('正在拟写 责任分工', 3, 5)
+// 写完这一遍后停住、盖印；印落定后 resolve
+await brew.done()
+// 回到开始前，之后再 start()
+brew.reset()
+// 卸载时调用
+brew.destroy()</pre>
+</main>
+
+<!-- 组件模板：Vue 组件 LoadingBrew 的 template 照搬这一段 -->
+<template id="tpl-brew">
+  <div class="brew" aria-busy="false">
+    <svg class="brew-art" viewBox="0 0 320 108" aria-hidden="true" focusable="false">
+      <rect class="brew-sheet" x="168.5" y="12.5" width="136" height="84"/>
+      <g class="brew-ink">
+        <path class="brew-line" d="M16 34C20.5 34 23.5 26 28 26C35.4 26 41.1 45 48.5 45C57.3 45 64.2 25.5 73 25.5C82.7 25.5 90.3 38 100 38C112 38 122 34 134 34H288"/>
+        <path class="brew-line" d="M184 52H258"/>
+        <path class="brew-line" d="M184 70H232"/>
+        <circle class="brew-pen" cx="16" cy="34" r="0"/>
+      </g>
+      <g class="brew-seal">
+        <rect x="270" y="51" width="22" height="38"/>
+        <text x="281" y="61.5">已</text>
+        <text x="281" y="78.5">成</text>
+      </g>
+    </svg>
+    <div class="brew-text" role="status" aria-live="polite">
+      <p class="brew-title"></p>
+      <p class="brew-step"><span class="brew-step-t"></span><span class="brew-step-n"></span></p>
+    </div>
+  </div>
+</template>
+
+<script>
+/* ========== LoadingBrew：煎药中加载组件 ========== */
+const LoadingBrew = (() => {
+  // 时间轴（毫秒），一圈 2400，细节见 README
+  const CYCLE = 2400;
+  const STROKES = [[0, 1000], [1100, 1380], [1480, 1680]];  // 脉搏线连第一行、第二行、第三行
+  const WRITTEN = 1680;                                     // 字行写完，停顿到 FADE[0]
+  const FADE = [2000, 2340];                                // 淡出，之后留白到 CYCLE
+  const PEN_R = 3, PEN_EASE = 100;                          // 笔头半径；落笔、提笔各 100
+  const RECOVER = 320;                                      // 淡出中途完成时，淡回的最长时长
+  const SWAP_OUT = 140;                                     // 文案先淡出，再换字淡入
+  const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)');
+  const sine = x => (1 - Math.cos(Math.PI * x)) / 2;
+  const clamp = x => Math.min(1, Math.max(0, x));
+  const alphaAt = t => (t < FADE[0] ? 1 : 1 - sine(clamp((t - FADE[0]) / (FADE[1] - FADE[0]))));
+
+  // 文案淡出、换字、淡入；连续调用时只换成最后一次的文案
+  function fader(el, paint, key) {
+    let shown = null, next = null, timer = 0;
+    const apply = v => { paint(v); shown = key(v); };
+    return (v, instant) => {
+      next = v;
+      if (instant || reduceMQ.matches) {
+        clearTimeout(timer); timer = 0;
+        el.classList.remove('is-out');
+        apply(v);
+        return;
+      }
+      if (timer || key(v) === shown) return;
+      el.classList.add('is-out');
+      timer = setTimeout(() => { timer = 0; apply(next); el.classList.remove('is-out'); }, SWAP_OUT);
+    };
+  }
+
+  // host 本身是 .brew（例如 Vue 模板已渲染好）就直接接管，否则把模板放进 host
+  function mount(host, opts = {}) {
+    const o = { title: '煎药中，请稍候', doneTitle: '药已备好', doneStep: '', unit: '节', autostart: true };
+    Object.keys(opts).forEach(k => { if (opts[k] !== undefined) o[k] = opts[k]; });
+    if (!host.classList.contains('brew')) host.replaceChildren(document.getElementById('tpl-brew').content.cloneNode(true));
+    const root = host.classList.contains('brew') ? host : host.querySelector('.brew');
+    const ink = root.querySelector('.brew-ink'), pen = root.querySelector('.brew-pen');
+    const lines = [...root.querySelectorAll('.brew-line')].map(el => ({ el, len: el.getTotalLength() }));
+    const titleEl = root.querySelector('.brew-title'), stepEl = root.querySelector('.brew-step');
+    const setTitle = fader(titleEl, v => { titleEl.textContent = v; }, v => v);
+    const setLine = fader(stepEl, v => {
+      stepEl.firstElementChild.textContent = v.text;
+      stepEl.lastElementChild.textContent = v.n;
+    }, v => v.text + '\n' + v.n);
+    const NO_STEP = { text: '', n: '' };
+
+    let phase = 'idle', t = 0, last = 0, raf = 0, recover = null, waiters = [];
+
+    function paintLine(ln, q) {
+      const s = ln.el.style;
+      s.visibility = q > 0 ? 'visible' : 'hidden';
+      if (q >= 1) { s.strokeDasharray = 'none'; return; }
+      s.strokeDasharray = `${ln.len} ${ln.len + 4}`;
+      s.strokeDashoffset = ln.len * (1 - q);
+    }
+    // 画出第 time 毫秒的样子；alpha 不传时按时间轴取
+    function draw(time, alpha = alphaAt(time)) {
+      ink.style.opacity = alpha;
+      let tip = null, r = 0;
+      lines.forEach((ln, i) => {
+        const [s, e] = STROKES[i];
+        const q = sine(clamp((time - s) / (e - s)));
+        paintLine(ln, q);
+        if (time > s && time < e) {
+          tip = ln.el.getPointAtLength(ln.len * q);
+          r = PEN_R * Math.min(sine(clamp((time - s) / PEN_EASE)), sine(clamp((e - time) / PEN_EASE)));
+        }
+      });
+      if (tip) { pen.setAttribute('cx', tip.x.toFixed(2)); pen.setAttribute('cy', tip.y.toFixed(2)); }
+      pen.setAttribute('r', r.toFixed(2));
+    }
+    function tick() {
+      const now = performance.now();
+      const dt = Math.min(now - last, 64);
+      last = now;
+      if (phase === 'loop') {
+        t = (t + dt) % CYCLE;
+        draw(t);
+      } else if (recover) {
+        recover.k = Math.min(1, recover.k + dt / recover.dur);
+        draw(WRITTEN, recover.from + (1 - recover.from) * sine(recover.k));
+        if (recover.k >= 1) return stamp();
+      } else {
+        t = Math.min(t + dt, WRITTEN);
+        draw(t);
+        if (t >= WRITTEN) return stamp();
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    function run() {
+      cancelAnimationFrame(raf); raf = 0;
+      if (reduceMQ.matches) {
+        draw(WRITTEN);
+        if (phase === 'finishing') stamp();
+        return;
+      }
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+    function stamp() {
+      cancelAnimationFrame(raf); raf = 0;
+      phase = 'done'; t = WRITTEN; recover = null;
+      draw(WRITTEN);
+      root.classList.add('is-done');
+      root.setAttribute('aria-busy', 'false');
+      setTitle(o.doneTitle);
+      setLine({ text: o.doneStep, n: '' });
+      const list = waiters; waiters = [];
+      setTimeout(() => list.forEach(f => f()), reduceMQ.matches ? 0 : 200);
+    }
+    function onMotionPref() {
+      if (phase !== 'loop' && phase !== 'finishing') return;
+      if (!reduceMQ.matches && phase === 'loop') t = WRITTEN;  // 从静止的整幅画接着停顿、淡出
+      run();
+    }
+    reduceMQ.addEventListener('change', onMotionPref);
+
+    const api = {
+      start() {
+        if (phase === 'loop' || phase === 'finishing') return;
+        if (phase === 'done') api.reset();
+        phase = 'loop'; t = 0;
+        root.setAttribute('aria-busy', 'true');
+        draw(reduceMQ.matches ? WRITTEN : 0);
+        run();
+      },
+      setStep(text = '', current, total) {
+        if (phase === 'done') return;
+        setLine({ text, n: current && total ? `第 ${current}/${total} ${o.unit}` : '' });
+      },
+      done() {
+        return new Promise(resolve => {
+          if (phase === 'done') return resolve();
+          waiters.push(resolve);
+          if (phase === 'finishing') return;
+          if (phase === 'idle' || reduceMQ.matches || (t >= WRITTEN && t < FADE[0])) return stamp();
+          if (t >= FADE[0]) {
+            const from = alphaAt(t);
+            recover = { from, k: 0, dur: Math.max(120, RECOVER * (1 - from)) };
+          }
+          phase = 'finishing';
+        });
+      },
+      reset() {
+        cancelAnimationFrame(raf); raf = 0;
+        phase = 'idle'; t = 0; recover = null; waiters = [];
+        root.classList.remove('is-done');
+        root.setAttribute('aria-busy', 'false');
+        setTitle(o.title, true);
+        setLine(NO_STEP, true);
+        draw(0);
+      },
+      destroy() {
+        cancelAnimationFrame(raf); raf = 0;
+        reduceMQ.removeEventListener('change', onMotionPref);
+      }
+    };
+    api.reset();
+    if (o.autostart) api.start();
+    return api;
+  }
+
+  return { mount };
+})();
+
+/* ========== 原型页演示 ========== */
+(() => {
+  const $ = s => document.querySelector(s);
+  const SECTIONS = ['总体要求', '整改任务', '责任分工', '时间安排', '保障措施'];
+  const brew = {
+    main: LoadingBrew.mount($('#brew-main'), { doneStep: '可以下载' }),
+    transcribe: LoadingBrew.mount($('#brew-transcribe'), { title: '正在整理脉案…', doneTitle: '脉案已整理好', unit: '段' }),
+    rx: LoadingBrew.mount($('#brew-rx'), { title: '先生正在开方…', doneTitle: '方子已开好', unit: '步' })
+  };
+  const steps = $('#steps'), showN = $('#show-n');
+  let cur = 0;
+
+  steps.innerHTML = SECTIONS.map((s, i) => `<button data-i="${i}" aria-pressed="false">${s}</button>`).join('');
+  function pick(i) {
+    cur = i;
+    steps.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+    brew.main.setStep(`正在拟写 ${SECTIONS[i]}`, ...(showN.checked ? [i + 1, SECTIONS.length] : []));
+  }
+  function lock(on) { steps.querySelectorAll('button').forEach(b => { b.disabled = on; }); }
+  function sampleSteps() {
+    brew.transcribe.setStep('正在辨认发言人', 3, 7);
+    brew.rx.setStep('正在拟写 医嘱', 2, 3);
+  }
+
+  steps.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b) pick(+b.dataset.i);
+  });
+  showN.addEventListener('change', () => pick(cur));
+  $('#btn-done').addEventListener('click', () => { lock(true); brew.main.done(); });
+  $('#btn-restart').addEventListener('click', () => {
+    lock(false);
+    brew.main.reset();
+    brew.main.start();
+    pick(0);
+  });
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-v]');
+    if (!b) return;
+    const v = brew[b.dataset.v];
+    if (b.dataset.act === 'done') v.done();
+    else { v.reset(); v.start(); sampleSteps(); }
+  });
+
+  pick(0);
+  sampleSteps();
+  window.brewDemo = brew;  // 方便在控制台试接口
+})();
+</script>
+</body>
+</html>
