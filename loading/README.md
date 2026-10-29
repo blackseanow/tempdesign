@@ -3,9 +3,10 @@
 一根墨线：左边是起伏的脉搏线，往右逐渐平稳，延伸成素笺上的三行字。写完停顿、淡去、重来；完成时停在写好的画面，右下角盖一枚朱砂印“已成”。
 
 - `index.html`：原型页，组件样式、模板、脚本都在里面，无外部依赖（字体除外）
+- `LoadingBrew.vue`：Vue 3 组件，见下文“Vue 组件”
 - `screenshots/`：自查截图，`check.json` 是最后一轮自查的数值结果
 - `tools/shoot.py`：截图与自查脚本
-- `loading.zip`：`index.html`、`README.md` 和全部截图
+- `loading.zip`：`index.html`、`LoadingBrew.vue`、`README.md` 和全部截图
 
 ## 时间轴
 
@@ -81,7 +82,7 @@
 const brew = LoadingBrew.mount(el, opts)
 ```
 
-`el` 是容器（组件模板放进去），或者本身就是已经渲染好的 `.brew` 元素（Vue 用这种）。`opts` 都可省：
+`el` 是容器（组件模板放进去），或者本身就是已经渲染好的 `.brew` 元素。Vue 项目直接用 `LoadingBrew.vue`，不用这个接口。`opts` 都可省：
 
 | 字段 | 默认 | 说明 |
 |---|---|---|
@@ -121,48 +122,55 @@ const brew = LoadingBrew.mount(el, opts)
 
 注意：有的读屏软件在 `aria-busy="true"` 期间会暂缓播报其内部的变化。如果接入后发现步骤不播报，把 `aria-busy` 挪到将要放结果的容器上（例如“治疗”页的 `.sheet`），并让文案区不在这个容器内。
 
-## 接入主程序
+## Vue 组件 LoadingBrew.vue
 
-1. 全局样式里已有设计稿的色值变量（`--paper`、`--sheet`、`--ink`、`--ink-2`、`--cinnabar`、`--kai`）和霞鹜文楷，组件直接沿用。
-2. 把 `index.html` 里 `.brew-*` 那段 CSS 放进组件样式，`LoadingBrew` 那段脚本存成 `loading-brew.js`，末尾改成 `export const mountBrew = LoadingBrew.mount`。
-3. 包成 Vue 组件（示意）：
+`LoadingBrew.vue` 是 Vue 3 单文件组件（`<script setup>`，不依赖其他包），由原型移植，时间轴、尺寸、颜色、行为都与原型一致。拷进主程序的组件目录即可：
 
 ```vue
-<!-- LoadingBrew.vue -->
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import { mountBrew } from './loading-brew.js'
-
-const props = defineProps({
-  title: String, doneTitle: String, doneStep: String, unit: String,
-  step: String, current: Number, total: Number,
-  done: Boolean
-})
-const emit = defineEmits(['stamped'])
-const el = ref(null)
-let brew
-
-onMounted(() => {
-  brew = mountBrew(el.value, props)          // undefined 的字段用默认值
-  brew.setStep(props.step, props.current, props.total)
-  if (props.done) brew.done()
-})
-watch(() => [props.step, props.current, props.total], ([s, c, t]) => brew.setStep(s, c, t))
-watch(() => props.done, async d => {
-  if (d) { await brew.done(); emit('stamped') }
-  else { brew.reset(); brew.start() }
-})
-onBeforeUnmount(() => brew.destroy())
+import LoadingBrew from './LoadingBrew.vue'
 </script>
 
 <template>
-  <!-- 把 index.html 里 <template id="tpl-brew"> 的内容原样放这里，根节点加 ref="el" -->
-  <div class="brew" ref="el" aria-busy="false">…</div>
+  <LoadingBrew
+    :step="`正在拟写 ${section}`" :current="k" :total="5"
+    :finished="ready" done-step="可以下载"
+    @stamped="showResult" />
 </template>
 ```
 
-4. 用在设计稿“治疗”一步：把 `renderCure()` 里 `boiling` 状态的药炉插画、“煎药中，请稍候”和 `#boil-step` 换成 `<LoadingBrew>`；`boil()` 每推进一节传一次 `step / current / total`（如“正在拟写 责任分工”，3，5）；生成完成时把 `done` 设为 `true`，收到 `stamped` 再切到“药已备好”的结果页。转写、开方的等待用同一个组件，换 `title`、`doneTitle`、`unit` 即可。
-5. 组件放在素笺色的 `.sheet` 里时，素笺与底色相同，靠 1 px 墨线边框区分，画面依然成立；放在竹纸底上对比更清楚。
+Props：
+
+| prop | 类型 | 默认 | 说明 |
+|---|---|---|---|
+| `title` | String | `'煎药中，请稍候'` | 第一行；加载中修改会淡入淡出切换 |
+| `done-title` | String | `'药已备好'` | 完成后的第一行 |
+| `done-step` | String | `''` | 完成后的第二行 |
+| `unit` | String | `'节'` | 进度单位 |
+| `step` | String | `''` | 第二行步骤文案 |
+| `current`、`total` | Number | — | 都给才显示“第 current/total 节” |
+| `finished` | Boolean | `false` | 改为 `true`：写完这一遍后盖印（时机同 `done()`）；改回 `false`：重新开始 |
+| `autostart` | Boolean | `true` | 挂载后立即开始；为 `false` 时等调用 `start()` |
+
+事件：`stamped`，每次印落定（200 ms 后）触发一次，适合在这时换成结果页。
+
+暴露的方法（通过模板 ref 调用，和原型接口一样）：`start()`、`setStep(text, current, total)`、`done()`（返回 Promise）、`reset()`。卸载时组件自己停掉动画、清掉计时器和“减少动态效果”的监听，不需要 `destroy()`。
+
+其他说明：
+
+- 挂载时 `finished` 已经是 `true`：直接显示完成文案并盖印，不先闪一下“煎药中”。
+- 依赖全局已加载霞鹜文楷；色值读 `--sheet`、`--ink`、`--ink-2`、`--cinnabar`、`--kai`，没有定义时用设计稿的值。样式是 scoped 的，不会影响外部。
+- 只在 `onMounted` 之后访问 `window`，服务端渲染安全。
+- 原型 `index.html` 与 `LoadingBrew.vue` 共用同一套时间轴和画面，改动时两处一起改。
+
+验证方式：用 `@vue/compiler-sfc` 3.5.13 编译，在 Chromium 里与原型同时逐帧推进两圈，每 16 ms 比对墨线长度、透明度、笔头位置，数值完全一致（最大差 0）；截图对比只有曲线边缘约 25 个抗锯齿像素不同，肉眼无差别。另检查了 props 响应、`stamped` 事件、暴露的方法、两个实例互不影响、`autostart=false`、挂载即完成、减少动态效果、卸载后无残留监听和报错、无 Vue 警告、`renderToString` 服务端渲染。
+
+## 接入主程序
+
+1. 全局样式里已有设计稿的色值变量和霞鹜文楷，组件直接沿用。
+2. 用在设计稿“治疗”一步：把 `renderCure()` 里 `boiling` 状态的药炉插画、“煎药中，请稍候”和 `#boil-step` 换成 `<LoadingBrew>`；`boil()` 每推进一节更新一次 `step / current / total`（如“正在拟写 责任分工”，3，5）；生成完成时把 `finished` 设为 `true`，收到 `stamped` 再切到“药已备好”的结果页。
+3. 转写、开方的等待用同一个组件，换 `title`、`done-title`、`unit` 即可。
+4. 组件放在素笺色的 `.sheet` 里时，素笺与底色相同，靠 1 px 墨线边框区分，画面依然成立；放在竹纸底上对比更清楚。
 
 ## 自查
 

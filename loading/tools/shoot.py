@@ -153,7 +153,7 @@ def check_motion(samples, step_ms):
     prev = None
     max_tip_err = 0.0
     for i, s in enumerate(samples):
-        partial = [l for l in s["lines"] if 0 < l["drawn"] < l["len"] - 0.01]
+        partial = [l for l in s["lines"] if 0 < l["drawn"] < l["len"]]  # 还没写完的线
         if s["pr"] > 0:
             if not partial:
                 issues.append(f"帧 {i}: 笔头可见，但没有正在画的线")

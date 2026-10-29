@@ -18,7 +18,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 button:disabled{cursor:default}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
-/* ===== 组件 LoadingBrew：开发时连同模板、脚本一起搬走 ===== */
+/* ===== 组件 LoadingBrew（Vue 版见 LoadingBrew.vue，两处保持一致） ===== */
 .brew{width:320px;max-width:100%;margin:0 auto}
 .brew-art{display:block;width:100%;height:auto;overflow:visible}
 .brew-sheet{fill:var(--sheet);stroke:var(--ink);stroke-width:1}
@@ -124,7 +124,7 @@ brew.reset()
 brew.destroy()</pre>
 </main>
 
-<!-- 组件模板：Vue 组件 LoadingBrew 的 template 照搬这一段 -->
+<!-- 组件模板：与 LoadingBrew.vue 的 template 保持一致 -->
 <template id="tpl-brew">
   <div class="brew" aria-busy="false">
     <svg class="brew-art" viewBox="0 0 320 108" aria-hidden="true" focusable="false">
@@ -182,7 +182,7 @@ const LoadingBrew = (() => {
     };
   }
 
-  // host 本身是 .brew（例如 Vue 模板已渲染好）就直接接管，否则把模板放进 host
+  // host 本身是 .brew（页面已渲染好）就直接接管，否则把模板放进 host
   function mount(host, opts = {}) {
     const o = { title: '煎药中，请稍候', doneTitle: '药已备好', doneStep: '', unit: '节', autostart: true };
     Object.keys(opts).forEach(k => { if (opts[k] !== undefined) o[k] = opts[k]; });
