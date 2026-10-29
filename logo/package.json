@@ -1,0 +1,11 @@
+{
+  "name": "xianyu-bamai-logo-studies",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "python3 scripts/build.py",
+    "render": "node scripts/render.cjs",
+    "verify": "python3 scripts/verify.py"
+  },
+  "devDependencies": {"playwright": "1.62.1"}
+}

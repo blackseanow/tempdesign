@@ -1,0 +1,867 @@
+{
+  "scope": "Static standalone SVG, manifest, palette and exact glyph-outline audit; visual recognition requires contact-sheet review.",
+  "passed": true,
+  "expectedSvgCount": 60,
+  "primarySvgCount": 54,
+  "fixedOpticalSvgCount": 6,
+  "actualSvgCount": 60,
+  "checkedSvgCount": 60,
+  "outlinedWordmarkCount": 36,
+  "continuousCVariantCount": 24,
+  "adaptiveOpticalSvgCount": 6,
+  "issues": [],
+  "files": [
+    {
+      "file": "A1/horizontal-color.svg",
+      "candidate": "A1",
+      "layout": "horizontal",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/horizontal-ink.svg",
+      "candidate": "A1",
+      "layout": "horizontal",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/horizontal-reverse.svg",
+      "candidate": "A1",
+      "layout": "horizontal",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/mark-color.svg",
+      "candidate": "A1",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/mark-ink.svg",
+      "candidate": "A1",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/mark-reverse.svg",
+      "candidate": "A1",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/vertical-color.svg",
+      "candidate": "A1",
+      "layout": "vertical",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/vertical-ink.svg",
+      "candidate": "A1",
+      "layout": "vertical",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A1/vertical-reverse.svg",
+      "candidate": "A1",
+      "layout": "vertical",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/horizontal-color.svg",
+      "candidate": "A2",
+      "layout": "horizontal",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/horizontal-ink.svg",
+      "candidate": "A2",
+      "layout": "horizontal",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/horizontal-reverse.svg",
+      "candidate": "A2",
+      "layout": "horizontal",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/mark-color.svg",
+      "candidate": "A2",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/mark-ink.svg",
+      "candidate": "A2",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/mark-reverse.svg",
+      "candidate": "A2",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/vertical-color.svg",
+      "candidate": "A2",
+      "layout": "vertical",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/vertical-ink.svg",
+      "candidate": "A2",
+      "layout": "vertical",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "A2/vertical-reverse.svg",
+      "candidate": "A2",
+      "layout": "vertical",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 4,
+      "passed": true
+    },
+    {
+      "file": "B1/horizontal-color.svg",
+      "candidate": "B1",
+      "layout": "horizontal",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/horizontal-ink.svg",
+      "candidate": "B1",
+      "layout": "horizontal",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/horizontal-reverse.svg",
+      "candidate": "B1",
+      "layout": "horizontal",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/mark-color.svg",
+      "candidate": "B1",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/mark-ink.svg",
+      "candidate": "B1",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/mark-reverse.svg",
+      "candidate": "B1",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/vertical-color.svg",
+      "candidate": "B1",
+      "layout": "vertical",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/vertical-ink.svg",
+      "candidate": "B1",
+      "layout": "vertical",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B1/vertical-reverse.svg",
+      "candidate": "B1",
+      "layout": "vertical",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/horizontal-color.svg",
+      "candidate": "B2",
+      "layout": "horizontal",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/horizontal-ink.svg",
+      "candidate": "B2",
+      "layout": "horizontal",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/horizontal-reverse.svg",
+      "candidate": "B2",
+      "layout": "horizontal",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/mark-color.svg",
+      "candidate": "B2",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/mark-ink.svg",
+      "candidate": "B2",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/mark-reverse.svg",
+      "candidate": "B2",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/vertical-color.svg",
+      "candidate": "B2",
+      "layout": "vertical",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/vertical-ink.svg",
+      "candidate": "B2",
+      "layout": "vertical",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "B2/vertical-reverse.svg",
+      "candidate": "B2",
+      "layout": "vertical",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/horizontal-color.svg",
+      "candidate": "C1",
+      "layout": "horizontal",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/horizontal-ink.svg",
+      "candidate": "C1",
+      "layout": "horizontal",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/horizontal-reverse.svg",
+      "candidate": "C1",
+      "layout": "horizontal",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/mark-color.svg",
+      "candidate": "C1",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": "adaptive",
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 2,
+      "passed": true
+    },
+    {
+      "file": "C1/mark-ink.svg",
+      "candidate": "C1",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": "adaptive",
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 2,
+      "passed": true
+    },
+    {
+      "file": "C1/mark-micro-color.svg",
+      "candidate": "C1",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": "fixed",
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/mark-micro-ink.svg",
+      "candidate": "C1",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": "fixed",
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/mark-micro-reverse.svg",
+      "candidate": "C1",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": "fixed",
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/mark-reverse.svg",
+      "candidate": "C1",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": "adaptive",
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 2,
+      "passed": true
+    },
+    {
+      "file": "C1/vertical-color.svg",
+      "candidate": "C1",
+      "layout": "vertical",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/vertical-ink.svg",
+      "candidate": "C1",
+      "layout": "vertical",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C1/vertical-reverse.svg",
+      "candidate": "C1",
+      "layout": "vertical",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/horizontal-color.svg",
+      "candidate": "C2",
+      "layout": "horizontal",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/horizontal-ink.svg",
+      "candidate": "C2",
+      "layout": "horizontal",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/horizontal-reverse.svg",
+      "candidate": "C2",
+      "layout": "horizontal",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/mark-color.svg",
+      "candidate": "C2",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": "adaptive",
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 2,
+      "passed": true
+    },
+    {
+      "file": "C2/mark-ink.svg",
+      "candidate": "C2",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": "adaptive",
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 2,
+      "passed": true
+    },
+    {
+      "file": "C2/mark-micro-color.svg",
+      "candidate": "C2",
+      "layout": "mark",
+      "mode": "color",
+      "opticalSize": "fixed",
+      "colors": [
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/mark-micro-ink.svg",
+      "candidate": "C2",
+      "layout": "mark",
+      "mode": "ink",
+      "opticalSize": "fixed",
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/mark-micro-reverse.svg",
+      "candidate": "C2",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": "fixed",
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/mark-reverse.svg",
+      "candidate": "C2",
+      "layout": "mark",
+      "mode": "reverse",
+      "opticalSize": "adaptive",
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 0,
+      "geometricPaths": 2,
+      "passed": true
+    },
+    {
+      "file": "C2/vertical-color.svg",
+      "candidate": "C2",
+      "layout": "vertical",
+      "mode": "color",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#B5382A",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/vertical-ink.svg",
+      "candidate": "C2",
+      "layout": "vertical",
+      "mode": "ink",
+      "opticalSize": null,
+      "colors": [
+        "#24231F",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    },
+    {
+      "file": "C2/vertical-reverse.svg",
+      "candidate": "C2",
+      "layout": "vertical",
+      "mode": "reverse",
+      "opticalSize": null,
+      "colors": [
+        "#1F3A4D",
+        "#F8F7F2"
+      ],
+      "glyphPaths": 5,
+      "geometricPaths": 1,
+      "passed": true
+    }
+  ]
+}

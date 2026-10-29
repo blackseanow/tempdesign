@@ -51,8 +51,8 @@ async function inspect(page, cdp) {
       return `${cs.animationName}/${cs.animationDuration}/${cs.animationIterationCount}/${cs.animationDelay}`;
     });
     return {
-      sign: r(document.querySelector('.sign')), plaque: r(document.querySelector('.plaque')),
-      motto: r(document.querySelector('.motto')), art: r(document.querySelector('.hero-art')),
+      sign: r(document.querySelector('.hero-sign')), plaque: r(document.querySelector('.hero-plaque')),
+      motto: r(document.querySelector('.hero-motto')), art: r(document.querySelector('.hero-art')),
       recDot: r(document.querySelector('.rec-dot')), pathCount: paths.length, fills,
       offPalette: Object.keys(fills).filter((f) => !PALETTE.includes(f)), red,
       anim: { dot: anim('.rec-dot'), wave: anim('.wave'), note: anim('.note') },
@@ -62,7 +62,7 @@ async function inspect(page, cdp) {
   // 实际排版用到的字体（排查方块字）
   const { root } = await cdp.send('DOM.getDocument', { depth: -1 });
   data.platformFonts = {};
-  for (const sel of ['.plaque span', '.motto span']) {
+  for (const sel of ['.hero-plaque span', '.hero-motto span']) {
     const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: sel });
     const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId });
     data.platformFonts[sel] = fonts.map((f) => `${f.familyName} ×${f.glyphCount}`);
@@ -94,12 +94,12 @@ async function inspect(page, cdp) {
     await page.screenshot({ path: path.join(c.scratch ? WORK : SHOTS, `${c.name}.png`), fullPage: true });
     const info = await inspect(page, cdp);
     // 去掉文字再截一张，用来核对文字区域下面是不是空白墙面
-    await page.addStyleTag({ content: '.sign *{visibility:hidden!important}' });
+    await page.addStyleTag({ content: '.hero-sign *{visibility:hidden!important}' });
     await page.screenshot({ path: path.join(WORK, `${c.name}-notext.png`), fullPage: true });
     report[c.name] = { dpr: c.dpr, scratch: !!c.scratch, ...info };
     if (c.name === 'desktop-1440') {
       // 动效中间帧：暂停所有动画，拨到 0.9s
-      await page.addStyleTag({ content: '.sign *{visibility:visible!important}' });
+      await page.addStyleTag({ content: '.hero-sign *{visibility:visible!important}' });
       await page.evaluate(() => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = 900; }));
       await page.screenshot({ path: path.join(SHOTS, 'desktop-1440-anim-0.9s.png'), fullPage: true });
     }

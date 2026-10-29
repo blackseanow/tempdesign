@@ -6,8 +6,9 @@
 |---|---|
 | `hero.svg` | 最终插画：149.3 KB（152,892 字节），viewBox `0 0 1916 821`，无背景。颜色全部用 CSS 变量，动效写在内部 `<style>` 里 |
 | `index.html` | 原型页，内联同一份 hero.svg（`<!-- hero.svg:start/end -->` 之间的内容由 `tools/build.py` 同步） |
+| `HeroSignboard.vue` | Vue 3 单文件组件：牌匾、标语和插画合在一起，由 `tools/build.py` 从 index.html 和 hero.svg 生成，见“接入主程序” |
 | `screenshots/` | 自查截图：桌面 1440（1x、2x）、手机 390（3x），另有一张纸笺动效 0.9s 的中间帧 |
-| `hero-a.zip` | 交付包：hero.svg、index.html、README.md、screenshots/ |
+| `hero-a.zip` | 交付包：hero.svg、index.html、HeroSignboard.vue、README.md、screenshots/ |
 | `tools/` | 生成和自查脚本（不打进交付包） |
 
 ## 配色
@@ -46,11 +47,37 @@
 
 ## 接入主程序
 
+### Vue 3 项目：用 HeroSignboard.vue
+
+把 `HeroSignboard.vue` 拷进组件目录即可，没有 props，也不需要脚本：
+
+```vue
+<script setup>
+import HeroSignboard from './HeroSignboard.vue'
+</script>
+
+<template>
+  <HeroSignboard />
+</template>
+```
+
+- 组件根节点是 `<header class="hero-signboard">`，里面是牌匾 `<h1>`、标语和内联的插画。传给组件的 `class` 和 `style` 会落在根节点上。
+- 样式没加 `scoped`。插画有 260 多个元素，加了会给每个元素都打上属性。所有选择器都带 `hero-` 前缀，不会影响别处，全站已有的 `.plaque` 规则也影响不到它。
+- 不要手改这个文件：它由 `tools/build.py` 生成，每次重新生成插画或改了 index.html 的版式都会覆盖。
+- 体积：插画的路径数据会编进 JS，约 150 KB（gzip 后约 52 KB）。建议放在首页路由的分包里。
+- 动效靠 CSS，不靠 JS。单页应用里离开首页再回来，组件重新挂载，纸笺会从头再漂一次。
+
+### 其他项目：内联 hero.svg
+
 1. **内联 SVG**：把 hero.svg 的内容原样放进页面，可以构建时内联（例如 Vite 的 `import heroSvg from './hero.svg?raw'` 再插入），也可以用服务端模板 include。只有内联时，页面的 CSS 变量才能传进插画。用 `<img src="hero.svg">` 也能正常显示和播放动效，但只会用兜底色。
-2. **变量**：全站 `:root` 里已有 `--paper --sheet --indigo --ink --cinnabar`，再补上 `--skin --hair --gray --mount`，值见上表。换主题（比如暗色）只需重新定义这些变量。注意 `--paper` 也是插画里墙面小块的颜色，必须和招牌区背景一致。
-3. **布局**：照抄 index.html 里 `.signboard / .sign / .plaque / .motto` 这几段 CSS。招牌容器设了 `container-type: inline-size`，牌匾和标语的字号用 `cqi`，随插画等比缩放，始终落在横向约 37%–58%、纵向约 6.5%–33% 的空白墙面上。宽度 ≤ 960px 时改为文字在上、插画在下，插画等比缩小。这个断点比设计稿 H5 的 820px 大，因为 820–960px 之间标语字号已经到下限，会碰到第一张纸笺。
-4. **class 约定**：根节点 `.hero-art`；红点 `.rec-dot`；声波 `.wave.w1–w3`；纸笺组 `g.note.n1–n3`；关键帧 `hero-breathe / hero-wave / hero-drift`。如果想等招牌滚进视口再播纸笺，可以先给 `.hero-art .note` 设 `animation-play-state: paused`，再用 IntersectionObserver 加 class 放开。
-5. **字体**：牌匾和标语用设计稿的 `--kai`（霞鹜文楷，jsdelivr 上的 `lxgw-wenkai-webfont@1.7.0`，原型里固定了版本），正文字体 `--song` 用 Noto Serif SC。
+2. **布局**：照抄 index.html 里 `hero-signboard:start` 到 `hero-signboard:end` 之间的 CSS（`.hero-signboard / .hero-sign / .hero-plaque / .hero-motto`）和 `<header class="hero-signboard">` 那段结构。
+
+### 两种方式都适用
+
+- **变量**：全站 `:root` 里已有 `--paper --sheet --indigo --ink --cinnabar`，再补上 `--skin --hair --gray --mount`，值见上表；不补时用兜底色，画面一样。换主题（比如暗色）只需重新定义这些变量。注意 `--paper` 也是插画里墙面小块的颜色，必须和招牌区背景一致。
+- **布局规则**：招牌容器设了 `container-type: inline-size`，牌匾和标语的字号用 `cqi`，随插画等比缩放，始终落在横向约 37%–58%、纵向约 6.5%–33% 的空白墙面上。宽度 ≤ 960px 时改为文字在上、插画在下，插画等比缩小。这个断点比设计稿 H5 的 820px 大，因为 820–960px 之间标语字号已经到下限，会碰到第一张纸笺。
+- **class 约定**：插画根节点 `.hero-art`；红点 `.rec-dot`；声波 `.wave.w1–w3`；纸笺组 `g.note.n1–n3`；关键帧 `hero-breathe / hero-wave / hero-drift`。如果想等招牌滚进视口再播纸笺，可以先给 `.hero-art .note` 设 `animation-play-state: paused`，再用 IntersectionObserver 加 class 放开。
+- **字体**：牌匾和标语用设计稿的 `--kai`（霞鹜文楷，jsdelivr 上的 `lxgw-wenkai-webfont@1.7.0`，原型里固定了版本），需要全站已经加载。正文字体 `--song` 用 Noto Serif SC。
 
 ## 生成过程和调参
 
@@ -59,7 +86,7 @@
 ```bash
 pip install vtracer numpy scipy scikit-image pillow svgelements
 python3 tools/quantize.py source.png build                 # 归色前处理，输出 build/labels.png
-python3 tools/build.py build                               # vtracer + 色板 class + 动效 class + svgo → hero.svg，并同步 index.html
+python3 tools/build.py build                               # vtracer + 色板 class + 动效 class + svgo → hero.svg，同步 index.html，生成 HeroSignboard.vue
 node tools/shoot.cjs build && python3 tools/check.py build # 截图 + 逐项自查（需要 Playwright 和 fonts-noto-cjk）
 ```
 
@@ -105,5 +132,11 @@ node tools/shoot.cjs build && python3 tools/check.py build # 截图 + 逐项自�
 | 文字和画面不重叠 | 把文字隐藏后，文字框外扩 8px 范围内全是墙面底色（所有宽度）。桌面端牌匾在横向 37.2%–57.8%，标语在 40.5%–54.5%；手机端文字在插画上方 |
 | 中文 | 牌匾 5 字、标语 10 字实际都用霞鹜文楷排版（CDP `getPlatformFontsForNode`），没有方块 |
 | 减少动态效果 | 运行中的动画为 0 个 |
+
+**HeroSignboard.vue 的验证**（Vue 3.5.44，测试工具不进仓库）：
+
+- 用 `@vue/compiler-sfc` 编译了客户端版和服务端版，没有错误和警告。服务端用 `renderToString` 渲染，256 条路径、3 组纸笺、6 道声波、红点都在，没有警告。
+- 在 Chromium 里挂载组件。测试页套用了设计稿 `ref/xianyu-demo-v2.html` 的全局样式，包括它的 `.plaque` 规则，且不定义新增的四个变量。在 1440、1024、390 三个宽度下和 index.html 截图逐像素比对，差异为 0 个像素。牌匾字号和位置一致，全站 `.plaque span{font-size:34px}` 没有影响到招牌。
+- 开发版 Vue 没有任何警告。动画正常时 10 个在跑。卸载后不留动画，重新挂载后纸笺从头漂入。“减少动态效果”下为 0 个。
 
 和原图相比的简化：老领导的灰白发丝并成单一发色；字幅去掉了飞白；盆栽是整块剪影；录音笔的按钮细节并进了机身；红点和虚线按原位重画成了规整形状。
