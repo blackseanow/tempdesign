@@ -1,9 +1,11 @@
-# 咸鱼把脉了 · Logo 候选（logo）
+# 咸鱼把脉了 · Logo 候选（logo-b）
 
 主标志是一枚朱砂方印，印里画“三指搭脉”。三个方向各出两个变体，共 6 个候选。每个候选有三种文件（印章、横排版、竖排题签版），每种都出全彩、单色墨、函套青底反白三个版本。
 
-- 联系表：`screenshots/sheet.png`
+- 联系表：`logo-b/screenshots/sheet.png`
 - 推荐：**A1 略斜三指**（理由见文末“推荐”）
+
+这一套放在 `logo-b/`。仓库里的 `logo/` 是按同一份 brief 做的另一套候选（提交 d262b14）。推送时 main 上已经有了 `logo/`，为了不覆盖它，这一套改放在这里；两套互不依赖，文件和脚本都不共用。下文的路径都相对于 `logo-b/`。
 
 ![联系表](screenshots/sheet.png)
 
@@ -168,7 +170,7 @@ Wi-Fi 和信号图标靠同心弧线或从左到右递增的高度来识别。�
 ## 重新生成
 
 ```bash
-cd logo
+cd logo-b
 npm install                                  # 霞鹜文楷 webfont：lxgw-wenkai-webfont 1.7.0
 pip install fonttools brotli skia-pathops numpy
 npm run build    # python3 tools/build.py && node tools/render.cjs && python3 tools/explore.py
