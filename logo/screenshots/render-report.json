@@ -1,0 +1,12 @@
+{
+  "renderer": "Playwright / Chromium",
+  "browserVersion": "156.0.8078.48",
+  "deviceScaleFactor": 1,
+  "markPNGs": 72,
+  "scenePNGs": 18,
+  "contactSheet": "sheet.png",
+  "smallSizeSheet": "pixels-16.png",
+  "missingImages": [],
+  "overflow": [],
+  "pageErrors": []
+}

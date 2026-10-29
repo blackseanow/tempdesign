@@ -1,0 +1,42 @@
+{
+  "brand": "咸鱼把脉了",
+  "palette": {
+    "red": "#B5382A",
+    "sheet": "#F8F7F2",
+    "ink": "#24231F",
+    "blue": "#1F3A4D",
+    "paper": "#ECEAE1"
+  },
+  "candidates": {
+    "A1": "三指按脉 · 稳按",
+    "A2": "三指按脉 · 轻搭",
+    "B1": "寸关尺 · 三点轻落",
+    "B2": "寸关尺 · 随脉而落",
+    "C1": "一笔搭脉 · 回锋",
+    "C2": "一笔搭脉 · 连绵"
+  },
+  "layouts": [
+    "mark",
+    "horizontal",
+    "vertical"
+  ],
+  "modes": [
+    "color",
+    "ink",
+    "reverse"
+  ],
+  "sizes": [
+    16,
+    32,
+    64,
+    180
+  ],
+  "opticalSizes": {
+    "candidates": [
+      "C1",
+      "C2"
+    ],
+    "maxWidth": 24,
+    "fixedFiles": "mark-micro-{mode}.svg"
+  }
+}
