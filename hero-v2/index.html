@@ -505,7 +505,7 @@ function createHeroMotion(stage, anchors, opts = {}) {
 
   let t = 0, curAfter = 0, rewindFrom = 0, running = false, raf = 0, last = 0, speed = 1
   let visible = true, played = false, afterReady = false, baseReady = false
-  let animated = false, mq = null, io = null, destroyed = false
+  let animated = false, modeSet = false, mq = null, io = null, destroyed = false
 
   function render(time) {
     t = time
@@ -540,7 +540,8 @@ function createHeroMotion(stage, anchors, opts = {}) {
     t = rewindFrom > 0.01 ? -PREROLL : 0
     play()
   }
-  function seek(time) { pause(); render(clamp(time, -PREROLL, END)) }
+  // 手动定格或暂停以后，就不再自动开播（比如底图还没下载完时先拖了时间轴）
+  function seek(time) { played = true; pause(); render(clamp(time, -PREROLL, END)) }
 
   function loadAfter() {
     if (!after.getAttribute('src') && after.dataset.src) {
@@ -558,7 +559,9 @@ function createHeroMotion(stage, anchors, opts = {}) {
   }
 
   function applyMode() {
-    animated = !mq.matches || !!opts.force
+    const next = !mq.matches || !!opts.force
+    if (next === animated && modeSet) return  // 媒体查询没真变（有的浏览器会多发 change），什么都不做
+    animated = next; modeSet = true
     if (animated) {
       loadAfter()
       if (played) { pause(); render(END) } else tryStart()
@@ -594,7 +597,8 @@ function createHeroMotion(stage, anchors, opts = {}) {
   applyMode()
 
   return {
-    play, pause, replay, seek,
+    play, replay, seek,
+    pause() { played = true; pause() },
     setAnchors(a) { build(a); render(t) },
     setSpeed(v) { speed = v },
     get time() { return t },
