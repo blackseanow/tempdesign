@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from svgelements import SVG, Path as SvgPath
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,8 +29,12 @@ def box(r, dpr, pad, shape):
     return x0, y0, x1, y1
 
 
+def red_mask(a):
+    return (a[..., 0] > 140) & (a[..., 1] < 110) & (a[..., 2] < 100) & (a[..., 0] - a[..., 1] > 60)
+
+
 for name, r in rep.items():
-    if name == 'reducedMotion':
+    if name in ('reducedMotion', 'pause'):
         continue
     dpr = r['dpr']
     shot = (WORK if r['scratch'] else ROOT / 'screenshots') / f'{name}.png'
@@ -59,12 +63,16 @@ for name, r in rep.items():
           f"{len(r['fills'])} 种：" + ' '.join(f'{k}×{v}' for k, v in r['fills'].items()))
 
     # 红色只在录音笔：只有 1 个朱砂色元素，且截图里的红像素都落在它附近
-    red_px = (a[..., 0] > 140) & (a[..., 1] < 110) & (a[..., 2] < 100) & (a[..., 0] - a[..., 1] > 60)
+    red_px = red_mask(a)
     rx0, ry0, rx1, ry1 = box(r['recDot'], dpr, 3, a.shape)
     inside = red_px[ry0:ry1, rx0:rx1].sum()
     outside = int(red_px.sum() - inside)
     check(f'{name} 红色只在录音笔', len(r['red']) == 1 and 'rec-dot' in r['red'][0]['cls'] and outside == 0,
           f"朱砂色元素 {[e['cls'] for e in r['red']]}，红点外的红像素 {outside}")
+
+    # 会动的部件（纸笺、虚线、说话和落笔的短弧）在整个循环里都不碰文字框
+    mo = r['motion']
+    check(f'{name} 动效不碰文字', mo['hits'] == 0, f"循环内碰到文字框 {mo['hits']} 次，最近时在文字框下方 {mo['gapPx']}px")
 
     # 中文没有方块：实际排版字体
     fonts = [f for v in r['platformFonts'].values() for f in v]
@@ -73,17 +81,56 @@ for name, r in rep.items():
 
 # 动效
 d = rep['desktop-1440']['anim']
-ok = (all(x.startswith('hero-breathe/2.4s/infinite') for x in d['dot']) and len(d['wave']) == 6
-      and all(x.startswith('hero-wave/2.4s/infinite') for x in d['wave'])
-      and [x.split('/')[2] for x in d['note']] == ['1', '1', '1'])
-check('动效', ok, f"红点 {d['dot'][0]}；声波 {len(d['wave'])} 道；纸笺 {d['note']}")
+ok = (all(x.startswith('hero-breathe/2.4s/infinite') for x in d['dot'])
+      and len(d['wave']) == 6 and all(x.startswith('hero-wave/1.6s/infinite') for x in d['wave'])
+      and len(d['note']) == 3 and all(x.startswith('hero-fly/4.8s/infinite') for x in d['note'])
+      and len(d['dash']) > 40 and all(x.startswith('hero-trail/1.6s/infinite') for x in d['dash'])
+      and len(d['talk']) == 3 and len(d['scrib']) == 4
+      and all(x.startswith('hero-blip/1.6s/infinite') for x in d['talk'] + d['scrib']))
+check('动效', ok, f"红点 {d['dot'][0]}；声波 {len(d['wave'])} 道；纸笺 {len(d['note'])} 张 {d['note'][0]}；"
+      f"虚线 {len(d['dash'])} 节；说话短弧 {len(d['talk'])} 道；落笔短线 {len(d['scrib'])} 道")
+
+# 一个循环 12 帧：拼联系表，逐帧查红色只在录音笔
+r = rep['desktop-1440']
+c, dot = r['loopClip'], r['recDotLoop']
+frames = [Image.open(WORK / f'loop-{i}.png').convert('RGB') for i in range(12)]
+outside = []
+for img in frames:
+    a = np.asarray(img).astype(int)
+    m = red_mask(a)
+    x0, y0 = int((dot['x'] - c['x'] - 3)), int((dot['y'] - c['y'] - 3))
+    x1, y1 = int((dot['x'] + dot['w'] - c['x'] + 3)) + 1, int((dot['y'] + dot['h'] - c['y'] + 3)) + 1
+    outside.append(int(m.sum() - m[max(y0, 0):y1, max(x0, 0):x1].sum()))
+check('循环内红色只在录音笔', not any(outside), f'12 帧红点外的红像素 {outside}')
+w, h = frames[0].size
+pad, cap = 12, 30
+sheet = Image.new('RGB', (4 * w + 5 * pad, 3 * (h + cap) + 4 * pad + 40), '#D6D2C4')
+dr = ImageDraw.Draw(sheet)
+try:
+    font = ImageFont.truetype('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', 18, index=2)
+except OSError:
+    font = ImageFont.load_default()
+dr.text((pad, pad), '招牌插画循环 4.8s，每 0.4s 一帧（desktop 1440，插画中段）', fill='#24231F', font=font)
+for i, img in enumerate(frames):
+    x, y = pad + (i % 4) * (w + pad), 40 + pad + (i // 4) * (h + cap + pad)
+    sheet.paste(img, (x, y))
+    dr.text((x + 2, y + h + 5), f'{i * 0.4:.1f} s', fill='#24231F', font=font)
+sheet.save(ROOT / 'screenshots' / 'loop-sheet.png')
+
+pz = rep['pause']
+ok = (not pz['before']['paused'] and pz['out1']['paused'] and pz['out1']['states'] == ['paused']
+      and pz['out2']['t'] == pz['out1']['t'] and not pz['back1']['paused'] and pz['back2']['states'] == ['running']
+      and pz['back2']['t'] > pz['back1']['t'])
+check('滚出视口暂停', ok, f"滚出后 {pz['out1']['states']}，0.6s 内纸笺时间 {pz['out1']['t']:.0f}→{pz['out2']['t']:.0f}ms；"
+      f"滚回后 {pz['back2']['states']}，{pz['back1']['t']:.0f}→{pz['back2']['t']:.0f}ms")
 rm = rep['reducedMotion']
-check('减少动态效果', rm['running'] == 0 and set(rm['names']) == {'none'}, f"运行中的动画 {rm['running']} 个")
+check('减少动态效果', rm['running'] == 0 and set(rm['names']) == {'none'} and set(rm['hidden']) == {'0'},
+      f"运行中的动画 {rm['running']} 个；只在动效里出现的 {len(rm['hidden'])} 个元素都隐藏")
 
 # 斑点：hero.svg 里每个子路径的面积（原图像素²）
 areas = []
 for el in SVG.parse(str(ROOT / 'hero.svg')).elements():
-    if isinstance(el, SvgPath):
+    if isinstance(el, SvgPath) and 'k-ink' not in (el.values.get('class') or ''):   # 描边短弧不是色块
         for sub in el.as_subpaths():
             sp = SvgPath(sub)
             pts = [sp.point(t) for t in np.linspace(0, 1, 64)]

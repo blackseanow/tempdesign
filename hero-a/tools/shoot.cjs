@@ -42,7 +42,8 @@ async function inspect(page, cdp) {
     const fills = {};
     const red = [];
     for (const p of paths) {
-      const f = hex(getComputedStyle(p).fill);
+      const cs = getComputedStyle(p);
+      const f = hex(cs.fill === 'none' ? cs.stroke : cs.fill);
       fills[f] = (fills[f] || 0) + 1;
       if (f === '#B5382A') red.push({ cls: p.getAttribute('class'), rect: r(p) });
     }
@@ -55,7 +56,8 @@ async function inspect(page, cdp) {
       motto: r(document.querySelector('.hero-motto')), art: r(document.querySelector('.hero-art')),
       recDot: r(document.querySelector('.rec-dot')), pathCount: paths.length, fills,
       offPalette: Object.keys(fills).filter((f) => !PALETTE.includes(f)), red,
-      anim: { dot: anim('.rec-dot'), wave: anim('.wave'), note: anim('.note') },
+      anim: { dot: anim('.rec-dot'), wave: anim('.wave'), note: anim('.note'), dash: anim('.dash'),
+              talk: anim('.talk'), scrib: anim('.scrib') },
       fontsOk: ['LXGW WenKai', 'Noto Serif SC'].map((f) => `${f}: ${document.fonts.check(`16px "${f}"`, '咸鱼把脉了领导一字不落对症开方按时交差')}`),
     };
   }, PALETTE);
@@ -90,19 +92,73 @@ async function inspect(page, cdp) {
     await cdp.send('CSS.enable');
     await page.goto(PAGE_URL, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(2800);                       // 纸笺 0.3s–2.4s 漂完停住
+    // 动效一直循环：定格在 0s，三张纸笺正好在设计位置（之后每 1.6s 重合一次）
+    await page.evaluate(() => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = 0; }));
     await page.screenshot({ path: path.join(c.scratch ? WORK : SHOTS, `${c.name}.png`), fullPage: true });
     const info = await inspect(page, cdp);
     // 去掉文字再截一张，用来核对文字区域下面是不是空白墙面
     await page.addStyleTag({ content: '.hero-sign *{visibility:hidden!important}' });
     await page.screenshot({ path: path.join(WORK, `${c.name}-notext.png`), fullPage: true });
+    await page.addStyleTag({ content: '.hero-sign *{visibility:visible!important}' });
+    // 整个循环里，会动的部件都不碰文字框（外扩 8px）：每 0.1s 量一次
+    info.motion = await page.evaluate(() => {
+      const box = (el) => el.getBoundingClientRect();
+      const s = box(document.querySelector('.hero-sign'));
+      const movers = [...document.querySelectorAll('.note,.dash,.talk,.scrib')];
+      let hits = 0, worst = Infinity;
+      for (let t = 0; t < 4800; t += 100) {
+        document.getAnimations().forEach((a) => { a.currentTime = t; });
+        for (const m of movers) {
+          const r = box(m);
+          if (getComputedStyle(m).opacity === '0') continue;
+          worst = Math.min(worst, r.top - s.bottom);
+          if (r.right > s.left - 8 && r.left < s.right + 8 && r.bottom > s.top - 8 && r.top < s.bottom + 8) hits++;
+        }
+      }
+      return { hits, gapPx: Math.round(worst * 10) / 10 };
+    });
     report[c.name] = { dpr: c.dpr, scratch: !!c.scratch, ...info };
     if (c.name === 'desktop-1440') {
-      // 动效中间帧：暂停所有动画，拨到 0.9s
-      await page.addStyleTag({ content: '.hero-sign *{visibility:visible!important}' });
-      await page.evaluate(() => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = 900; }));
-      await page.screenshot({ path: path.join(SHOTS, 'desktop-1440-anim-0.9s.png'), fullPage: true });
+      // 一个循环 4.8s，每 0.4s 一帧，存进工作目录，由 check.py 拼成联系表、逐帧查红色
+      const art = await page.locator('.hero-art').boundingBox();
+      const k = art.width / 1916;
+      const clip = { x: art.x + 520 * k, y: art.y + 230 * k, width: 780 * k, height: 290 * k };
+      for (let i = 0; i < 12; i++) {
+        await page.evaluate((t) => document.getAnimations().forEach((a) => { a.currentTime = t; }), i * 400);
+        await page.screenshot({ path: path.join(WORK, `loop-${i}.png`), clip });
+      }
+      report[c.name].loopClip = clip;
+      report[c.name].recDotLoop = await page.evaluate(() => {
+        const b = document.querySelector('.rec-dot').getBoundingClientRect(); return { x: b.x, y: b.y + scrollY, w: b.width, h: b.height };
+      });
     }
+    await ctx.close();
+  }
+  // 滚出视口暂停、滚回来接着播
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    await routeFonts(page);
+    await page.goto(PAGE_URL, { waitUntil: 'load' });
+    await page.evaluate(() => { const d = document.createElement('div'); d.style.height = '3000px'; document.body.append(d); });
+    const state = () => page.evaluate(() => {
+      const fly = document.getAnimations().find((a) => a.animationName === 'hero-fly');
+      return { paused: document.querySelector('.hero-art').classList.contains('hero-paused'),
+        states: [...new Set(document.getAnimations().map((a) => a.playState))], t: fly.currentTime };
+    });
+    await page.waitForTimeout(400);
+    const before = await state();
+    await page.evaluate(() => scrollTo(0, 2500));
+    await page.waitForTimeout(300);
+    const out1 = await state();
+    await page.waitForTimeout(600);
+    const out2 = await state();
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(300);
+    const back1 = await state();
+    await page.waitForTimeout(400);
+    const back2 = await state();
+    report.pause = { before, out1, out2, back1, back2 };
     await ctx.close();
   }
   // 减少动态效果：全部静止
@@ -112,8 +168,10 @@ async function inspect(page, cdp) {
   await page.goto(PAGE_URL, { waitUntil: 'load' });
   report.reducedMotion = await page.evaluate(() => ({
     running: document.getAnimations().length,
-    names: [...document.querySelectorAll('.rec-dot,.wave,.note')].map((el) => getComputedStyle(el).animationName),
+    names: [...document.querySelectorAll('.rec-dot,.wave,.note,.dash,.talk,.scrib')].map((el) => getComputedStyle(el).animationName),
+    hidden: [...document.querySelectorAll('.pre,.talk,.scrib')].map((el) => getComputedStyle(el).opacity),
   }));
+  await page.screenshot({ path: path.join(WORK, 'reduced.png') });
   await ctx.close();
   await browser.close();
   fs.writeFileSync(path.join(WORK, 'report.json'), JSON.stringify(report, null, 1));
