@@ -5,11 +5,12 @@
 - 三张原图各出一份 1x 的 webp（宽 1916）。原图宽度到 3000 像素才另出 @2x（宽取原图和 3832 的较小值），
   srcset 按实际生成了哪些写，换了大图重跑一遍就行。
 - 三张图必须叠得上：以 base-before 的尺寸为准，差几个像素的在右边、下边补（复制最后一列、行），差得多的等比缩放。
-- 道具 props/*.svg 和印章 seal.svg 内联进页面（只有内联，页面的 CSS 变量才传得进去），
+- 道具 props/*.svg 和 logo 内联进页面（只有内联，页面的 CSS 变量才传得进去），
   并检查颜色：只能用 props/_style.css 里的 class（都是设计系统变量），不许写死颜色；朱砂只许印章用。
 - index.html 内嵌一份 anchors.json（file:// 打开时用）；HeroSignboard.vue 直接 import anchors.json。
 - 领导说话的嘴形：从页面上显示的同一份 base-before.webp 生成闭嘴、半张、大半张三帧（见 mouth_sprites）。
-- 录音笔正面的铭牌：logo（seal.svg 的反白版）和 wordmark.svg 的“把脉了”，按 recorder 锚点放。
+- logo 用仓库里的候选（logo.json 选哪一款，命令行 --logo 可临时换）：盖在材料上的朱砂印章，
+  和录音笔正面铭牌上的反白版；铭牌下面是 wordmark-*.svg 的“把脉了”，按 recorder 锚点放。
 """
 import base64
 import io
@@ -223,33 +224,79 @@ def mouth_markup(m):
     return f'<g class="fx-mouth">{imgs}</g>'
 
 
-def wordmark_art(height):
-    """wordmark.svg（“把脉了”的字形路径）缩放到给定高度，返回 (标记, 宽度)。"""
-    s = (ROOT / 'wordmark.svg').read_text()
+LOGO_SETS = {
+    # 仓库里两套 logo 候选，都是“三指搭脉”方印。值是（印章文件，小尺寸专用文件，字标字重）
+    'logo-b': lambda k: (ROOT.parent / 'logo-b' / 'svg' / k / f'{k}-seal-color.svg', None, 'bold'),
+    'logo': lambda k: (ROOT.parent / 'logo' / 'candidates' / k / 'mark-color.svg',
+                       ROOT.parent / 'logo' / 'candidates' / k / 'mark-micro-color.svg', 'regular'),
+}
+LOGO_NAMES = {
+    'logo-b/A1': '略斜三指（logo-b 推荐）', 'logo-b/A2': '斜入三指', 'logo-b/B1': '指腹压线', 'logo-b/B2': '指腹留红',
+    'logo-b/C1': '点按指尖', 'logo-b/C2': '斜按指尖',
+    'logo/A1': '稳按', 'logo/A2': '轻搭（logo 推荐）', 'logo/B1': '三点轻落', 'logo/B2': '随脉而落',
+    'logo/C1': '回锋', 'logo/C2': '连绵',
+}
+FACE, FIGURE = '#B5382A', '#F8F7F2'   # 候选文件里印面（朱砂）和图形（素笺）的颜色
+
+
+def chosen_logo():
+    """logo.json 里选的那一款；命令行 --logo logo-b/A2 可以临时换。"""
+    if '--logo' in sys.argv:
+        return sys.argv[sys.argv.index('--logo') + 1]
+    return json.loads((ROOT / 'logo.json').read_text())['logo']
+
+
+def logo_art(spec, size, small=False):
+    """把候选 logo 的全彩印章取出来：印面标成 lg-face，图形标成 lg-figure，颜色由页面按用处给
+    （盖在材料上：朱砂印面、素笺图形；录音笔上：素笺印面、松烟墨图形）。缩放到以原点为中心、边长 size。
+    small=True 时，有小尺寸光学稿（logo/C1、C2 的 mark-micro）就用它。"""
+    group, key = spec.split('/')
+    if group not in LOGO_SETS or spec not in LOGO_NAMES:
+        sys.exit(f'logo.json 里的 “{spec}” 不在候选里，可选：{"、".join(LOGO_NAMES)}')
+    path, micro, _ = LOGO_SETS[group](key)
+    if small and micro and micro.exists():
+        path = micro
+    s = path.read_text()
+    attrs, body = re.search(r'<svg\b([^>]*)>(.*)</svg>', s, re.S).groups()
+    _, _, w, h = (float(v) for v in re.search(r'viewBox="([^"]+)"', attrs).group(1).split())
+    body = re.sub(r'<title\b.*?</title>|<style\b.*?</style>|<!--.*?-->', '', body, flags=re.S)
+    body = re.sub(r'<g class="micro">.*?</g>\s*(?=<g class="regular">|</g>|$)', '', body, flags=re.S)  # 大尺寸只留常规稿
+    body = re.sub(r'<g class="regular">(.*?)</g>', r'\1', body, flags=re.S)
+    body = re.sub(rf'\s(?:fill|color)="{FIGURE}"', '', body.replace(f'fill="{FIGURE}"', 'class="lg-figure"'), count=0)
+    body = body.replace(f'fill="{FACE}"', 'class="lg-face"')
+    if re.search(r'#[0-9a-fA-F]{3,6}\b', body):
+        problems.append(f'{path.name}: 除了印面和图形还有别的颜色：{sorted(set(re.findall(r"#[0-9a-fA-F]{3,6}", body)))}')
+    k = size / max(w, h)
+    return f'<g class="logo" transform="scale({k:g}) translate({-w / 2:g} {-h / 2:g})">{body}</g>'
+
+
+def wordmark_art(height, weight):
+    """wordmark-<字重>.svg（“把脉了”的字形路径）缩放到给定高度，返回 (标记, 宽度)。"""
+    s = (ROOT / f'wordmark-{weight}.svg').read_text()
     _, _, w, h = (float(v) for v in re.search(r'viewBox="([^"]+)"', s).group(1).split())
     d = re.search(r'<path class="f-sheet" d="([^"]+)"', s).group(1)
     k = height / h
     return f'<path class="f-sheet" transform="scale({k:g})" d="{d}"/>', w * k
 
 
-def decal_markup(anchors):
-    """录音笔正面的铭牌：深色底板盖住按键，上面一枚反白的 logo（seal.svg 换成素笺色），下面横排“把脉了”。
+def decal_markup(anchors, spec):
+    """录音笔正面的铭牌：深色底板盖住按键，上面一枚反白的 logo（素笺印面、松烟墨图形，像丝印），下面横排“把脉了”。
     坐标以 recorder 锚点（机身中心）为原点，单位是 1916 宽的像素；动效脚本按锚点重新摆。
     朱砂仍然只留给最后那枚印章。"""
     rx, ry = anchors['recorder']['x'] / 100 * 1916, anchors['recorder']['y'] / 100 * 821
-    mark = svg_art(ROOT / 'seal.svg', 13, 'seal').replace('f-cinnabar', 'f-sheet')
-    word, ww = wordmark_art(9.6)
+    mark = logo_art(spec, 13, small=True)
+    word, ww = wordmark_art(9.6, LOGO_SETS[spec.split('/')[0]](spec.split('/')[1])[2])
     return (f'<svg class="hero-decal" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">'
             f'<g class="decal" transform="translate({rx:.1f} {ry:.1f})">'
             f'<rect class="f-ink decal-plate" x="-16" y="-1" width="32" height="35" rx="3"/>'
-            f'<g transform="translate(0 10.5)">{mark}</g>'
-            f'<g transform="translate({-ww / 2:.2f} 21.5)">{word}</g>'
+            f'<g class="decal-mark" transform="translate(0 10.5)">{mark}</g>'
+            f'<g class="decal-word" transform="translate({-ww / 2:.2f} 21.5)">{word}</g>'
             f'</g></svg>')
 
 
-def stage_markup(img, vue, anchors, mouth):
+def stage_markup(img, vue, anchors, mouth, spec):
     props ='\n'.join(f'<g class="fx-prop" data-prop="{p}" opacity="0">{svg_art(ROOT / "props" / f"{p}.svg", PROP_BOX, "prop")}</g>' for p in PROPS)
-    seal = svg_art(ROOT / 'seal.svg', SEAL_BOX, 'seal')
+    seal = logo_art(spec, SEAL_BOX)
     if vue:
         attr = lambda name, value: f':{name}="{value}"'
         static_set, before_src, before_set = 'img.static', 'img.before', 'img.beforeSet'
@@ -272,7 +319,7 @@ def stage_markup(img, vue, anchors, mouth):
       <img class="hero-base" {base_attrs} width="1916" height="821" alt="{ALT}" fetchpriority="high">
     </picture>
     <img class="hero-after" {after_attrs} width="1916" height="821" alt="" aria-hidden="true" decoding="async">
-    {decal_markup(anchors)}
+    {decal_markup(anchors, spec)}
     <svg class="hero-fx" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">
       <g class="fx-ripples"><ellipse class="fx-ripple"/><ellipse class="fx-ripple"/><ellipse class="fx-ripple"/></g>
       {mouth_markup(mouth)}
@@ -292,6 +339,13 @@ def indent(s, n):
 
 
 def main():
+    if '--logo-markup' in sys.argv:
+        # 给 tools/logo_options.cjs 用：每一款候选的印章、铭牌 logo、字标，JSON 输出，不动任何文件
+        out = {spec: {'name': name, 'stamp': logo_art(spec, SEAL_BOX), 'mark': logo_art(spec, 13, small=True),
+                      'word': wordmark_art(9.6, LOGO_SETS[spec.split('/')[0]](spec.split('/')[1])[2])}
+               for spec, name in LOGO_NAMES.items()}
+        print(json.dumps(out, ensure_ascii=False))
+        return
     img, notes, size = build_images()
     css = (SRC / 'hero.css').read_text().strip() + '\n\n/* 道具和印章的配色（props/_style.css） */\n' + palette_css()
     motion = (SRC / 'motion.js').read_text().strip()
@@ -300,10 +354,11 @@ def main():
         if not (0 <= anchors[k]['x'] <= 100 and 0 <= anchors[k]['y'] <= 100):
             problems.append(f'anchors.json: {k} 超出 0–100')
     mouth = mouth_sprites(anchors)
+    spec = chosen_logo()
 
     page = (SRC / 'page.html').read_text()
     page = (page.replace('{{CSS}}', css)
-                .replace('{{MARKUP}}', stage_markup(img, False, anchors, mouth))
+                .replace('{{MARKUP}}', stage_markup(img, False, anchors, mouth, spec))
                 .replace('{{ANCHORS}}', json.dumps(anchors, ensure_ascii=False))
                 .replace('{{MOTION}}', motion)
                 .replace('{{DEBUG}}', (SRC / 'debug.js').read_text().strip()))
@@ -327,7 +382,7 @@ def main():
     vue = (SRC / 'HeroSignboard.vue.tpl').read_text()
     vue = (vue.replace('{{IMPORTS}}', '\n'.join(imports))
               .replace('{{MOTION}}', motion)
-              .replace('{{MARKUP}}', indent(stage_markup(img, True, anchors, mouth), 2))
+              .replace('{{MARKUP}}', indent(stage_markup(img, True, anchors, mouth, spec), 2))
               .replace('{{CSS}}', css))
     (ROOT / 'HeroSignboard.vue').write_text(vue)
 
@@ -337,6 +392,7 @@ def main():
         print(f'  {f.name} {im.size[0]}×{im.size[1]} {f.stat().st_size / 1024:.0f} KB')
     for n in notes + notes_extra:
         print('说明：', n)
+    print(f'logo：{spec} {LOGO_NAMES[spec]}')
     if mouth:
         print('嘴形：{} 帧，位置 {}'.format(len(mouth['frames']), ', '.join(f'{v:g}' for v in mouth['rect'])))
     print(f'index.html {(ROOT / "index.html").stat().st_size / 1024:.0f} KB，HeroSignboard.vue {(ROOT / "HeroSignboard.vue").stat().st_size / 1024:.0f} KB')

@@ -1,0 +1,4 @@
+{
+  "说明": "印章和录音笔上的 logo 用哪一款，都是仓库里的候选：logo-b/A1 … logo-b/C2（logo-b/ 那套，推荐 A1），logo/A1 … logo/C2（logo/ 那套，推荐 A2）。对比图见 screenshots/logo-options.png。改完运行 python3 tools/build.py。",
+  "logo": "logo-b/A1"
+}

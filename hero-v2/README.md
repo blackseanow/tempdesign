@@ -4,7 +4,8 @@
 
 - **领导说话时会动嘴**，一秒四五个字，4 秒后停下。
 - **六样道具走同一条路**：从嘴边飘到员工的笔记本旁边堆起来，收住时整堆按顺序被吸进录音笔。
-- **录音笔正面印着 logo**：一枚声纹指印印章，下面是“把脉了”。
+- **录音笔正面印着 logo**：上面是 logo，下面是“把脉了”。最后盖在材料上的朱砂印章用的也是这枚 logo。
+- **logo 还没定**：用的是仓库里的候选，现在默认 logo-b/A1。12 款在招牌里的样子见 `screenshots/logo-options.png`，选好后改 `logo.json` 里的一行，再跑 `python3 tools/build.py`。
 
 先看效果：`screenshots/hero-v2.mp4`（录像）、`screenshots/sequence-sheet.png`（12 帧联系表）；`mouth-close@2x.png`、`recorder-close@2x.png` 分别是嘴形和录音笔的特写。
 
@@ -12,9 +13,9 @@
 
 1. **base-after 不是在 base-before 上只改员工得到的。** 员工以外还有 7.9% 的像素看得出差别：领导的脸、手、茶杯、录音笔、月洞门里的竹子都重画过，整张图越往下越往上偏（2–8 px）。交叉淡入那 0.8 秒里，领导和桌沿会往上跳几像素，竹子和领导的脸会变样。我照你说的做完了，原图没改。细节见下文“差异图检查”。建议在 base-before 上只重绘员工和他面前的桌面（局部重绘）再出一张 base-after；换上以后跑 `build.py` 和 `check_diff.py` 就行。
 2. **原图只有 1916 宽，只生成了 1x。** 不到 3000 像素。桌面和平板的高清屏（比如 Mac 的 Retina）上，图会被放大 1.1–2 倍，略糊；手机宽度小，1x 已经够用。拿到 ≥ 3000 宽（最好 3832 × 1642）的三张原图后，替换 PNG 再跑 `python3 tools/build.py`，会自动生成 `@2x.webp`，并写进 index.html 和 HeroSignboard.vue 的 srcset。
-3. **两样素材仓库里没有，我先画了替身。**
-   - 道具：`anatomy/` 里只有大饼（dabing）和宏图（hongtu）两张解剖图，没有导出的 icon.svg，也没有脸谱、鸡汤、棋盘、火箭。六样道具是我照 hero-static 里的样子重画的（`props/*.svg`），只用设计系统变量。拿到 anatomy 导出的 icon.svg 后，覆盖 `props/` 里同名的文件，再跑 `build.py`。viewBox 随意，build 会统一大小。它也会检查颜色：不能写死颜色，道具不能用朱砂。
-   - 印章：`logo/` 和 `logo-b/` 都是“三指搭脉”方印，没有“声纹指印”的 logo v2。`seal.svg` 是按名字画的替身：朱砂方印，白文指纹，纹线按声波起伏，右边起伏大、左边小。拿到 logo v2 后替换 `seal.svg`，单色，用 `class="f-cinnabar"`。录音笔上的 logo 也取自 `seal.svg`，换了会一起变。
+3. **两样素材要定。**
+   - 道具（替身）：`anatomy/` 里只有大饼（dabing）和宏图（hongtu）两张解剖图，没有导出的 icon.svg，也没有脸谱、鸡汤、棋盘、火箭。六样道具是我照 hero-static 里的样子重画的（`props/*.svg`），只用设计系统变量。拿到 anatomy 导出的 icon.svg 后，覆盖 `props/` 里同名的文件，再跑 `build.py`。viewBox 随意，build 会统一大小。它也会检查颜色：不能写死颜色，道具不能用朱砂。
+   - logo：印章和录音笔上的 logo 都取自仓库里的候选：`logo-b/` 六款（A1 略斜三指、A2 斜入三指、B1 指腹压线、B2 指腹留红、C1 点按指尖、C2 斜按指尖，那边推荐 A1），`logo/` 六款（A1 稳按、A2 轻搭、B1 三点轻落、B2 随脉而落、C1 回锋、C2 连绵，那边推荐 A2）。现在默认 `logo-b/A1`。选哪一款写在 `logo.json`，例如 `"logo": "logo/A2"`；对比图 `screenshots/logo-options.png`。
 4. **版式变了：** 新图中间上方是道具飞过的路线，牌匾和标语不再压在画上，改放在插画上方（所有宽度都这样）。
 
 ## 文件
@@ -26,12 +27,12 @@
 | `anchors.json` | 四个锚点，单位是图片宽、高的百分比 |
 | `img/*.webp` | 三张图的 1x WebP（1916 × 821，质量 88）：hero-static 153 KB、base-before 118 KB、base-after 105 KB |
 | `props/*.svg`、`props/_style.css` | 六样道具（替身）和配色 class，class 都对应设计系统变量 |
-| `seal.svg` | 声纹指印印章（替身），一条 evenodd 路径，只用朱砂。录音笔上的 logo 用它的反白版 |
-| `wordmark.svg` | 录音笔上的“把脉了”：霞鹜文楷 Bold 的字形轮廓转成的路径，不依赖字体加载。由 `tools/make_wordmark.py` 生成 |
+| `logo.json` | 用哪一款 logo（仓库 `logo-b/`、`logo/` 里的候选），印章和录音笔共用 |
+| `wordmark-bold.svg`、`wordmark-regular.svg` | 录音笔上的“把脉了”：霞鹜文楷的字形轮廓转成的路径，不依赖字体加载。选 logo-b 的候选用 Bold，选 logo 的用 Regular，和两套字标一致。由 `tools/make_wordmark.py` 生成 |
 | `checks/diff.png`、`diff-pairs.png`、`diff-report.json` | 差异图、各处的前后对照、数字 |
-| `screenshots/` | 录像、联系表，桌面、手机、减少动态效果、调试模式截图，印章、嘴形、录音笔特写，`check.json`（自查结果） |
+| `screenshots/` | 录像、联系表，logo 候选对比图，桌面、手机、减少动态效果、调试模式截图，印章、嘴形、录音笔特写，`check.json`（自查结果） |
 | `src/` | 源文件：`hero.css`、`motion.js`（动效）、`debug.js`、页面和组件模板 |
-| `tools/` | `build.py`、`check_diff.py`、`make_seal.py`、`make_wordmark.py`、`shoot.cjs`（截图自查）、`record.cjs`（录像）、`sheet.py` |
+| `tools/` | `build.py`、`check_diff.py`、`make_wordmark.py`、`shoot.cjs`（截图自查）、`logo_options.cjs`（logo 对比图）、`record.cjs`（录像）、`sheet.py` |
 | `hero-v2.zip` | 交付包：上面除 `src/`、`tools/` 和三张原图以外的全部 |
 | `hero-static.png`、`base-before.png`、`base-after.png` | 原图，没动 |
 
@@ -41,12 +42,12 @@
 |---|---|---|
 | 把脉前 | 0–4 秒 | 底图 base-before。**领导说话**：嘴一张一合，一秒四五个字，有的字张得大、有的小，4 秒后停下，回到底图张嘴笑的样子。**声浪** 1.8 秒从嘴边走到笔记本：前 15% 只有三道细线，起伏很缓（波长 190）；往后从已有的线上陆续分出另外 9 道，越往员工那边散得越开（到 ±60）、起伏越大越密（波长缩到 75），最后 10% 收进笔记本。**道具**从 0.25 秒起每 0.5 秒放出一样，每样飞 1.42 秒，从 0.32 倍长到 1.25 倍（1 倍边长 150 px），最后一段落到笔记本旁边那一堆上，缩到 0.5 倍，轻轻一弹，停住。落在桌上的不算在空中，空中同时最多三样（1–3.6 秒之间是两三样）。顺序：脸谱书、宏图、大饼、鸡汤、棋盘、火箭，1.7–4.2 秒依次落定。前五样边飘边翻滚（转一圈左右，带轻微压扁）；火箭机头始终朝上（摆动不超过 4°），飞的时候尾焰会闪，落下就熄 |
 | 收住 | 4–6 秒 | 声浪掉头：笔记本那头先被拽回来，嘴边那头最后，每一点都沿弧线加速吸进录音笔的机头，起伏一路收平。笔记本旁边那一堆从 4.2 秒起按落下的先后，每 0.12 秒飞走一样，沿弧线进录音笔，边转边缩小，5.0–5.6 秒全部消失在机头。5.15 秒起，录音笔脚下的三圈波纹从里到外各亮一下 |
-| 把脉后 | 6–8 秒 | 6.0–6.8 秒交叉淡入 base-after。6.85 秒朱砂印章从 1.75 倍大落到那摞材料上，压一下（0.5 秒），按纸面的透视压扁、斜切，用正片叠底，纸上的字行会透出来。8 秒停住 |
+| 把脉后 | 6–8 秒 | 6.0–6.8 秒交叉淡入 base-after。6.85 秒朱砂印章（选中的 logo，朱砂印面、素笺图形）从 1.75 倍大落到那摞材料上，压一下（0.5 秒），按纸面的透视压扁、斜切，用正片叠底，纸上的字行会透出来。8 秒停住 |
 
 - **重播**：录音笔上盖着一个透明按钮，键盘也能聚焦。鼠标移上去，波纹会淡淡亮起。点了以后先用 0.45 秒淡回 base-before，再从头播。
 - 招牌第一次进入视口才开始计时；滚出视口暂停，回来接着播。base-after 还没下载完时，会停在 6 秒等它。
 - **减少动态效果，或屏幕窄于 768px**：`<picture>` 按媒体查询直接换成 hero-static；动效层、上层图和按钮都不显示，也不下载 base-after（手机只下载 hero-static 一张）。运行中改窗口宽度或系统设置会跟着切换，切回桌面时直接停在“把脉后”。
-- **录音笔上的 logo**：机身正面按键那块盖一块深色铭牌（ink 色，ink-2 细边），上面是素笺色的声纹指印（seal.svg 的反白版）和横排“把脉了”。它在底图上面、动效下面，静态图上也有，位置跟 recorder 锚点走。为了让朱砂只留给最后那枚印章，这里用的是单色；想用朱砂色，把 build.py `decal_markup` 里 `f-sheet` 换成 `f-cinnabar` 就行。
+- **录音笔上的 logo**：机身正面按键那块盖一块深色铭牌（ink 色，ink-2 细边），上面是选中 logo 的反白版（素笺印面、松烟墨图形，像丝印）和横排“把脉了”。它在底图上面、动效下面，静态图上也有，位置跟 recorder 锚点走。为了让朱砂只留给最后那枚印章，这里用的是单色；想用朱砂，把 `src/hero.css` 里 `.hero-decal .lg-face` 的颜色改成 `--cinnabar`、`.lg-figure` 改成 `--sheet` 就行。logo/C1、C2 在这么小的尺寸下自动换成它们的小尺寸光学稿（mark-micro）。
 - **领导的嘴**：`build.py` 从页面上显示的同一份 base-before.webp 生成闭嘴、半张、大半张三帧小图（47 × 25 px）：找出嘴（上唇线、牙、口腔、舌头、下唇线连成的一片），逐列把口腔压扁、下唇线往上提，空出来的地方用嘴下方的皮肤色补上，下巴不动。拼回去看不出接缝。嘴要在 mouth 锚点左边 46 px 以内；找不到就不做嘴形动画，build 会提示。
 - **颜色**：声浪、道具、波纹、铭牌只用设计系统变量（ink、ink-2、ink-3、line、sheet、indigo、indigo-2、gold、brass、wood），页面没定义变量时用设计稿的值兜底。朱砂只出现在印章上。嘴形是底图本身的像素，不涉及取色。
 
@@ -151,10 +152,10 @@ python3 tools/check_diff.py
 重做差异图。
 
 ```bash
-python3 tools/make_seal.py
+FONT_DIR=<lxgw-wenkai-webfont 包目录> node tools/logo_options.cjs
 ```
 
-重画印章替身。
+重做 logo 候选对比图（12 款逐一放进招牌截图，不改交付文件）。
 
 ```bash
 python3 tools/make_wordmark.py <lxgw-wenkai-webfont 包目录>

@@ -202,7 +202,8 @@ async function main() {
   const decalCols = [...new Set(colors.filter(c => c.inDecal).map(c => PAL_RGB[c.v] || c.v))]
   const usedNames = [...new Set(colors.filter(c => !c.inSeal && !c.inDecal).map(c => PAL_RGB[c.v] || c.v))]
   check('声浪和道具只用设计系统的颜色', bad.length === 0, bad.length ? `不在色板里：${[...new Set(bad.map(b => b.v))].join('、')}` : `声浪和道具用到 ${usedNames.join('、')}；录音笔铭牌用 ${decalCols.join('、')}`)
-  check('朱砂只出现在印章上', redOut.length === 0 && sealCols.join() === 'cinnabar', `印章 ${sealCols.join('、')}；印章以外的朱砂元素 ${redOut.length} 个`)
+  check('朱砂只出现在印章上', redOut.length === 0 && sealCols.includes('cinnabar') && sealCols.every(c => ['cinnabar', 'sheet'].includes(c)),
+    `印章用 ${sealCols.join('、')}（朱砂印面、素笺图形）；印章以外的朱砂元素 ${redOut.length} 个`)
 
   // 帧：联系表
   const times = [0.5, 1.2, 1.9, 2.6, 3.3, 4.15, 4.5, 4.9, 5.5, 6.4, 7.1, 8.0]
