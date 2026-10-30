@@ -1,0 +1,25 @@
+settled in 380.8 s
+cover keys measured in 493.6 s
+wrote juben.html (410.5 KB) and juben.svg (341.7 KB) · 68 items · 64 solids · scale 0.586 px/mm · 600×784
+  tubes in 7486 replayed frames · 86.1 s
+  solids at rest and in 32 prefix states · 86.2 s
+  solids in 1186 replayed frames (every fourth with an act on the move) · 601.9 s
+  the cover against the cards in 7486 replayed frames, in section: closest 0.01 mm (act0.arch, cover 0.0°, together 3.617 s) · 603.5 s
+  the cover against the fixed parts at 337 angles · 643.2 s
+  the cover's order in 483 replayed frames it swings in · 2043.0 s
+  the rest · 3904.4 s
+clearance: 0 problems
+clearance apart: 0 problems
+terminals: 0 ends not on a mount
+loose ends: 0
+screen folds: 0
+support: 0 unsupported solids · 0 hanging tubes · 0 sunk pairs
+depth order: 0 problems
+through in mid-flight: 0 pairs
+self-overlap: 0 chunks whose outline crosses itself on screen
+wobble: 0 smoothed profiles whose slope turns between its ends
+saddles off their host apart: 0
+stand-in shapes: 0 items whose recorded shape covers too little of what it draws
+crowding: 0 pairs where a bend or end touches another line on screen
+audit · 5 tubes · 64 solids · 68 items · 1895 depth states · 7486 replayed frames · 337 cover angles · 483 frames of cover order · 595865 overlaps · 427 order rules · 3904.4 s
+audit passed
