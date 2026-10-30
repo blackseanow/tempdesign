@@ -1,0 +1,4 @@
+{
+  "说明": "印章和录音笔上的 logo：定为 logo-b/A1（略斜三指）。要换成别的候选（logo-b/A1 … logo-b/C2、logo/A1 … logo/C2，对比图见 screenshots/logo-options.png），改这里再运行 python3 tools/build.py。",
+  "logo": "logo-b/A1"
+}

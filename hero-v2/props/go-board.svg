@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 160 160" width="160" height="160" role="img" aria-label="棋盘">
+<title>棋盘</title>
+<style>/* style:start */
+.f-sheet{fill:var(--sheet,#F8F7F2)}
+.f-paper{fill:var(--paper,#ECEAE1)}
+.f-line{fill:var(--line,#D6D2C4)}
+.f-ink{fill:var(--ink,#24231F)}
+.f-ink2{fill:var(--ink-2,#4E4C45)}
+.f-ink3{fill:var(--ink-3,#6B685F)}
+.f-indigo{fill:var(--indigo,#1F3A4D)}
+.f-indigo2{fill:var(--indigo-2,#2B4D65)}
+.f-gold{fill:var(--gold,#D9B865)}
+.f-brass{fill:var(--brass,#85682F)}
+.f-wood{fill:var(--wood,#6B4A2B)}
+.f-cinnabar{fill:var(--cinnabar,#B5382A)}
+.o{stroke:var(--ink,#24231F);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.k-ink,.k-ink3,.k-line,.k-sheet,.k-gold,.k-brass,.k-wood,.k-indigo2{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.k-ink{stroke:var(--ink,#24231F)}
+.k-ink3{stroke:var(--ink-3,#6B685F)}
+.k-line{stroke:var(--line,#D6D2C4)}
+.k-sheet{stroke:var(--sheet,#F8F7F2)}
+.k-gold{stroke:var(--gold,#D9B865)}
+.k-brass{stroke:var(--brass,#85682F)}
+.k-wood{stroke:var(--wood,#6B4A2B)}
+.k-indigo2{stroke:var(--indigo-2,#2B4D65)}
+/* style:end */</style>
+<!-- 腿 -->
+<path class="f-wood o" d="M-60 6h9v15h-9zM-5 38h10v15H-5zM51 6h9v15h-9z"/>
+<!-- 两个侧面 -->
+<path class="f-brass o" d="M-66-6 0 28V44L-66 10z"/>
+<path class="f-wood o" d="M0 28 66-6V10L0 44z"/>
+<!-- 盘面 -->
+<path class="f-gold o" d="M-66-6 0-40 66-6 0 28z"/>
+<!-- 九路棋线（参数 u、v 从 0.1 到 0.9） -->
+<path class="k-wood" stroke-width="1.1" d="M-52.8-6 0-33.2M-46.2-2.6 6.6-29.8M-39.6.8 13.2-26.4M-33 4.2 19.8-23M-26.4 7.6 26.4-19.6M-19.8 11 33-16.2M-13.2 14.4 39.6-12.8M-6.6 17.8 46.2-9.4M0 21.2 52.8-6M-52.8-6 0 21.2M-46.2-9.4 6.6 17.8M-39.6-12.8 13.2 14.4M-33-16.2 19.8 11M-26.4-19.6 26.4 7.6M-19.8-23 33 4.2M-13.2-26.4 39.6.8M-6.6-29.8 46.2-2.6M0-33.2 52.8-6"/>
+<!-- 棋子 -->
+<g class="f-ink">
+<ellipse cx="-13.2" cy="-12.8" rx="5.4" ry="3.1"/><ellipse cx="6.6" cy="-9.4" rx="5.4" ry="3.1"/><ellipse cx="0" cy="-6" rx="5.4" ry="3.1"/><ellipse cx="19.8" cy="-2.6" rx="5.4" ry="3.1"/><ellipse cx="-19.8" cy="4.2" rx="5.4" ry="3.1"/><ellipse cx="26.4" cy="-12.8" rx="5.4" ry="3.1"/>
+</g>
+<g class="f-sheet">
+<ellipse cx="-6.6" cy="-2.6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="-19.6" rx="5.4" ry="3.1"/><ellipse cx="-26.4" cy="-6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="7.6" rx="5.4" ry="3.1"/><ellipse cx="-6.6" cy="-23" rx="5.4" ry="3.1"/>
+</g>
+<g class="k-ink" stroke-width="1">
+<ellipse cx="-6.6" cy="-2.6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="-19.6" rx="5.4" ry="3.1"/><ellipse cx="-26.4" cy="-6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="7.6" rx="5.4" ry="3.1"/><ellipse cx="-6.6" cy="-23" rx="5.4" ry="3.1"/>
+</g>
+<g class="f-ink3" opacity=".9">
+<ellipse cx="-14.6" cy="-13.8" rx="1.8" ry=".9"/><ellipse cx="5.2" cy="-10.4" rx="1.8" ry=".9"/><ellipse cx="-1.4" cy="-7" rx="1.8" ry=".9"/><ellipse cx="18.4" cy="-3.6" rx="1.8" ry=".9"/><ellipse cx="-21.2" cy="3.2" rx="1.8" ry=".9"/><ellipse cx="25" cy="-13.8" rx="1.8" ry=".9"/>
+</g>
+</svg>

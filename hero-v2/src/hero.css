@@ -1,0 +1,43 @@
+/* ---------- 招牌：牌匾和标语在上，插画在下 ----------
+   新图中间上方是道具飞过的路线，牌匾不再压在画上。类名都带 hero- 前缀，不和全站的 .plaque 冲突。 */
+.hero-signboard{max-width:1920px;margin:0 auto;container-type:inline-size}
+.hero-sign{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(22px,2.4cqi,44px) 16px clamp(14px,1.5cqi,26px)}
+.hero-plaque{display:inline-block;margin:0;padding:.41em 1.18em;background:var(--indigo,#1F3A4D);color:#F4F2EA;font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-weight:400;font-size:clamp(24px,2.1cqi,40px);line-height:1.7;white-space:nowrap;box-shadow:inset 0 0 0 5px var(--indigo,#1F3A4D),inset 0 0 0 6px #C9A86A}
+.hero-plaque span{letter-spacing:.35em;margin-right:-.35em}
+.hero-motto{margin:.8em 0 0;font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-size:clamp(15px,1.1cqi,21px);line-height:1.8;letter-spacing:.12em;color:var(--ink-2,#4E4C45)}
+.hero-motto span{display:inline-block;margin:0 .4em}
+
+/* ---------- 插画：三层叠在同一个 1916 × 821 的框里 ---------- */
+.hero-stage{position:relative;aspect-ratio:1916/821;overflow:hidden;background:var(--paper,#ECEAE1)}
+.hero-stage picture,.hero-stage img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.hero-after{opacity:0}
+.hero-fx{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+/* 录音笔正面的铭牌（logo 和“把脉了”）：画在底图上面、动效下面，静态图上也显示 */
+.hero-decal{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-decal .decal-plate{stroke:var(--ink-2,#4E4C45);stroke-width:.8;stroke-opacity:.7}
+/* logo 印在两处：盖在材料上的印章是朱砂印面、素笺图形；录音笔铭牌上是反白版，素笺印面、松烟墨图形 */
+.hero-fx .fx-seal .lg-face{fill:var(--cinnabar,#B5382A)}
+.hero-fx .fx-seal .lg-figure{fill:var(--sheet,#F8F7F2);color:var(--sheet,#F8F7F2)}
+.hero-decal .lg-face{fill:var(--sheet,#F8F7F2)}
+.hero-decal .lg-figure{fill:var(--ink,#24231F);color:var(--ink,#24231F)}
+.hero-replay{position:absolute;padding:0;border:0;border-radius:14px;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hero-replay:focus-visible{outline:2px solid var(--brass,#85682F);outline-offset:2px}
+
+/* 声浪：只用设计系统的颜色 */
+.hero-fx .fx-waves path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.hero-fx .w-ink2{stroke:var(--ink-2,#4E4C45)}
+.hero-fx .w-ink3{stroke:var(--ink-3,#6B685F)}
+.hero-fx .w-brass{stroke:var(--brass,#85682F)}
+.hero-fx .w-gold{stroke:var(--gold,#D9B865)}
+/* 录音笔周围的波纹：平时不显示，收住时亮一下；鼠标移到录音笔上时淡淡亮起，提示可以点 */
+.hero-fx .fx-ripple{fill:none;stroke:var(--gold,#D9B865);stroke-width:2.6;opacity:0;transform-box:fill-box;transform-origin:center}
+.hero-stage.is-hot .fx-ripple{opacity:.55;transition:opacity .25s}
+.hero-fx .fx-seal{mix-blend-mode:multiply}
+
+/* 减少动态效果、或者屏幕窄于 768px：<picture> 换成 hero-static，这几层都不要 */
+@media (prefers-reduced-motion:reduce),(max-width:767.98px){
+  .hero-stage .hero-after,.hero-stage .hero-fx,.hero-stage .hero-replay{display:none}
+}
+@media (max-width:600px){
+  .hero-motto span{display:block}
+}

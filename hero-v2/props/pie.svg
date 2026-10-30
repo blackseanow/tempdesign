@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 160 160" width="160" height="160" role="img" aria-label="芝麻大饼">
+<title>芝麻大饼</title>
+<style>/* style:start */
+.f-sheet{fill:var(--sheet,#F8F7F2)}
+.f-paper{fill:var(--paper,#ECEAE1)}
+.f-line{fill:var(--line,#D6D2C4)}
+.f-ink{fill:var(--ink,#24231F)}
+.f-ink2{fill:var(--ink-2,#4E4C45)}
+.f-ink3{fill:var(--ink-3,#6B685F)}
+.f-indigo{fill:var(--indigo,#1F3A4D)}
+.f-indigo2{fill:var(--indigo-2,#2B4D65)}
+.f-gold{fill:var(--gold,#D9B865)}
+.f-brass{fill:var(--brass,#85682F)}
+.f-wood{fill:var(--wood,#6B4A2B)}
+.f-cinnabar{fill:var(--cinnabar,#B5382A)}
+.o{stroke:var(--ink,#24231F);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.k-ink,.k-ink3,.k-line,.k-sheet,.k-gold,.k-brass,.k-wood,.k-indigo2{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.k-ink{stroke:var(--ink,#24231F)}
+.k-ink3{stroke:var(--ink-3,#6B685F)}
+.k-line{stroke:var(--line,#D6D2C4)}
+.k-sheet{stroke:var(--sheet,#F8F7F2)}
+.k-gold{stroke:var(--gold,#D9B865)}
+.k-brass{stroke:var(--brass,#85682F)}
+.k-wood{stroke:var(--wood,#6B4A2B)}
+.k-indigo2{stroke:var(--indigo-2,#2B4D65)}
+/* style:end */</style>
+<!-- 饼边：千层 -->
+<path class="f-brass o" d="M-64-6A64 32 0 0 0 64-6V9A64 32 0 0 1-64 9z"/>
+<path class="k-gold" stroke-width="1.2" opacity=".7" d="M-63.5-1A64 32 0 0 0 63.5-1M-63.5 4A64 32 0 0 0 63.5 4"/>
+<!-- 饼面 -->
+<ellipse class="f-gold o" cx="0" cy="-6" rx="64" ry="32"/>
+<ellipse class="k-brass" stroke-width="1.4" opacity=".55" cx="0" cy="-6.5" rx="55" ry="26"/>
+<!-- 烙出来的焦斑 -->
+<g class="f-brass" opacity=".5">
+<ellipse cx="-24" cy="-12" rx="7" ry="3.2"/><ellipse cx="17" cy="-22" rx="6" ry="2.6"/><ellipse cx="30" cy="1" rx="8" ry="3.2"/><ellipse cx="-8" cy="8" rx="6" ry="2.6"/><ellipse cx="-42" cy="4" rx="4.5" ry="2.2"/>
+</g>
+<!-- 芝麻 -->
+<g class="f-sheet">
+<ellipse cx="-20.4" cy="-26.9" rx="2.3" ry="1.15" transform="rotate(18 -20.4 -26.9)"/><ellipse cx="-49.6" cy="-3.8" rx="2.3" ry="1.15" transform="rotate(-16 -49.6 -3.8)"/><ellipse cx="-8.8" cy="13.6" rx="2.3" ry="1.15" transform="rotate(-45 -8.8 13.6)"/><ellipse cx="-32.1" cy="1.6" rx="2.3" ry="1.15" transform="rotate(54 -32.1 1.6)"/><ellipse cx="8.9" cy="-12.2" rx="2.3" ry="1.15" transform="rotate(57 8.9 -12.2)"/><ellipse cx="-44.3" cy="-17.5" rx="2.3" ry="1.15" transform="rotate(38 -44.3 -17.5)"/><ellipse cx="5.5" cy="-32.2" rx="2.3" ry="1.15" transform="rotate(-53 5.5 -32.2)"/><ellipse cx="-8.4" cy="-17.2" rx="2.3" ry="1.15" transform="rotate(10 -8.4 -17.2)"/><ellipse cx="34.1" cy="5.9" rx="2.3" ry="1.15" transform="rotate(-31 34.1 5.9)"/><ellipse cx="43.5" cy="7.8" rx="2.3" ry="1.15" transform="rotate(-25 43.5 7.8)"/><ellipse cx="-40.4" cy="-6.7" rx="2.3" ry="1.15" transform="rotate(-55 -40.4 -6.7)"/><ellipse cx="19.5" cy="9.9" rx="2.3" ry="1.15" transform="rotate(9 19.5 9.9)"/><ellipse cx="43.6" cy="-17.2" rx="2.3" ry="1.15" transform="rotate(23 43.6 -17.2)"/><ellipse cx="10.9" cy="-1.2" rx="2.3" ry="1.15" transform="rotate(-5 10.9 -1.2)"/><ellipse cx="-3" cy="3.8" rx="2.3" ry="1.15" transform="rotate(-53 -3 3.8)"/><ellipse cx="23.4" cy="2.8" rx="2.3" ry="1.15" transform="rotate(59 23.4 2.8)"/><ellipse cx="-13.2" cy="4.1" rx="2.3" ry="1.15" transform="rotate(-57 -13.2 4.1)"/><ellipse cx="-4.4" cy="-25.9" rx="2.3" ry="1.15" transform="rotate(-46 -4.4 -25.9)"/><ellipse cx="5.7" cy="17" rx="2.3" ry="1.15" transform="rotate(38 5.7 17)"/><ellipse cx="-31.1" cy="-22" rx="2.3" ry="1.15" transform="rotate(-2 -31.1 -22)"/><ellipse cx="10.3" cy="-20.2" rx="2.3" ry="1.15" transform="rotate(-60 10.3 -20.2)"/><ellipse cx="22.1" cy="-5.1" rx="2.3" ry="1.15" transform="rotate(14 22.1 -5.1)"/><ellipse cx="-3.9" cy="-7" rx="2.3" ry="1.15" transform="rotate(-50 -3.9 -7)"/><ellipse cx="-27.3" cy="13.7" rx="2.3" ry="1.15" transform="rotate(-41 -27.3 13.7)"/><ellipse cx="-27.7" cy="-14" rx="2.3" ry="1.15" transform="rotate(-40 -27.7 -14)"/><ellipse cx="31.5" cy="-4" rx="2.3" ry="1.15" transform="rotate(33 31.5 -4)"/><ellipse cx="53" cy="-9.2" rx="2.3" ry="1.15" transform="rotate(52 53 -9.2)"/><ellipse cx="18.6" cy="18.6" rx="2.3" ry="1.15" transform="rotate(34 18.6 18.6)"/><ellipse cx="-37.3" cy="11.3" rx="2.3" ry="1.15" transform="rotate(-20 -37.3 11.3)"/><ellipse cx="18.2" cy="-15" rx="2.3" ry="1.15" transform="rotate(6 18.2 -15)"/><ellipse cx="37.8" cy="-23.3" rx="2.3" ry="1.15" transform="rotate(-30 37.8 -23.3)"/><ellipse cx="3.7" cy="-4.6" rx="2.3" ry="1.15" transform="rotate(-58 3.7 -4.6)"/><ellipse cx="-20.2" cy="-4.9" rx="2.3" ry="1.15" transform="rotate(7 -20.2 -4.9)"/><ellipse cx="-21.1" cy="7.3" rx="2.3" ry="1.15" transform="rotate(-58 -21.1 7.3)"/><ellipse cx="30.1" cy="-18.6" rx="2.3" ry="1.15"/><ellipse cx="-2.9" cy="20.1" rx="2.3" ry="1.15" transform="rotate(-47 -2.9 20.1)"/><ellipse cx="37" cy="-10.1" rx="2.3" ry="1.15" transform="rotate(-1 37 -10.1)"/><ellipse cx="3.4" cy="9" rx="2.3" ry="1.15" transform="rotate(19 3.4 9)"/><ellipse cx="27.1" cy="12.7" rx="2.3" ry="1.15" transform="rotate(-43 27.1 12.7)"/><ellipse cx="22.4" cy="-22.2" rx="2.3" ry="1.15" transform="rotate(-56 22.4 -22.2)"/><ellipse cx="16.6" cy="-31.4" rx="2.3" ry="1.15" transform="rotate(-42 16.6 -31.4)"/><ellipse cx="-18.1" cy="-17" rx="2.3" ry="1.15" transform="rotate(41 -18.1 -17)"/><ellipse cx="-11.6" cy="-9.2" rx="2.3" ry="1.15" transform="rotate(54 -11.6 -9.2)"/><ellipse cx="37.3" cy="13.3" rx="2.3" ry="1.15" transform="rotate(-8 37.3 13.3)"/><ellipse cx="-14.8" cy="19.2" rx="2.3" ry="1.15" transform="rotate(-37 -14.8 19.2)"/><ellipse cx="-54.5" cy="-11.4" rx="2.3" ry="1.15" transform="rotate(37 -54.5 -11.4)"/>
+</g>
+</svg>
