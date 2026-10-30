@@ -1,0 +1,36 @@
+"""把 shoot.cjs 截的帧拼成联系表 screenshots/sequence-sheet.png（每帧标时间和阶段）。
+
+用法：python3 tools/sheet.py <帧目录> <输出目录> <时间,时间,...>
+"""
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+FONT = '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc'
+
+
+def phase(t):
+    return '把脉前' if t < 4 else '收住' if t < 6 else '把脉后'
+
+
+def main():
+    src, out, times = Path(sys.argv[1]), Path(sys.argv[2]), [float(t) for t in sys.argv[3].split(',')]
+    frames = [Image.open(src / f'frame-{t:.1f}.png').convert('RGB') for t in times]
+    w, h = 720, round(frames[0].size[1] * 720 / frames[0].size[0])
+    cols, gap, head = 3, 12, 30
+    rows = (len(frames) + cols - 1) // cols
+    sheet = Image.new('RGB', (cols * w + (cols + 1) * gap, rows * (h + head) + (rows + 1) * gap), (236, 234, 225))
+    d = ImageDraw.Draw(sheet)
+    f = ImageFont.truetype(FONT, 18)
+    for i, (t, im) in enumerate(zip(times, frames)):
+        x = gap + (i % cols) * (w + gap)
+        y = gap + (i // cols) * (h + head + gap)
+        d.text((x, y + 4), f'{t:.1f} 秒 · {phase(t)}', font=f, fill=(36, 35, 31))
+        sheet.paste(im.resize((w, h), Image.LANCZOS), (x, y + head))
+    sheet.save(out / 'sequence-sheet.png', optimize=True)
+    print('sequence-sheet.png', sheet.size)
+
+
+if __name__ == '__main__':
+    main()

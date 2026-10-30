@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 160 160" width="160" height="160" role="img" aria-label="一锅鸡汤">
+<title>一锅鸡汤</title>
+<style>/* style:start */
+.f-sheet{fill:var(--sheet,#F8F7F2)}
+.f-paper{fill:var(--paper,#ECEAE1)}
+.f-line{fill:var(--line,#D6D2C4)}
+.f-ink{fill:var(--ink,#24231F)}
+.f-ink2{fill:var(--ink-2,#4E4C45)}
+.f-ink3{fill:var(--ink-3,#6B685F)}
+.f-indigo{fill:var(--indigo,#1F3A4D)}
+.f-indigo2{fill:var(--indigo-2,#2B4D65)}
+.f-gold{fill:var(--gold,#D9B865)}
+.f-brass{fill:var(--brass,#85682F)}
+.f-wood{fill:var(--wood,#6B4A2B)}
+.f-cinnabar{fill:var(--cinnabar,#B5382A)}
+.o{stroke:var(--ink,#24231F);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.k-ink,.k-ink3,.k-line,.k-sheet,.k-gold,.k-brass,.k-wood,.k-indigo2{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.k-ink{stroke:var(--ink,#24231F)}
+.k-ink3{stroke:var(--ink-3,#6B685F)}
+.k-line{stroke:var(--line,#D6D2C4)}
+.k-sheet{stroke:var(--sheet,#F8F7F2)}
+.k-gold{stroke:var(--gold,#D9B865)}
+.k-brass{stroke:var(--brass,#85682F)}
+.k-wood{stroke:var(--wood,#6B4A2B)}
+.k-indigo2{stroke:var(--indigo-2,#2B4D65)}
+/* style:end */</style>
+<!-- 热气 -->
+<path class="k-ink3" stroke-width="2.2" opacity=".75" d="M-4-36c-7-9 5-14-1-24M10-34c-6-8 5-13 0-22M24-38c-5-7 4-11 0-18"/>
+<!-- 锅耳 -->
+<rect class="f-indigo o" x="-63" y="-8" width="16" height="12" rx="5"/>
+<rect class="f-indigo o" x="47" y="-8" width="16" height="12" rx="5"/>
+<!-- 锅身 -->
+<path class="f-indigo o" d="M-51-10C-51 26-41 45 0 47 41 45 51 26 51-10z"/>
+<path class="k-indigo2" stroke-width="4.5" d="M-41 2c0 17 6 28 16 34"/>
+<!-- 锅口和汤 -->
+<ellipse class="f-indigo2 o" cx="0" cy="-10" rx="53" ry="12.5"/>
+<ellipse class="f-gold" cx="0" cy="-9" rx="45" ry="8.5"/>
+<path class="k-brass" stroke-width="1.3" opacity=".7" d="M-30-8q8 3 16 0M6-5q8 3 16 0"/>
+<!-- 骨头：先画粗墨线当轮廓，再盖素笺 -->
+<g class="k-ink" stroke-width="14"><path d="M14-11 32-37"/></g>
+<circle class="f-ink" cx="28.4" cy="-42.4" r="8.4"/>
+<circle class="f-ink" cx="37.6" cy="-35.4" r="8.4"/>
+<g class="k-sheet" stroke-width="8"><path d="M14-11 32-37"/></g>
+<circle class="f-sheet" cx="28.4" cy="-42.4" r="5.4"/>
+<circle class="f-sheet" cx="37.6" cy="-35.4" r="5.4"/>
+<ellipse class="f-gold" cx="13.5" cy="-8.8" rx="9" ry="3"/>
+<!-- 掀开的锅盖 -->
+<g transform="rotate(-24 -26 -24)">
+<ellipse class="f-indigo o" cx="-26" cy="-24" rx="31" ry="9"/>
+<path class="k-indigo2" stroke-width="3" d="M-48-26q22-7 44 0"/>
+<rect class="f-brass o" x="-31" y="-38" width="10" height="7" rx="3"/>
+</g>
+</svg>

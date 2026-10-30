@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>咸鱼把脉了 招牌插画 v2</title>
+<!-- 由 tools/build.py 从 src/ 生成，不要手改 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<style>
+:root{
+  --paper:#ECEAE1;--sheet:#F8F7F2;--ink:#24231F;--ink-2:#4E4C45;--ink-3:#6B685F;
+  --line:#D6D2C4;--line-2:#E4E0D4;
+  --indigo:#1F3A4D;--indigo-2:#2B4D65;--cinnabar:#B5382A;--brass:#85682F;
+  --velvet:#A72F24;--gold:#D9B865;--wood:#6B4A2B;
+  --kai:"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif;
+  --song:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--song);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* hero-signboard:start（到 end 之间的样式由 tools/build.py 原样复制进 HeroSignboard.vue） */
+{{CSS}}
+/* hero-signboard:end */
+
+/* ---------- ?debug=1 才用到 ---------- */
+.hero-debug{position:absolute;inset:0;pointer-events:none}
+.hero-debug-ref,.hero-debug-guides{position:absolute;inset:0;width:100%;height:100%}
+.hero-debug-guides{fill:none;stroke:var(--indigo-2);stroke-width:2;stroke-dasharray:8 6}
+.hero-debug-guides .hd-mic{fill:var(--sheet);stroke-dasharray:none}
+.hero-debug-guides .hd-seal{stroke:var(--brass);stroke-width:3}
+.hero-debug-on .hero-replay{outline:2px dashed var(--brass);outline-offset:0}
+.hero-debug-pin{position:absolute;pointer-events:auto;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:2px solid var(--sheet);border-radius:50%;background:var(--indigo);box-shadow:0 0 0 2px var(--indigo);cursor:grab;touch-action:none}
+.hero-debug-pin:active{cursor:grabbing}
+.hero-debug-pin i{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--sheet)}
+.hero-debug-pin span{position:absolute;left:20px;top:-26px;padding:1px 6px;white-space:nowrap;font:12px/1.6 var(--song);color:var(--sheet);background:var(--indigo)}
+.hero-debug-pin[data-key=stack] span{left:auto;right:20px}
+.hero-debug-panel{max-width:1920px;margin:0 auto;padding:14px 16px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:4px 32px;font-size:13px;line-height:1.6;background:var(--sheet);border-top:1px solid var(--line)}
+.hero-debug-panel>section{min-width:0}
+.hero-debug-panel h2{margin:0 0 4px;font-family:var(--kai);font-weight:400;font-size:18px}
+.hero-debug-panel p{margin:4px 0;color:var(--ink-2)}
+.hero-debug-panel table{width:100%;border-collapse:collapse;margin:6px 0}
+.hero-debug-panel th{text-align:left;font-weight:400;color:var(--ink-3)}
+.hero-debug-panel input[type=number]{width:76px}
+.hero-debug-panel .hd-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:6px 0}
+.hero-debug-panel input[type=range]{flex:1}
+.hero-debug-panel textarea{width:100%;font:12px/1.5 ui-monospace,monospace}
+.hero-debug-panel .hd-msg{color:var(--brass)}
+</style>
+</head>
+<body>
+{{MARKUP}}
+<script>
+// anchors.json 的内嵌副本：file:// 打开时浏览器不让读 anchors.json，就用这份（tools/build.py 生成时写入）
+const HERO_ANCHORS = {{ANCHORS}};
+{{MOTION}}
+{{DEBUG}}
+(async () => {
+  const stage = document.querySelector('.hero-stage')
+  let anchors = HERO_ANCHORS, source = 'inline'
+  if (location.protocol.startsWith('http')) {
+    try {
+      const r = await fetch('anchors.json', { cache: 'no-store' })
+      if (r.ok) { anchors = await r.json(); source = 'anchors.json' }
+    } catch (e) { /* 读不到就用内嵌副本 */ }
+  }
+  let dbg = null
+  const motion = createHeroMotion(stage, anchors, { onFrame: t => dbg && dbg.onFrame(t) })
+  if (new URLSearchParams(location.search).get('debug') === '1') dbg = initHeroDebug(stage, motion, anchors, source)
+  window.heroMotion = motion  // 控制台里可以 heroMotion.seek(5)、heroMotion.replay()
+})()
+</script>
+</body>
+</html>

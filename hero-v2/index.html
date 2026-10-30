@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>咸鱼把脉了 招牌插画 v2</title>
+<!-- 由 tools/build.py 从 src/ 生成，不要手改 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<style>
+:root{
+  --paper:#ECEAE1;--sheet:#F8F7F2;--ink:#24231F;--ink-2:#4E4C45;--ink-3:#6B685F;
+  --line:#D6D2C4;--line-2:#E4E0D4;
+  --indigo:#1F3A4D;--indigo-2:#2B4D65;--cinnabar:#B5382A;--brass:#85682F;
+  --velvet:#A72F24;--gold:#D9B865;--wood:#6B4A2B;
+  --kai:"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif;
+  --song:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--song);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* hero-signboard:start（到 end 之间的样式由 tools/build.py 原样复制进 HeroSignboard.vue） */
+/* ---------- 招牌：牌匾和标语在上，插画在下 ----------
+   新图中间上方是道具飞过的路线，牌匾不再压在画上。类名都带 hero- 前缀，不和全站的 .plaque 冲突。 */
+.hero-signboard{max-width:1920px;margin:0 auto;container-type:inline-size}
+.hero-sign{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(22px,2.4cqi,44px) 16px clamp(14px,1.5cqi,26px)}
+.hero-plaque{display:inline-block;margin:0;padding:.41em 1.18em;background:var(--indigo,#1F3A4D);color:#F4F2EA;font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-weight:400;font-size:clamp(24px,2.1cqi,40px);line-height:1.7;white-space:nowrap;box-shadow:inset 0 0 0 5px var(--indigo,#1F3A4D),inset 0 0 0 6px #C9A86A}
+.hero-plaque span{letter-spacing:.35em;margin-right:-.35em}
+.hero-motto{margin:.8em 0 0;font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-size:clamp(15px,1.1cqi,21px);line-height:1.8;letter-spacing:.12em;color:var(--ink-2,#4E4C45)}
+.hero-motto span{display:inline-block;margin:0 .4em}
+
+/* ---------- 插画：三层叠在同一个 1916 × 821 的框里 ---------- */
+.hero-stage{position:relative;aspect-ratio:1916/821;overflow:hidden;background:var(--paper,#ECEAE1)}
+.hero-stage picture,.hero-stage img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.hero-after{opacity:0}
+.hero-fx{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.hero-replay{position:absolute;padding:0;border:0;border-radius:14px;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hero-replay:focus-visible{outline:2px solid var(--brass,#85682F);outline-offset:2px}
+
+/* 声浪：只用设计系统的颜色 */
+.hero-fx .fx-waves path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.hero-fx .w-ink2{stroke:var(--ink-2,#4E4C45)}
+.hero-fx .w-ink3{stroke:var(--ink-3,#6B685F)}
+.hero-fx .w-brass{stroke:var(--brass,#85682F)}
+.hero-fx .w-gold{stroke:var(--gold,#D9B865)}
+/* 录音笔周围的波纹：平时不显示，收住时亮一下；鼠标移到录音笔上时淡淡亮起，提示可以点 */
+.hero-fx .fx-ripple{fill:none;stroke:var(--gold,#D9B865);stroke-width:2.6;opacity:0;transform-box:fill-box;transform-origin:center}
+.hero-stage.is-hot .fx-ripple{opacity:.55;transition:opacity .25s}
+.hero-fx .fx-seal{mix-blend-mode:multiply}
+
+/* 减少动态效果、或者屏幕窄于 768px：<picture> 换成 hero-static，这几层都不要 */
+@media (prefers-reduced-motion:reduce),(max-width:767.98px){
+  .hero-stage .hero-after,.hero-stage .hero-fx,.hero-stage .hero-replay{display:none}
+}
+@media (max-width:600px){
+  .hero-motto span{display:block}
+}
+
+/* 道具和印章的配色（props/_style.css） */
+.hero-fx .f-sheet{fill:var(--sheet,#F8F7F2)}
+.hero-fx .f-paper{fill:var(--paper,#ECEAE1)}
+.hero-fx .f-line{fill:var(--line,#D6D2C4)}
+.hero-fx .f-ink{fill:var(--ink,#24231F)}
+.hero-fx .f-ink2{fill:var(--ink-2,#4E4C45)}
+.hero-fx .f-ink3{fill:var(--ink-3,#6B685F)}
+.hero-fx .f-indigo{fill:var(--indigo,#1F3A4D)}
+.hero-fx .f-indigo2{fill:var(--indigo-2,#2B4D65)}
+.hero-fx .f-gold{fill:var(--gold,#D9B865)}
+.hero-fx .f-brass{fill:var(--brass,#85682F)}
+.hero-fx .f-wood{fill:var(--wood,#6B4A2B)}
+.hero-fx .f-cinnabar{fill:var(--cinnabar,#B5382A)}
+.hero-fx .o{stroke:var(--ink,#24231F);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.hero-fx .k-ink,.hero-fx .k-ink3,.hero-fx .k-line,.hero-fx .k-sheet,.hero-fx .k-gold,.hero-fx .k-brass,.hero-fx .k-wood,.hero-fx .k-indigo2{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.hero-fx .k-ink{stroke:var(--ink,#24231F)}
+.hero-fx .k-ink3{stroke:var(--ink-3,#6B685F)}
+.hero-fx .k-line{stroke:var(--line,#D6D2C4)}
+.hero-fx .k-sheet{stroke:var(--sheet,#F8F7F2)}
+.hero-fx .k-gold{stroke:var(--gold,#D9B865)}
+.hero-fx .k-brass{stroke:var(--brass,#85682F)}
+.hero-fx .k-wood{stroke:var(--wood,#6B4A2B)}
+.hero-fx .k-indigo2{stroke:var(--indigo-2,#2B4D65)}
+/* hero-signboard:end */
+
+/* ---------- ?debug=1 才用到 ---------- */
+.hero-debug{position:absolute;inset:0;pointer-events:none}
+.hero-debug-ref,.hero-debug-guides{position:absolute;inset:0;width:100%;height:100%}
+.hero-debug-guides{fill:none;stroke:var(--indigo-2);stroke-width:2;stroke-dasharray:8 6}
+.hero-debug-guides .hd-mic{fill:var(--sheet);stroke-dasharray:none}
+.hero-debug-guides .hd-seal{stroke:var(--brass);stroke-width:3}
+.hero-debug-on .hero-replay{outline:2px dashed var(--brass);outline-offset:0}
+.hero-debug-pin{position:absolute;pointer-events:auto;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:2px solid var(--sheet);border-radius:50%;background:var(--indigo);box-shadow:0 0 0 2px var(--indigo);cursor:grab;touch-action:none}
+.hero-debug-pin:active{cursor:grabbing}
+.hero-debug-pin i{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--sheet)}
+.hero-debug-pin span{position:absolute;left:20px;top:-26px;padding:1px 6px;white-space:nowrap;font:12px/1.6 var(--song);color:var(--sheet);background:var(--indigo)}
+.hero-debug-pin[data-key=stack] span{left:auto;right:20px}
+.hero-debug-panel{max-width:1920px;margin:0 auto;padding:14px 16px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:4px 32px;font-size:13px;line-height:1.6;background:var(--sheet);border-top:1px solid var(--line)}
+.hero-debug-panel>section{min-width:0}
+.hero-debug-panel h2{margin:0 0 4px;font-family:var(--kai);font-weight:400;font-size:18px}
+.hero-debug-panel p{margin:4px 0;color:var(--ink-2)}
+.hero-debug-panel table{width:100%;border-collapse:collapse;margin:6px 0}
+.hero-debug-panel th{text-align:left;font-weight:400;color:var(--ink-3)}
+.hero-debug-panel input[type=number]{width:76px}
+.hero-debug-panel .hd-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:6px 0}
+.hero-debug-panel input[type=range]{flex:1}
+.hero-debug-panel textarea{width:100%;font:12px/1.5 ui-monospace,monospace}
+.hero-debug-panel .hd-msg{color:var(--brass)}
+</style>
+</head>
+<body>
+<header class="hero-signboard">
+  <div class="hero-sign">
+    <h1 class="hero-plaque"><span>咸鱼把脉了</span></h1>
+    <p class="hero-motto"><span>领导把脉，一字不落；</span><span>对症开方，按时交差。</span></p>
+  </div>
+  <div class="hero-stage">
+    <picture>
+      <source media="(prefers-reduced-motion: reduce), (max-width: 767.98px)" srcset="img/hero-static.webp 1x" type="image/webp">
+      <img class="hero-base" src="img/base-before.webp" srcset="img/base-before.webp 1x" width="1916" height="821" alt="插画：领导靠在椅背上侃侃而谈，脸谱、宏图、大饼、鸡汤、棋盘和火箭顺着声浪飘向对面埋头狂记的员工，会议桌中间的录音笔正在收音。" fetchpriority="high">
+    </picture>
+    <img class="hero-after" data-src="img/base-after.webp" data-srcset="img/base-after.webp 1x" width="1916" height="821" alt="" aria-hidden="true" decoding="async">
+    <svg class="hero-fx" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">
+      <g class="fx-ripples"><ellipse class="fx-ripple"/><ellipse class="fx-ripple"/><ellipse class="fx-ripple"/></g>
+      <g class="fx-waves"></g>
+      <g class="fx-props">
+        <g class="fx-prop" data-prop="mask-book" opacity="0"><g transform="scale(1) translate(-0 -0)">
+        <path class="f-sheet o" d="M-38-56H48a4 4 0 0 1 4 4V62a4 4 0 0 1-4 4H-38z"/>
+        <path class="k-ink3" stroke-width="1.1" d="M45-50V60M48.5-49V61M-30 62.5H44"/>
+        <path class="k-brass" stroke-width="3" d="M26 64l3 12"/>
+        <circle class="f-brass" cx="29.6" cy="77" r="2.6"/>
+        <rect class="f-indigo o" x="-48" y="-62" width="90" height="122" rx="3"/>
+        <path class="k-indigo2" stroke-width="4" d="M37-55V52"/>
+        <path class="k-sheet" stroke-width="1.6" d="M-37-58V56M-48-46h11M-48-24h11M-48-2h11M-48 20h11M-48 42h11"/>
+        <rect class="f-sheet" x="-31" y="-54" width="9" height="40" rx="1"/>
+        <path class="k-ink" stroke-width="1.6" d="M-26.5-49v6M-26.5-38v6M-26.5-27v7"/>
+        <path class="f-gold o" d="M6-42C27-42 36-31 36-14 36 3 31 19 21 31 15 39 10 44 6 44 2 44-3 39-9 31-19 19-24 3-24-14-24-31-15-42 6-42z"/>
+        <path class="f-ink" d="M6-39C9.5-31 9.5-22 6-14 2.5-22 2.5-31 6-39z"/>
+        <path class="f-ink" d="M-19-17C-13-27-3-26 2-15-5-20-12-20-19-17zM31-17C25-27 15-26 10-15 17-20 24-20 31-17z"/>
+        <path class="f-ink" d="M0-9C-7-13-16-11-19-1-12-5-5-5 0-9zM12-9C19-13 28-11 31-1 24-5 17-5 12-9z"/>
+        <ellipse class="f-sheet" cx="-8.5" cy="-7.2" rx="3.6" ry="2.2" transform="rotate(-14 -8.5 -7.2)"/>
+        <ellipse class="f-sheet" cx="20.5" cy="-7.2" rx="3.6" ry="2.2" transform="rotate(14 20.5 -7.2)"/>
+        <circle class="f-ink" cx="-8" cy="-7.2" r="1.3"/>
+        <circle class="f-ink" cx="20" cy="-7.2" r="1.3"/>
+        <path class="k-ink" stroke-width="2" d="M2 6q4 4 8 0"/>
+        <path class="k-brass" stroke-width="1.8" d="M-17 8c3 7 8 8 12 4M29 8c-3 7-8 8-12 4"/>
+        <path class="f-ink" d="M-9 22C-2 17 14 17 21 22 15 30-3 30-9 22z"/>
+        </g></g>
+        <g class="fx-prop" data-prop="scroll" opacity="0"><g transform="scale(1) translate(-0 -0)">
+        <path class="f-sheet o" d="M-62-33C-30-38 30-29 62-35V31C30 37-30 28-62 33z"/>
+        <path class="k-brass" stroke-width="1.3" d="M-55-26C-26-30 26-22 55-28V24C26 30-26 22-55 26z"/>
+        <path class="f-indigo2" d="M-50 20-33-5-24 4-7-21 9-1 17-9 35 19C12 23-27 16-50 20z"/>
+        <path class="f-indigo" d="M7 21 26 1 43 20C33 22 18 22 7 21z"/>
+        <path class="k-sheet" stroke-width="1.6" d="M-7-21-12-11M-33-5-36 0M26 1 22 7"/>
+        <path class="k-ink" stroke-width="1.6" d="M-7-21V-35"/>
+        <path class="f-gold" d="M-7-35 4-31.5-7-28z"/>
+        <path class="k-ink" stroke-width="1.8" stroke-dasharray="4 4.5" d="M-50 26C-34 30-28 12-12 14S16 26 27 11 42-12 52-20"/>
+        <rect class="f-wood o" x="-71" y="-42" width="10" height="84" rx="3"/>
+        <rect class="f-wood o" x="61" y="-44" width="10" height="84" rx="3"/>
+        <path class="f-gold o" d="M-69-50h6v8h-6zM-69 42h6v8h-6zM63-52h6v8h-6zM63 40h6v8h-6z"/>
+        </g></g>
+        <g class="fx-prop" data-prop="pie" opacity="0"><g transform="scale(1) translate(-0 -0)">
+        <path class="f-brass o" d="M-64-6A64 32 0 0 0 64-6V9A64 32 0 0 1-64 9z"/>
+        <path class="k-gold" stroke-width="1.2" opacity=".7" d="M-63.5-1A64 32 0 0 0 63.5-1M-63.5 4A64 32 0 0 0 63.5 4"/>
+        <ellipse class="f-gold o" cx="0" cy="-6" rx="64" ry="32"/>
+        <ellipse class="k-brass" stroke-width="1.4" opacity=".55" cx="0" cy="-6.5" rx="55" ry="26"/>
+        <g class="f-brass" opacity=".5">
+        <ellipse cx="-24" cy="-12" rx="7" ry="3.2"/><ellipse cx="17" cy="-22" rx="6" ry="2.6"/><ellipse cx="30" cy="1" rx="8" ry="3.2"/><ellipse cx="-8" cy="8" rx="6" ry="2.6"/><ellipse cx="-42" cy="4" rx="4.5" ry="2.2"/>
+        </g>
+        <g class="f-sheet">
+        <ellipse cx="-20.4" cy="-26.9" rx="2.3" ry="1.15" transform="rotate(18 -20.4 -26.9)"/><ellipse cx="-49.6" cy="-3.8" rx="2.3" ry="1.15" transform="rotate(-16 -49.6 -3.8)"/><ellipse cx="-8.8" cy="13.6" rx="2.3" ry="1.15" transform="rotate(-45 -8.8 13.6)"/><ellipse cx="-32.1" cy="1.6" rx="2.3" ry="1.15" transform="rotate(54 -32.1 1.6)"/><ellipse cx="8.9" cy="-12.2" rx="2.3" ry="1.15" transform="rotate(57 8.9 -12.2)"/><ellipse cx="-44.3" cy="-17.5" rx="2.3" ry="1.15" transform="rotate(38 -44.3 -17.5)"/><ellipse cx="5.5" cy="-32.2" rx="2.3" ry="1.15" transform="rotate(-53 5.5 -32.2)"/><ellipse cx="-8.4" cy="-17.2" rx="2.3" ry="1.15" transform="rotate(10 -8.4 -17.2)"/><ellipse cx="34.1" cy="5.9" rx="2.3" ry="1.15" transform="rotate(-31 34.1 5.9)"/><ellipse cx="43.5" cy="7.8" rx="2.3" ry="1.15" transform="rotate(-25 43.5 7.8)"/><ellipse cx="-40.4" cy="-6.7" rx="2.3" ry="1.15" transform="rotate(-55 -40.4 -6.7)"/><ellipse cx="19.5" cy="9.9" rx="2.3" ry="1.15" transform="rotate(9 19.5 9.9)"/><ellipse cx="43.6" cy="-17.2" rx="2.3" ry="1.15" transform="rotate(23 43.6 -17.2)"/><ellipse cx="10.9" cy="-1.2" rx="2.3" ry="1.15" transform="rotate(-5 10.9 -1.2)"/><ellipse cx="-3" cy="3.8" rx="2.3" ry="1.15" transform="rotate(-53 -3 3.8)"/><ellipse cx="23.4" cy="2.8" rx="2.3" ry="1.15" transform="rotate(59 23.4 2.8)"/><ellipse cx="-13.2" cy="4.1" rx="2.3" ry="1.15" transform="rotate(-57 -13.2 4.1)"/><ellipse cx="-4.4" cy="-25.9" rx="2.3" ry="1.15" transform="rotate(-46 -4.4 -25.9)"/><ellipse cx="5.7" cy="17" rx="2.3" ry="1.15" transform="rotate(38 5.7 17)"/><ellipse cx="-31.1" cy="-22" rx="2.3" ry="1.15" transform="rotate(-2 -31.1 -22)"/><ellipse cx="10.3" cy="-20.2" rx="2.3" ry="1.15" transform="rotate(-60 10.3 -20.2)"/><ellipse cx="22.1" cy="-5.1" rx="2.3" ry="1.15" transform="rotate(14 22.1 -5.1)"/><ellipse cx="-3.9" cy="-7" rx="2.3" ry="1.15" transform="rotate(-50 -3.9 -7)"/><ellipse cx="-27.3" cy="13.7" rx="2.3" ry="1.15" transform="rotate(-41 -27.3 13.7)"/><ellipse cx="-27.7" cy="-14" rx="2.3" ry="1.15" transform="rotate(-40 -27.7 -14)"/><ellipse cx="31.5" cy="-4" rx="2.3" ry="1.15" transform="rotate(33 31.5 -4)"/><ellipse cx="53" cy="-9.2" rx="2.3" ry="1.15" transform="rotate(52 53 -9.2)"/><ellipse cx="18.6" cy="18.6" rx="2.3" ry="1.15" transform="rotate(34 18.6 18.6)"/><ellipse cx="-37.3" cy="11.3" rx="2.3" ry="1.15" transform="rotate(-20 -37.3 11.3)"/><ellipse cx="18.2" cy="-15" rx="2.3" ry="1.15" transform="rotate(6 18.2 -15)"/><ellipse cx="37.8" cy="-23.3" rx="2.3" ry="1.15" transform="rotate(-30 37.8 -23.3)"/><ellipse cx="3.7" cy="-4.6" rx="2.3" ry="1.15" transform="rotate(-58 3.7 -4.6)"/><ellipse cx="-20.2" cy="-4.9" rx="2.3" ry="1.15" transform="rotate(7 -20.2 -4.9)"/><ellipse cx="-21.1" cy="7.3" rx="2.3" ry="1.15" transform="rotate(-58 -21.1 7.3)"/><ellipse cx="30.1" cy="-18.6" rx="2.3" ry="1.15"/><ellipse cx="-2.9" cy="20.1" rx="2.3" ry="1.15" transform="rotate(-47 -2.9 20.1)"/><ellipse cx="37" cy="-10.1" rx="2.3" ry="1.15" transform="rotate(-1 37 -10.1)"/><ellipse cx="3.4" cy="9" rx="2.3" ry="1.15" transform="rotate(19 3.4 9)"/><ellipse cx="27.1" cy="12.7" rx="2.3" ry="1.15" transform="rotate(-43 27.1 12.7)"/><ellipse cx="22.4" cy="-22.2" rx="2.3" ry="1.15" transform="rotate(-56 22.4 -22.2)"/><ellipse cx="16.6" cy="-31.4" rx="2.3" ry="1.15" transform="rotate(-42 16.6 -31.4)"/><ellipse cx="-18.1" cy="-17" rx="2.3" ry="1.15" transform="rotate(41 -18.1 -17)"/><ellipse cx="-11.6" cy="-9.2" rx="2.3" ry="1.15" transform="rotate(54 -11.6 -9.2)"/><ellipse cx="37.3" cy="13.3" rx="2.3" ry="1.15" transform="rotate(-8 37.3 13.3)"/><ellipse cx="-14.8" cy="19.2" rx="2.3" ry="1.15" transform="rotate(-37 -14.8 19.2)"/><ellipse cx="-54.5" cy="-11.4" rx="2.3" ry="1.15" transform="rotate(37 -54.5 -11.4)"/>
+        </g>
+        </g></g>
+        <g class="fx-prop" data-prop="soup" opacity="0"><g transform="scale(1) translate(-0 -0)">
+        <path class="k-ink3" stroke-width="2.2" opacity=".75" d="M-4-36c-7-9 5-14-1-24M10-34c-6-8 5-13 0-22M24-38c-5-7 4-11 0-18"/>
+        <rect class="f-indigo o" x="-63" y="-8" width="16" height="12" rx="5"/>
+        <rect class="f-indigo o" x="47" y="-8" width="16" height="12" rx="5"/>
+        <path class="f-indigo o" d="M-51-10C-51 26-41 45 0 47 41 45 51 26 51-10z"/>
+        <path class="k-indigo2" stroke-width="4.5" d="M-41 2c0 17 6 28 16 34"/>
+        <ellipse class="f-indigo2 o" cx="0" cy="-10" rx="53" ry="12.5"/>
+        <ellipse class="f-gold" cx="0" cy="-9" rx="45" ry="8.5"/>
+        <path class="k-brass" stroke-width="1.3" opacity=".7" d="M-30-8q8 3 16 0M6-5q8 3 16 0"/>
+        <g class="k-ink" stroke-width="14"><path d="M14-11 32-37"/></g>
+        <circle class="f-ink" cx="28.4" cy="-42.4" r="8.4"/>
+        <circle class="f-ink" cx="37.6" cy="-35.4" r="8.4"/>
+        <g class="k-sheet" stroke-width="8"><path d="M14-11 32-37"/></g>
+        <circle class="f-sheet" cx="28.4" cy="-42.4" r="5.4"/>
+        <circle class="f-sheet" cx="37.6" cy="-35.4" r="5.4"/>
+        <ellipse class="f-gold" cx="13.5" cy="-8.8" rx="9" ry="3"/>
+        <g transform="rotate(-24 -26 -24)">
+        <ellipse class="f-indigo o" cx="-26" cy="-24" rx="31" ry="9"/>
+        <path class="k-indigo2" stroke-width="3" d="M-48-26q22-7 44 0"/>
+        <rect class="f-brass o" x="-31" y="-38" width="10" height="7" rx="3"/>
+        </g>
+        </g></g>
+        <g class="fx-prop" data-prop="go-board" opacity="0"><g transform="scale(1) translate(-0 -0)">
+        <path class="f-wood o" d="M-60 6h9v15h-9zM-5 38h10v15H-5zM51 6h9v15h-9z"/>
+        <path class="f-brass o" d="M-66-6 0 28V44L-66 10z"/>
+        <path class="f-wood o" d="M0 28 66-6V10L0 44z"/>
+        <path class="f-gold o" d="M-66-6 0-40 66-6 0 28z"/>
+        <path class="k-wood" stroke-width="1.1" d="M-52.8-6 0-33.2M-46.2-2.6 6.6-29.8M-39.6.8 13.2-26.4M-33 4.2 19.8-23M-26.4 7.6 26.4-19.6M-19.8 11 33-16.2M-13.2 14.4 39.6-12.8M-6.6 17.8 46.2-9.4M0 21.2 52.8-6M-52.8-6 0 21.2M-46.2-9.4 6.6 17.8M-39.6-12.8 13.2 14.4M-33-16.2 19.8 11M-26.4-19.6 26.4 7.6M-19.8-23 33 4.2M-13.2-26.4 39.6.8M-6.6-29.8 46.2-2.6M0-33.2 52.8-6"/>
+        <g class="f-ink">
+        <ellipse cx="-13.2" cy="-12.8" rx="5.4" ry="3.1"/><ellipse cx="6.6" cy="-9.4" rx="5.4" ry="3.1"/><ellipse cx="0" cy="-6" rx="5.4" ry="3.1"/><ellipse cx="19.8" cy="-2.6" rx="5.4" ry="3.1"/><ellipse cx="-19.8" cy="4.2" rx="5.4" ry="3.1"/><ellipse cx="26.4" cy="-12.8" rx="5.4" ry="3.1"/>
+        </g>
+        <g class="f-sheet">
+        <ellipse cx="-6.6" cy="-2.6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="-19.6" rx="5.4" ry="3.1"/><ellipse cx="-26.4" cy="-6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="7.6" rx="5.4" ry="3.1"/><ellipse cx="-6.6" cy="-23" rx="5.4" ry="3.1"/>
+        </g>
+        <g class="k-ink" stroke-width="1">
+        <ellipse cx="-6.6" cy="-2.6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="-19.6" rx="5.4" ry="3.1"/><ellipse cx="-26.4" cy="-6" rx="5.4" ry="3.1"/><ellipse cx="13.2" cy="7.6" rx="5.4" ry="3.1"/><ellipse cx="-6.6" cy="-23" rx="5.4" ry="3.1"/>
+        </g>
+        <g class="f-ink3" opacity=".9">
+        <ellipse cx="-14.6" cy="-13.8" rx="1.8" ry=".9"/><ellipse cx="5.2" cy="-10.4" rx="1.8" ry=".9"/><ellipse cx="-1.4" cy="-7" rx="1.8" ry=".9"/><ellipse cx="18.4" cy="-3.6" rx="1.8" ry=".9"/><ellipse cx="-21.2" cy="3.2" rx="1.8" ry=".9"/><ellipse cx="25" cy="-13.8" rx="1.8" ry=".9"/>
+        </g>
+        </g></g>
+        <g class="fx-prop" data-prop="rocket" opacity="0"><g transform="scale(1) translate(-0 -0)">
+        <g class="flame">
+        <path class="f-gold" d="M-12 42C-15 56-4 64 0 78 4 64 15 56 12 42z"/>
+        <path class="f-sheet" d="M-6 42C-7 51-2 56 0 66 2 56 7 51 6 42z"/>
+        </g>
+        <path class="f-indigo o" d="M-17 12C-31 21-35 34-33 46L-15 37zM17 12C31 21 35 34 33 46L15 37z"/>
+        <path class="f-sheet o" d="M0-68C16-52 22-26 20 4 19 20 16 33 14 41H-14C-16 33-19 20-20 4-22-26-16-52 0-68z"/>
+        <path class="f-line" d="M10-50C18-30 19 0 17 20 16 30 14.5 36 13 40H8C10 30 12 10 11-12 10-28 8.5-40 4-55z"/>
+        <path class="f-brass o" d="M0-68C8-60 12.5-53 15.5-45H-15.5C-12.5-53-8-60 0-68z"/>
+        <circle class="f-sheet o" cx="0" cy="-17" r="12"/>
+        <circle class="f-indigo" cx="0" cy="-17" r="8.2"/>
+        <path class="k-sheet" stroke-width="2" opacity=".8" d="M-4.5-20.5a5.6 5.6 0 0 1 5-2.4"/>
+        <path class="k-indigo2" stroke-width="3" d="M-19 13H19"/>
+        <path class="f-indigo o" d="M-3.5 26h7v20h-7z"/>
+        <path class="f-ink2 o" d="M-11 40h22l-3 5h-16z"/>
+        </g></g>
+      </g>
+      <g class="fx-seal" opacity="0"><g transform="scale(1) translate(-0 -0)">
+<path class="f-cinnabar" fill-rule="evenodd" d="M-27.8 -32H27.8A4.2 4.2 0 0 1 32 -27.8V27.8A4.2 4.2 0 0 1 27.8 32H-27.8A4.2 4.2 0 0 1 -32 27.8V-27.8A4.2 4.2 0 0 1 -27.8 -32ZM2.33 -1.20L2.32 -1.00L2.30 -0.81L2.27 -0.61L2.23 -0.43L2.18 -0.24L2.11 -0.06L2.04 0.11L1.95 0.28L1.86 0.44L1.75 0.59L1.64 0.73L1.52 0.86L1.40 0.98L1.26 1.09L1.13 1.18L0.98 1.27L0.84 1.34L0.69 1.40L0.54 1.45L0.39 1.49L0.23 1.51L0.08 1.53L-0.08 1.53L-0.23 1.51L-0.39 1.49L-0.54 1.45L-0.69 1.40L-0.84 1.34L-0.98 1.27L-1.13 1.18L-1.26 1.09L-1.40 0.98L-1.52 0.86L-1.64 0.73L-1.75 0.59L-1.86 0.44L-1.95 0.28L-2.04 0.11L-2.11 -0.06L-2.18 -0.24L-2.23 -0.43L-2.27 -0.61L-2.30 -0.81L-2.32 -1.00L-2.33 -1.20L-2.32 -1.40L-2.30 -1.59L-2.27 -1.79L-2.23 -1.97L-2.18 -2.16L-2.11 -2.34L-2.04 -2.51L-1.95 -2.68L-1.86 -2.84L-1.75 -2.99L-1.64 -3.13L-1.52 -3.26L-1.40 -3.38L-1.26 -3.49L-1.13 -3.58L-0.98 -3.67L-0.84 -3.74L-0.69 -3.80L-0.54 -3.85L-0.39 -3.89L-0.23 -3.91L-0.08 -3.93L0.08 -3.93L0.23 -3.91L0.39 -3.89L0.54 -3.85L0.69 -3.80L0.84 -3.74L0.98 -3.67L1.13 -3.58L1.26 -3.49L1.40 -3.38L1.52 -3.26L1.64 -3.13L1.75 -2.99L1.86 -2.84L1.95 -2.68L2.04 -2.51L2.11 -2.34L2.18 -2.16L2.23 -1.97L2.27 -1.79L2.30 -1.59L2.32 -1.40ZM3.88 -1.20L3.87 -0.91L3.84 -0.62L3.79 -0.33L3.73 -0.04L3.65 0.24L3.55 0.51L3.44 0.77L3.31 1.03L3.16 1.28L3.00 1.51L2.82 1.74L2.63 1.95L2.42 2.14L2.20 2.32L1.97 2.48L1.73 2.63L1.48 2.75L1.23 2.86L0.96 2.94L0.69 3.01L0.42 3.05L0.14 3.08L-0.14 3.08L-0.42 3.05L-0.69 3.01L-0.96 2.94L-1.23 2.86L-1.48 2.75L-1.73 2.63L-1.97 2.48L-2.20 2.32L-2.42 2.14L-2.63 1.95L-2.82 1.74L-3.00 1.51L-3.16 1.28L-3.31 1.03L-3.44 0.77L-3.55 0.51L-3.65 0.24L-3.73 -0.04L-3.79 -0.33L-3.84 -0.62L-3.87 -0.91L-3.88 -1.20L-3.87 -1.49L-3.84 -1.78L-3.79 -2.07L-3.73 -2.36L-3.65 -2.64L-3.55 -2.91L-3.44 -3.17L-3.31 -3.43L-3.16 -3.68L-3.00 -3.91L-2.82 -4.14L-2.63 -4.35L-2.42 -4.54L-2.20 -4.72L-1.97 -4.88L-1.73 -5.03L-1.48 -5.15L-1.23 -5.26L-0.96 -5.34L-0.69 -5.41L-0.42 -5.45L-0.14 -5.48L0.14 -5.48L0.42 -5.45L0.69 -5.41L0.96 -5.34L1.23 -5.26L1.48 -5.15L1.73 -5.03L1.97 -4.88L2.20 -4.72L2.42 -4.54L2.63 -4.35L2.82 -4.14L3.00 -3.91L3.16 -3.68L3.31 -3.43L3.44 -3.17L3.55 -2.91L3.65 -2.64L3.73 -2.36L3.79 -2.07L3.84 -1.78L3.87 -1.49ZM6.30 -1.12L6.33 -0.78L6.31 -0.49L6.23 -0.18L6.09 0.20L5.96 0.67L5.88 1.15L5.85 1.55L5.79 1.84L5.69 2.06L5.50 2.32L5.24 2.64L4.97 3.03L4.77 3.42L4.60 3.73L4.43 3.97L4.22 4.18L3.96 4.39L3.66 4.61L3.36 4.84L3.07 5.05L2.78 5.26L2.50 5.43L2.25 5.55L1.99 5.64L1.66 5.70L1.28 5.78L0.89 5.88L0.54 5.98L0.27 6.05L0.04 6.06L-0.22 6.01L-0.56 5.93L-0.95 5.85L-1.35 5.79L-1.68 5.74L-1.96 5.68L-2.21 5.58L-2.47 5.43L-2.77 5.23L-3.09 5.02L-3.40 4.82L-3.68 4.62L-3.94 4.42L-4.17 4.20L-4.39 3.95L-4.60 3.67L-4.82 3.35L-5.05 3.03L-5.27 2.71L-5.45 2.42L-5.60 2.12L-5.72 1.80L-5.82 1.44L-5.93 1.05L-6.04 0.65L-6.14 0.27L-6.22 -0.09L-6.27 -0.43L-6.28 -0.78L-6.26 -1.16L-6.24 -1.57L-6.22 -1.98L-6.19 -2.38L-6.15 -2.74L-6.08 -3.08L-5.98 -3.42L-5.85 -3.77L-5.70 -4.14L-5.55 -4.50L-5.40 -4.86L-5.24 -5.19L-5.08 -5.48L-4.89 -5.74L-4.66 -6.00L-4.40 -6.28L-4.12 -6.57L-3.86 -6.86L-3.63 -7.11L-3.41 -7.30L-3.17 -7.44L-2.88 -7.58L-2.53 -7.73L-2.17 -7.90L-1.84 -8.07L-1.55 -8.20L-1.30 -8.28L-1.02 -8.32L-0.70 -8.34L-0.34 -8.35L0.02 -8.37L0.36 -8.37L0.68 -8.36L0.98 -8.33L1.26 -8.27L1.54 -8.17L1.85 -8.03L2.22 -7.87L2.60 -7.73L2.92 -7.62L3.16 -7.51L3.35 -7.36L3.55 -7.13L3.81 -6.82L4.13 -6.48L4.48 -6.20L4.75 -5.99L4.93 -5.80L5.06 -5.57L5.19 -5.25L5.35 -4.85L5.54 -4.45L5.73 -4.09L5.88 -3.77L5.99 -3.45L6.07 -3.11L6.13 -2.75L6.17 -2.37L6.20 -1.96L6.25 -1.52ZM7.84 -1.28L7.88 -0.78L7.84 -0.23L7.71 0.28L7.57 0.68L7.47 1.00L7.42 1.34L7.38 1.78L7.27 2.32L7.03 2.85L6.73 3.26L6.48 3.57L6.30 3.84L6.13 4.16L5.91 4.55L5.61 4.97L5.27 5.32L4.92 5.61L4.60 5.85L4.29 6.08L3.97 6.32L3.63 6.55L3.26 6.78L2.83 6.99L2.38 7.14L1.97 7.22L1.63 7.29L1.31 7.37L0.93 7.49L0.47 7.58L-0.04 7.60L-0.52 7.53L-0.91 7.44L-1.23 7.37L-1.57 7.32L-1.97 7.26L-2.43 7.16L-2.88 6.97L-3.27 6.75L-3.62 6.53L-3.93 6.32L-4.26 6.11L-4.61 5.87L-4.96 5.59L-5.29 5.27L-5.59 4.93L-5.86 4.58L-6.09 4.24L-6.32 3.91L-6.56 3.56L-6.80 3.17L-7.02 2.74L-7.19 2.29L-7.31 1.86L-7.42 1.46L-7.53 1.06L-7.65 0.64L-7.75 0.19L-7.81 -0.30L-7.83 -0.78L-7.81 -1.24L-7.79 -1.66L-7.76 -2.08L-7.73 -2.52L-7.68 -2.98L-7.59 -3.45L-7.45 -3.91L-7.30 -4.33L-7.14 -4.73L-6.98 -5.11L-6.81 -5.50L-6.62 -5.91L-6.38 -6.32L-6.10 -6.71L-5.80 -7.05L-5.52 -7.34L-5.26 -7.62L-5.00 -7.91L-4.69 -8.23L-4.32 -8.55L-3.91 -8.81L-3.51 -8.99L-3.17 -9.14L-2.85 -9.29L-2.51 -9.46L-2.11 -9.65L-1.65 -9.79L-1.19 -9.86L-0.77 -9.89L-0.39 -9.90L-0.02 -9.92L0.37 -9.92L0.79 -9.91L1.23 -9.86L1.69 -9.76L2.11 -9.61L2.48 -9.45L2.80 -9.31L3.12 -9.19L3.51 -9.05L3.97 -8.83L4.40 -8.50L4.73 -8.14L4.97 -7.84L5.18 -7.63L5.45 -7.41L5.80 -7.13L6.17 -6.73L6.45 -6.27L6.63 -5.83L6.77 -5.46L6.93 -5.14L7.12 -4.78L7.31 -4.35L7.48 -3.89L7.59 -3.42L7.66 -2.96L7.71 -2.51L7.74 -2.10L7.79 -1.71ZM10.45 -0.87L10.64 -0.47L10.67 -0.24L10.57 -0.03L10.24 0.32L9.74 0.79L9.29 1.51L9.28 2.40L9.55 3.14L9.79 3.71L9.86 4.01L9.82 4.08L9.54 4.24L8.98 4.46L8.31 4.81L7.78 5.47L7.59 6.20L7.54 6.79L7.46 7.19L7.34 7.41L7.12 7.56L6.74 7.74L6.26 7.95L5.76 8.24L5.33 8.57L4.93 8.91L4.56 9.27L4.23 9.60L3.97 9.81L3.75 9.91L3.46 9.91L3.01 9.85L2.41 9.79L1.71 9.92L1.13 10.26L0.69 10.62L0.39 10.84L0.24 10.89L0.08 10.84L-0.25 10.61L-0.71 10.27L-1.33 9.97L-2.04 9.90L-2.63 10.01L-3.07 10.10L-3.36 10.11L-3.56 10.04L-3.81 9.84L-4.12 9.51L-4.51 9.11L-4.98 8.75L-5.47 8.47L-5.92 8.27L-6.30 8.08L-6.61 7.87L-6.88 7.63L-7.10 7.32L-7.31 6.93L-7.55 6.47L-7.84 5.97L-8.20 5.51L-8.59 5.12L-8.91 4.79L-9.14 4.49L-9.28 4.17L-9.36 3.78L-9.40 3.29L-9.46 2.71L-9.59 2.11L-9.81 1.54L-10.05 1.05L-10.24 0.64L-10.34 0.27L-10.35 -0.10L-10.29 -0.53L-10.17 -1.04L-10.06 -1.61L-10.02 -2.22L-10.04 -2.80L-10.09 -3.32L-10.10 -3.77L-10.05 -4.16L-9.93 -4.54L-9.73 -4.94L-9.48 -5.38L-9.22 -5.87L-9.00 -6.40L-8.83 -6.94L-8.70 -7.44L-8.56 -7.87L-8.40 -8.20L-8.18 -8.46L-7.88 -8.71L-7.47 -8.98L-7.00 -9.34L-6.58 -9.81L-6.27 -10.33L-6.04 -10.80L-5.84 -11.12L-5.65 -11.29L-5.41 -11.38L-5.01 -11.43L-4.46 -11.47L-3.83 -11.65L-3.26 -12.00L-2.85 -12.39L-2.53 -12.69L-2.29 -12.84L-2.06 -12.89L-1.74 -12.85L-1.29 -12.76L-0.74 -12.67L-0.17 -12.67L0.35 -12.74L0.80 -12.82L1.22 -12.88L1.58 -12.89L1.87 -12.85L2.14 -12.72L2.45 -12.48L2.86 -12.14L3.42 -11.80L4.11 -11.65L4.74 -11.68L5.21 -11.72L5.42 -11.70L5.50 -11.63L5.62 -11.30L5.75 -10.71L5.98 -9.99L6.56 -9.35L7.31 -9.09L7.93 -9.01L8.30 -8.92L8.40 -8.85L8.45 -8.63L8.45 -8.13L8.43 -7.46L8.58 -6.72L8.95 -6.10L9.36 -5.67L9.67 -5.34L9.84 -5.05L9.94 -4.70L9.98 -4.27L9.99 -3.80L9.95 -3.31L9.91 -2.73L9.96 -2.07L10.17 -1.41ZM11.85 -1.53L12.14 -0.86L12.20 0.00L11.86 0.82L11.33 1.41L10.91 1.80L10.78 1.95L10.80 2.08L10.99 2.56L11.29 3.29L11.39 4.21L10.97 5.11L10.25 5.62L9.61 5.88L9.25 6.04L9.18 6.13L9.12 6.43L9.07 7.02L8.91 7.74L8.51 8.42L7.93 8.89L7.39 9.15L6.96 9.34L6.62 9.53L6.31 9.78L5.98 10.06L5.65 10.38L5.26 10.76L4.74 11.16L4.08 11.42L3.39 11.46L2.82 11.39L2.46 11.34L2.27 11.37L2.03 11.52L1.62 11.86L1.04 12.25L0.24 12.44L-0.55 12.25L-1.14 11.88L-1.54 11.58L-1.76 11.46L-1.95 11.45L-2.33 11.52L-2.90 11.64L-3.61 11.64L-4.31 11.40L-4.85 10.99L-5.24 10.58L-5.55 10.26L-5.83 10.04L-6.16 9.86L-6.58 9.67L-7.08 9.42L-7.58 9.09L-8.03 8.66L-8.41 8.16L-8.69 7.65L-8.91 7.20L-9.12 6.85L-9.36 6.54L-9.69 6.21L-10.09 5.80L-10.48 5.28L-10.76 4.65L-10.90 4.00L-10.95 3.42L-10.99 2.95L-11.07 2.56L-11.23 2.17L-11.46 1.71L-11.70 1.15L-11.87 0.50L-11.90 -0.19L-11.81 -0.82L-11.69 -1.36L-11.60 -1.82L-11.57 -2.23L-11.59 -2.69L-11.64 -3.23L-11.65 -3.85L-11.56 -4.50L-11.36 -5.12L-11.10 -5.66L-10.84 -6.12L-10.62 -6.53L-10.46 -6.93L-10.32 -7.37L-10.19 -7.88L-10.00 -8.45L-9.70 -9.04L-9.28 -9.56L-8.80 -9.95L-8.37 -10.24L-8.05 -10.48L-7.83 -10.72L-7.63 -11.07L-7.39 -11.56L-7.02 -12.13L-6.46 -12.61L-5.79 -12.88L-5.17 -12.97L-4.71 -13.00L-4.45 -13.07L-4.22 -13.22L-3.91 -13.52L-3.46 -13.93L-2.86 -14.28L-2.16 -14.43L-1.51 -14.39L-1.00 -14.28L-0.62 -14.22L-0.28 -14.22L0.11 -14.27L0.58 -14.36L1.10 -14.42L1.68 -14.44L2.32 -14.33L2.93 -14.06L3.42 -13.70L3.77 -13.39L4.00 -13.24L4.22 -13.20L4.64 -13.23L5.28 -13.27L6.08 -13.10L6.77 -12.52L7.10 -11.76L7.25 -11.09L7.35 -10.72L7.38 -10.66L7.63 -10.61L8.24 -10.53L9.02 -10.30L9.71 -9.69L9.99 -8.85L10.00 -8.11L9.98 -7.57L10.02 -7.28L10.17 -7.06L10.50 -6.73L10.92 -6.26L11.27 -5.65L11.46 -4.99L11.52 -4.36L11.54 -3.77L11.50 -3.19L11.46 -2.72L11.48 -2.37L11.60 -2.02ZM14.58 -0.77L14.90 -0.27L15.01 0.06L14.96 0.28L14.65 0.63L14.04 1.06L13.32 1.54L12.69 2.27L12.56 3.30L12.94 4.20L13.44 4.99L13.83 5.69L13.95 6.11L13.90 6.21L13.58 6.38L12.88 6.56L12.04 6.75L11.20 7.11L10.60 7.87L10.45 8.74L10.49 9.53L10.50 10.18L10.42 10.60L10.26 10.83L9.97 11.00L9.50 11.17L8.92 11.34L8.31 11.59L7.75 11.94L7.28 12.33L6.84 12.74L6.42 13.20L6.05 13.64L5.73 14.00L5.45 14.19L5.18 14.26L4.80 14.23L4.27 14.08L3.62 13.90L2.84 13.87L2.07 14.18L1.49 14.69L1.02 15.21L0.64 15.58L0.39 15.71L0.24 15.70L-0.07 15.50L-0.50 15.09L-1.01 14.57L-1.67 14.13L-2.49 13.97L-3.24 14.12L-3.85 14.36L-4.35 14.53L-4.70 14.57L-4.94 14.50L-5.21 14.28L-5.53 13.89L-5.90 13.40L-6.34 12.90L-6.87 12.47L-7.45 12.16L-8.01 11.95L-8.50 11.77L-8.93 11.58L-9.29 11.33L-9.59 11.04L-9.84 10.68L-10.07 10.23L-10.28 9.70L-10.54 9.12L-10.89 8.54L-11.33 8.03L-11.82 7.60L-12.26 7.24L-12.61 6.90L-12.84 6.56L-12.98 6.17L-13.03 5.69L-13.03 5.11L-13.03 4.45L-13.10 3.75L-13.31 3.07L-13.62 2.45L-13.95 1.92L-14.22 1.44L-14.39 1.01L-14.45 0.59L-14.40 0.13L-14.26 -0.39L-14.07 -0.98L-13.90 -1.63L-13.81 -2.32L-13.83 -3.01L-13.93 -3.65L-14.02 -4.24L-14.06 -4.75L-14.02 -5.21L-13.90 -5.65L-13.68 -6.09L-13.38 -6.56L-13.05 -7.06L-12.73 -7.62L-12.47 -8.22L-12.28 -8.86L-12.15 -9.48L-12.05 -10.05L-11.91 -10.53L-11.73 -10.91L-11.47 -11.22L-11.12 -11.48L-10.65 -11.74L-10.10 -12.04L-9.54 -12.46L-9.07 -13.02L-8.75 -13.66L-8.52 -14.28L-8.31 -14.79L-8.10 -15.13L-7.88 -15.29L-7.55 -15.37L-7.06 -15.37L-6.43 -15.33L-5.71 -15.37L-4.98 -15.65L-4.41 -16.13L-3.98 -16.65L-3.62 -17.09L-3.31 -17.36L-3.06 -17.47L-2.75 -17.47L-2.32 -17.36L-1.78 -17.18L-1.16 -17.02L-0.49 -16.96L0.14 -17.04L0.70 -17.17L1.21 -17.30L1.70 -17.39L2.13 -17.44L2.49 -17.42L2.80 -17.31L3.13 -17.07L3.50 -16.69L3.95 -16.22L4.55 -15.78L5.34 -15.57L6.12 -15.64L6.82 -15.82L7.37 -15.93L7.65 -15.92L7.75 -15.84L7.89 -15.45L7.96 -14.73L8.01 -13.87L8.23 -12.98L8.94 -12.26L9.84 -12.07L10.69 -12.09L11.40 -12.09L11.78 -12.00L11.87 -11.89L11.91 -11.55L11.83 -10.90L11.68 -10.10L11.63 -9.25L11.89 -8.42L12.41 -7.80L12.95 -7.37L13.38 -7.01L13.65 -6.68L13.80 -6.32L13.87 -5.87L13.88 -5.33L13.86 -4.79L13.77 -4.22L13.66 -3.59L13.63 -2.86L13.79 -2.08L14.16 -1.38ZM15.88 -1.63L16.32 -0.90L16.56 0.02L16.33 1.01L15.69 1.78L14.93 2.33L14.31 2.74L14.08 2.95L14.08 3.01L14.30 3.45L14.77 4.20L15.27 5.12L15.49 6.18L15.07 7.23L14.19 7.81L13.25 8.07L12.48 8.23L12.09 8.37L12.03 8.45L12.00 8.80L12.04 9.48L12.04 10.32L11.85 11.20L11.34 11.94L10.65 12.40L9.99 12.64L9.43 12.81L9.01 12.98L8.65 13.20L8.30 13.49L7.94 13.83L7.60 14.21L7.22 14.67L6.74 15.17L6.10 15.60L5.31 15.81L4.52 15.75L3.85 15.57L3.35 15.43L3.09 15.40L2.91 15.48L2.59 15.78L2.13 16.29L1.53 16.85L0.70 17.23L-0.24 17.17L-1.01 16.74L-1.58 16.19L-2.02 15.75L-2.29 15.55L-2.46 15.52L-2.78 15.60L-3.33 15.82L-4.03 16.05L-4.85 16.11L-5.65 15.87L-6.29 15.40L-6.75 14.85L-7.11 14.37L-7.42 14.01L-7.72 13.76L-8.08 13.58L-8.54 13.41L-9.10 13.20L-9.69 12.92L-10.26 12.54L-10.76 12.05L-11.17 11.48L-11.48 10.87L-11.71 10.31L-11.92 9.83L-12.14 9.45L-12.43 9.12L-12.82 8.79L-13.30 8.39L-13.80 7.89L-14.23 7.26L-14.49 6.53L-14.58 5.78L-14.58 5.10L-14.58 4.52L-14.62 4.06L-14.75 3.65L-14.97 3.21L-15.28 2.70L-15.62 2.10L-15.89 1.39L-15.99 0.62L-15.93 -0.14L-15.75 -0.82L-15.56 -1.42L-15.42 -1.93L-15.36 -2.39L-15.38 -2.87L-15.46 -3.42L-15.56 -4.05L-15.61 -4.76L-15.55 -5.50L-15.34 -6.21L-15.03 -6.84L-14.69 -7.39L-14.37 -7.87L-14.12 -8.32L-13.92 -8.75L-13.79 -9.23L-13.68 -9.78L-13.55 -10.41L-13.36 -11.08L-13.03 -11.76L-12.54 -12.34L-11.96 -12.78L-11.39 -13.10L-10.92 -13.36L-10.60 -13.59L-10.37 -13.86L-10.17 -14.27L-9.97 -14.84L-9.68 -15.52L-9.23 -16.19L-8.55 -16.69L-7.75 -16.91L-7.01 -16.92L-6.41 -16.88L-6.01 -16.89L-5.78 -16.98L-5.52 -17.20L-5.18 -17.63L-4.73 -18.17L-4.13 -18.68L-3.37 -18.99L-2.58 -19.01L-1.89 -18.85L-1.33 -18.66L-0.89 -18.54L-0.53 -18.51L-0.14 -18.56L0.33 -18.68L0.88 -18.81L1.46 -18.93L2.11 -18.99L2.82 -18.94L3.53 -18.68L4.14 -18.25L4.62 -17.77L4.99 -17.37L5.24 -17.17L5.44 -17.11L5.84 -17.17L6.48 -17.33L7.29 -17.48L8.23 -17.36L9.03 -16.71L9.40 -15.80L9.51 -14.86L9.55 -14.07L9.62 -13.67L9.63 -13.65L9.95 -13.62L10.68 -13.64L11.61 -13.62L12.57 -13.33L13.28 -12.55L13.46 -11.57L13.36 -10.66L13.21 -9.91L13.18 -9.41L13.25 -9.17L13.48 -8.93L13.93 -8.57L14.49 -8.10L14.98 -7.47L15.29 -6.74L15.42 -6.00L15.43 -5.31L15.40 -4.64L15.30 -3.98L15.20 -3.41L15.17 -2.98L15.25 -2.62L15.48 -2.19ZM-16.01 9.20L-16.26 8.84L-16.43 8.51L-16.55 8.15L-16.63 7.75L-16.67 7.30L-16.69 6.81L-16.70 6.29L-16.74 5.75L-16.81 5.21L-16.95 4.66L-17.14 4.14L-17.37 3.66L-17.62 3.20L-17.86 2.76L-18.07 2.35L-18.23 1.95L-18.34 1.57L-18.40 1.18L-18.40 0.78L-18.35 0.36L-18.26 -0.08L-18.13 -0.55L-17.99 -1.04L-17.87 -1.56L-17.77 -2.10L-17.72 -2.64L-17.72 -3.19L-17.76 -3.72L-17.82 -4.24L-17.89 -4.73L-17.93 -5.19L-17.94 -5.63L-17.92 -6.05L-17.85 -6.45L-17.73 -6.84L-17.57 -7.23L-17.36 -7.62L-17.13 -8.02L-16.88 -8.44L-16.62 -8.87L-16.38 -9.32L-16.15 -9.79L-15.96 -10.27L-15.80 -10.77L-15.67 -11.28L-15.56 -11.77L-15.45 -12.24L-15.33 -12.67L-15.19 -13.07L-15.02 -13.42L-14.82 -13.73L-14.58 -14.01L-14.28 -14.26L-13.94 -14.50L-13.55 -14.74L-13.13 -14.99L-12.69 -15.28L-12.27 -15.62L-11.89 -16.03L-11.57 -16.49L-11.31 -16.98L-11.10 -17.47L-10.90 -17.93L-10.70 -18.34L-10.49 -18.68L-10.28 -18.92L-10.04 -19.09L-9.76 -19.21L-9.41 -19.28L-9.00 -19.31L-8.52 -19.31L-8.00 -19.32L-7.46 -19.38L-6.90 -19.52L-6.38 -19.78L-5.92 -20.12L-5.54 -20.50L-5.19 -20.89L-4.87 -21.24L-4.57 -21.52L-4.29 -21.72L-4.02 -21.84L-3.75 -21.90L-3.43 -21.90L-3.06 -21.84L-2.65 -21.74L-2.20 -21.61L-1.71 -21.50L-1.21 -21.42L-0.70 -21.39L-0.19 -21.43L0.28 -21.50L0.73 -21.60L1.16 -21.69L1.57 -21.77L1.98 -21.83L2.38 -21.88L2.75 -21.89L3.09 -21.86L3.40 -21.79L3.70 -21.66L4.00 -21.47L4.32 -21.22L4.65 -20.90L5.01 -20.56L5.42 -20.21L5.91 -19.91L6.48 -19.71L7.09 -19.65L7.67 -19.69L8.23 -19.79L8.75 -19.88L9.19 -19.92L9.52 -19.90L9.73 -19.82L9.88 -19.68L10.04 -19.41L10.17 -18.96L10.27 -18.39L10.35 -17.76L10.45 -17.10L10.66 -16.45L11.06 -15.85L11.66 -15.45L12.32 -15.27L12.97 -15.21L13.59 -15.18L14.15 -15.14L14.59 -15.04L14.87 -14.91L15.02 -14.76L15.11 -14.52L15.16 -14.14L15.14 -13.62L15.07 -13.03L15.00 -12.40L14.98 -11.75L15.08 -11.10L15.32 -10.50L15.68 -10.00L16.08 -9.59L16.48 -9.23L16.83 -8.91L17.13 -8.59L17.35 -8.28L17.51 -7.95L17.62 -7.58L17.68 -7.18L17.72 -6.73L17.73 -6.26L17.72 -5.80L17.69 -5.34L17.63 -4.86L17.56 -4.35L17.51 -3.81L17.52 -3.23L17.63 -2.63L17.83 -2.05L18.11 -1.51L18.41 -1.01L18.69 -0.54L18.90 -0.12L19.01 0.23L19.02 0.52L18.94 0.79L18.73 1.10L18.37 1.46L17.90 1.83L17.39 2.23L16.88 2.69L16.46 3.26L16.24 3.99L16.32 4.73L16.57 5.41L16.90 6.05L17.23 6.67L17.50 7.23L17.63 7.69L17.64 7.99L17.57 8.18L17.37 8.36L17.00 8.56L16.47 8.75L15.85 8.93L15.22 9.14L14.60 9.43L14.07 9.88L13.71 10.49L13.55 11.14L13.51 11.76L13.50 12.36L13.48 12.90L13.42 13.35L13.31 13.70L13.15 13.96L12.94 14.16L12.65 14.35L12.28 14.51L11.85 14.67L11.38 14.84L10.91 15.04L10.44 15.29L10.01 15.57L9.62 15.87L9.27 16.18L8.91 16.49L8.56 16.83L8.22 17.20L7.90 17.55L7.60 17.87L7.32 18.13L7.04 18.32L6.77 18.44L6.48 18.50L6.14 18.50L5.74 18.44L5.29 18.33L4.78 18.22L4.23 18.15L3.74 18.17L3.35 18.29L3.08 18.58L3.00 18.98L3.12 19.36L3.41 19.63L3.80 19.72L4.16 19.70L4.51 19.75L4.95 19.85L5.46 19.96L6.03 20.04L6.63 20.04L7.23 19.92L7.79 19.68L8.28 19.35L8.69 18.98L9.05 18.60L9.37 18.24L9.67 17.92L9.97 17.63L10.28 17.35L10.61 17.07L10.91 16.83L11.23 16.62L11.57 16.45L11.95 16.29L12.39 16.13L12.87 15.94L13.39 15.71L13.91 15.38L14.37 14.92L14.72 14.34L14.93 13.70L15.02 13.03L15.05 12.39L15.06 11.82L15.08 11.36L15.15 11.06L15.24 10.89L15.42 10.75L15.78 10.58L16.31 10.42L16.95 10.23L17.64 9.98L18.30 9.60L18.86 9.03L19.16 8.27L19.16 7.46L18.95 6.69L18.62 5.98L18.27 5.33L17.98 4.77L17.82 4.36L17.79 4.12L17.83 3.97L18.01 3.74L18.37 3.43L18.87 3.05L19.41 2.61L19.93 2.08L20.33 1.45L20.55 0.73L20.54 -0.01L20.35 -0.68L20.05 -1.28L19.74 -1.80L19.46 -2.27L19.25 -2.67L19.13 -3.03L19.07 -3.37L19.06 -3.75L19.10 -4.18L19.17 -4.66L19.23 -5.19L19.27 -5.74L19.28 -6.28L19.26 -6.81L19.22 -7.36L19.13 -7.93L18.95 -8.51L18.69 -9.06L18.33 -9.57L17.93 -10.01L17.51 -10.39L17.15 -10.71L16.86 -11.00L16.68 -11.25L16.58 -11.50L16.53 -11.83L16.55 -12.29L16.61 -12.85L16.68 -13.50L16.71 -14.20L16.61 -14.93L16.31 -15.62L15.77 -16.17L15.09 -16.51L14.38 -16.67L13.69 -16.73L13.07 -16.76L12.58 -16.80L12.28 -16.87L12.16 -16.95L12.07 -17.10L11.97 -17.44L11.88 -17.97L11.80 -18.62L11.68 -19.32L11.46 -20.01L11.09 -20.65L10.53 -21.15L9.86 -21.41L9.18 -21.47L8.54 -21.41L7.97 -21.31L7.48 -21.23L7.10 -21.20L6.81 -21.23L6.58 -21.31L6.34 -21.46L6.05 -21.71L5.72 -22.03L5.34 -22.38L4.90 -22.73L4.42 -23.04L3.89 -23.26L3.34 -23.39L2.79 -23.44L2.27 -23.42L1.78 -23.37L1.31 -23.29L0.85 -23.21L0.41 -23.11L0.00 -23.03L-0.37 -22.97L-0.71 -22.94L-1.05 -22.96L-1.41 -23.02L-1.81 -23.11L-2.26 -23.24L-2.76 -23.36L-3.31 -23.44L-3.90 -23.44L-4.50 -23.32L-5.06 -23.07L-5.56 -22.72L-5.98 -22.33L-6.34 -21.93L-6.66 -21.57L-6.94 -21.29L-7.20 -21.09L-7.44 -20.97L-7.72 -20.90L-8.09 -20.87L-8.54 -20.86L-9.06 -20.86L-9.63 -20.82L-10.22 -20.69L-10.80 -20.44L-11.32 -20.07L-11.73 -19.60L-12.06 -19.09L-12.31 -18.58L-12.52 -18.09L-12.71 -17.66L-12.90 -17.30L-13.10 -17.00L-13.33 -16.76L-13.61 -16.53L-13.95 -16.30L-14.35 -16.07L-14.79 -15.80L-15.23 -15.48L-15.66 -15.11L-16.05 -14.67L-16.37 -14.19L-16.62 -13.67L-16.81 -13.14L-16.95 -12.61L-17.07 -12.11L-17.18 -11.64L-17.29 -11.20L-17.42 -10.79L-17.57 -10.40L-17.76 -10.02L-17.97 -9.63L-18.21 -9.23L-18.46 -8.81L-18.72 -8.37L-18.97 -7.88L-19.19 -7.36L-19.36 -6.81L-19.46 -6.24L-19.49 -5.66L-19.48 -5.10L-19.43 -4.56L-19.36 -4.05L-19.31 -3.57L-19.27 -3.13L-19.27 -2.71L-19.31 -2.30L-19.38 -1.88L-19.49 -1.44L-19.63 -0.96L-19.76 -0.44L-19.88 0.11L-19.95 0.70L-19.94 1.30L-19.86 1.89L-19.69 2.46L-19.47 3.00L-19.22 3.49L-18.97 3.94L-18.75 4.36L-18.56 4.75L-18.43 5.12L-18.33 5.50L-18.28 5.91L-18.25 6.36L-18.24 6.86L-18.22 7.40L-18.16 7.96L-18.05 8.54L-17.86 9.11L-17.59 9.64L-17.28 10.09L-16.98 10.34L-16.58 10.41L-16.20 10.27L-15.95 9.97L-15.88 9.57ZM-20.27 9.29L-20.33 8.73L-20.37 8.16L-20.42 7.57L-20.50 6.97L-20.61 6.38L-20.78 5.79L-20.99 5.22L-21.23 4.68L-21.49 4.16L-21.73 3.65L-21.95 3.16L-22.12 2.68L-22.25 2.20L-22.32 1.73L-22.33 1.24L-22.30 0.74L-22.22 0.22L-22.11 -0.32L-21.98 -0.88L-21.86 -1.46L-21.75 -2.05L-21.68 -2.65L-21.65 -3.25L-21.66 -3.85L-21.70 -4.44L-21.75 -5.01L-21.79 -5.57L-21.82 -6.11L-21.81 -6.63L-21.76 -7.12L-21.66 -7.61L-21.52 -8.08L-21.34 -8.55L-21.12 -9.02L-20.87 -9.50L-20.60 -9.98L-20.33 -10.47L-20.06 -10.98L-19.81 -11.50L-19.58 -12.04L-19.39 -12.58L-19.21 -13.14L-19.06 -13.69L-18.91 -14.23L-18.76 -14.75L-18.60 -15.24L-18.41 -15.70L-18.18 -16.11L-17.92 -16.49L-17.62 -16.83L-17.27 -17.15L-16.87 -17.45L-16.44 -17.75L-15.99 -18.06L-15.53 -18.40L-15.08 -18.78L-14.66 -19.21L-14.29 -19.69L-13.97 -20.20L-13.69 -20.72L-13.43 -21.23L-13.17 -21.71L-12.91 -22.13L-12.63 -22.47L-12.33 -22.74L-12.00 -22.95L-11.62 -23.09L-11.18 -23.19L-10.69 -23.26L-10.15 -23.30L-9.58 -23.36L-9.00 -23.46L-8.42 -23.64L-7.87 -23.91L-7.37 -24.25L-6.92 -24.64L-6.51 -25.03L-6.12 -25.40L-5.75 -25.73L-5.39 -25.98L-5.03 -26.15L-4.67 -26.25L-4.28 -26.29L-3.86 -26.28L-3.39 -26.21L-2.90 -26.11L-2.38 -26.00L-1.83 -25.91L-1.28 -25.86L-0.72 -25.86L-0.18 -25.90L0.35 -25.97L0.85 -26.06L1.34 -26.14L1.82 -26.21L2.30 -26.26L2.77 -26.30L3.22 -26.31L3.65 -26.28L4.05 -26.20L4.43 -26.07L4.81 -25.88L5.20 -25.63L5.59 -25.32L6.00 -24.98L6.44 -24.62L6.92 -24.29L7.48 -24.01L8.08 -23.83L8.71 -23.76L9.33 -23.77L9.94 -23.82L10.50 -23.86L11.00 -23.87L11.41 -23.80L11.71 -23.68L11.96 -23.48L12.19 -23.15L12.39 -22.69L12.55 -22.11L12.70 -21.46L12.86 -20.78L13.08 -20.11L13.43 -19.48L13.95 -18.97L14.59 -18.63L15.26 -18.45L15.94 -18.34L16.58 -18.25L17.15 -18.13L17.60 -17.96L17.92 -17.76L18.13 -17.50L18.28 -17.16L18.37 -16.69L18.39 -16.11L18.37 -15.47L18.35 -14.79L18.37 -14.10L18.49 -13.42L18.72 -12.78L19.05 -12.21L19.45 -11.71L19.87 -11.28L20.26 -10.87L20.61 -10.48L20.90 -10.08L21.13 -9.67L21.30 -9.24L21.42 -8.78L21.49 -8.28L21.54 -7.75L21.57 -7.20L21.58 -6.67L21.56 -6.13L21.52 -5.58L21.47 -5.00L21.43 -4.40L21.45 -3.77L21.53 -3.13L21.70 -2.50L21.95 -1.89L22.23 -1.30L22.51 -0.75L22.75 -0.23L22.91 0.25L22.97 0.67L22.92 1.06L22.77 1.45L22.50 1.86L22.10 2.30L21.62 2.76L21.11 3.24L20.63 3.78L20.25 4.42L20.06 5.16L20.09 5.92L20.29 6.66L20.57 7.36L20.86 8.05L21.10 8.69L21.24 9.25L21.26 9.69L21.17 10.02L20.98 10.30L20.64 10.58L20.14 10.85L19.55 11.10L18.90 11.36L18.26 11.67L17.67 12.07L17.18 12.60L16.85 13.23L16.68 13.90L16.59 14.56L16.53 15.20L16.45 15.79L16.34 16.30L16.18 16.73L15.97 17.08L15.70 17.37L15.36 17.62L14.95 17.84L14.49 18.06L13.99 18.28L13.48 18.51L12.97 18.78L12.49 19.08L12.04 19.41L11.62 19.74L11.21 20.08L10.80 20.43L10.40 20.81L10.01 21.19L9.64 21.57L9.27 21.92L8.92 22.21L8.56 22.44L8.21 22.60L7.77 22.70L7.42 22.90L7.21 23.24L7.21 23.65L7.40 24.00L7.75 24.20L8.15 24.21L8.71 24.06L9.30 23.80L9.83 23.46L10.30 23.08L10.72 22.68L11.11 22.29L11.47 21.92L11.84 21.59L12.21 21.26L12.60 20.94L12.98 20.64L13.35 20.37L13.74 20.13L14.16 19.90L14.62 19.69L15.12 19.47L15.66 19.23L16.21 18.92L16.74 18.52L17.21 18.01L17.58 17.41L17.83 16.74L17.98 16.05L18.07 15.37L18.13 14.74L18.20 14.20L18.30 13.78L18.45 13.49L18.67 13.25L19.02 13.02L19.52 12.78L20.14 12.53L20.82 12.24L21.50 11.86L22.12 11.35L22.58 10.66L22.80 9.86L22.78 9.03L22.58 8.23L22.30 7.47L22.00 6.77L21.75 6.16L21.62 5.67L21.60 5.32L21.67 5.03L21.87 4.71L22.22 4.33L22.69 3.88L23.22 3.38L23.73 2.81L24.15 2.16L24.43 1.42L24.52 0.65L24.42 -0.10L24.20 -0.79L23.91 -1.42L23.62 -1.99L23.36 -2.51L23.17 -2.99L23.05 -3.44L22.99 -3.89L22.98 -4.37L23.01 -4.89L23.06 -5.45L23.11 -6.04L23.13 -6.66L23.12 -7.26L23.09 -7.86L23.03 -8.47L22.94 -9.09L22.77 -9.72L22.53 -10.34L22.21 -10.92L21.82 -11.45L21.40 -11.93L20.98 -12.35L20.61 -12.74L20.32 -13.09L20.12 -13.44L19.99 -13.81L19.92 -14.25L19.90 -14.79L19.92 -15.42L19.94 -16.12L19.91 -16.86L19.76 -17.61L19.45 -18.32L18.94 -18.92L18.29 -19.35L17.57 -19.62L16.85 -19.77L16.17 -19.87L15.59 -19.96L15.14 -20.08L14.86 -20.23L14.67 -20.41L14.50 -20.72L14.35 -21.19L14.21 -21.80L14.06 -22.49L13.85 -23.21L13.54 -23.91L13.10 -24.53L12.51 -25.01L11.82 -25.30L11.12 -25.41L10.44 -25.41L9.81 -25.37L9.25 -25.32L8.78 -25.31L8.38 -25.35L8.05 -25.45L7.72 -25.62L7.37 -25.86L6.98 -26.17L6.56 -26.53L6.10 -26.89L5.59 -27.22L5.03 -27.50L4.45 -27.70L3.86 -27.81L3.27 -27.86L2.70 -27.85L2.16 -27.81L1.62 -27.75L1.10 -27.67L0.59 -27.59L0.11 -27.50L-0.34 -27.44L-0.78 -27.41L-1.20 -27.41L-1.63 -27.45L-2.09 -27.53L-2.59 -27.63L-3.13 -27.74L-3.71 -27.82L-4.33 -27.84L-4.96 -27.78L-5.59 -27.60L-6.17 -27.31L-6.70 -26.95L-7.17 -26.55L-7.59 -26.15L-7.97 -25.78L-8.32 -25.47L-8.65 -25.24L-8.99 -25.08L-9.36 -24.97L-9.79 -24.89L-10.29 -24.84L-10.85 -24.80L-11.46 -24.72L-12.08 -24.57L-12.69 -24.33L-13.26 -23.98L-13.76 -23.54L-14.17 -23.03L-14.51 -22.49L-14.80 -21.95L-15.06 -21.44L-15.31 -20.98L-15.56 -20.57L-15.83 -20.22L-16.13 -19.91L-16.48 -19.62L-16.88 -19.33L-17.32 -19.03L-17.79 -18.70L-18.26 -18.34L-18.72 -17.92L-19.14 -17.45L-19.50 -16.92L-19.80 -16.37L-20.05 -15.79L-20.24 -15.22L-20.41 -14.65L-20.55 -14.10L-20.70 -13.58L-20.85 -13.08L-21.03 -12.60L-21.22 -12.14L-21.45 -11.67L-21.69 -11.21L-21.95 -10.73L-22.23 -10.23L-22.50 -9.71L-22.76 -9.16L-22.99 -8.58L-23.17 -7.98L-23.29 -7.35L-23.35 -6.72L-23.37 -6.09L-23.34 -5.48L-23.29 -4.89L-23.25 -4.33L-23.21 -3.79L-23.20 -3.28L-23.23 -2.77L-23.29 -2.27L-23.38 -1.76L-23.50 -1.22L-23.62 -0.65L-23.75 -0.05L-23.84 0.57L-23.88 1.21L-23.86 1.87L-23.77 2.51L-23.60 3.14L-23.39 3.74L-23.14 4.30L-22.88 4.83L-22.64 5.33L-22.43 5.81L-22.25 6.27L-22.12 6.74L-22.03 7.22L-21.96 7.73L-21.92 8.28L-21.87 8.87L-21.81 9.46L-21.66 9.83L-21.35 10.08L-20.95 10.15L-20.58 10.00L-20.33 9.69ZM-28.15 -21.00a0.55 0.44 0 1 0 1.10 0a0.55 0.44 0 1 0 -1.10 0ZM-26.50 26.40a0.7 0.56 0 1 0 1.40 0a0.7 0.56 0 1 0 -1.40 0ZM24.40 -27.40a0.5 0.40 0 1 0 1.00 0a0.5 0.40 0 1 0 -1.00 0ZM27.40 18.20a0.6 0.48 0 1 0 1.20 0a0.6 0.48 0 1 0 -1.20 0ZM-28.85 6.00a0.45 0.36 0 1 0 0.90 0a0.45 0.36 0 1 0 -0.90 0ZM8.50 28.30a0.5 0.40 0 1 0 1.00 0a0.5 0.40 0 1 0 -1.00 0ZM-12.90 -28.60a0.4 0.32 0 1 0 0.80 0a0.4 0.32 0 1 0 -0.80 0Z"/>
+</g></g>
+    </svg>
+    <button class="hero-replay" type="button" aria-label="再看一遍：点录音笔重播动画" title="再看一遍"></button>
+  </div>
+</header>
+<script>
+// anchors.json 的内嵌副本：file:// 打开时浏览器不让读 anchors.json，就用这份（tools/build.py 生成时写入）
+const HERO_ANCHORS = {"说明": "x、y 是占图片宽、高的百分比（0–100），原点在左上角。打开 index.html?debug=1 拖动标记微调，再把面板里的 JSON 贴回这里。", "mouth": {"label": "领导嘴边", "x": 14.61, "y": 43.36}, "recorder": {"label": "录音笔", "x": 48.17, "y": 74.54}, "notebook": {"label": "员工的笔记本", "x": 77.14, "y": 78.93}, "stack": {"label": "员工面前那摞材料", "x": 73.33, "y": 76.25}};
+/* 招牌动效：把脉前（0–4 秒）→ 收住（4–6 秒）→ 把脉后（6–8 秒），播一次停在“把脉后”，点录音笔重播。
+   画面只由时间 t（秒）决定：render(t) 不依赖上一帧，所以调试面板能拖时间轴，截图能定格在任意一刻。
+   坐标是插画的 viewBox（1916 × 821），锚点从 anchors.json 的百分比换算过来。 */
+function createHeroMotion(stage, anchors, opts = {}) {
+  const W = 1916, H = 821, NS = 'http://www.w3.org/2000/svg'
+  const END = 8, GATHER = 4, AFTER = 6, PREROLL = 0.45
+  const STATIC_QUERY = '(prefers-reduced-motion: reduce), (max-width: 767.98px)'
+  // 声浪中线的形状：从嘴边到笔记本的拱。每个点是 [沿“嘴边 → 笔记本”的比例, 往上抬多少（占图高）]
+  const ARCH = [[0, 0], [0.227, 0.197], [0.533, 0.415], [0.797, 0.447], [0.921, 0.289], [0.963, 0.084], [1, 0]]
+  const STEP = 9            // 声浪采样间距
+  const PROP_PX = 150       // 道具放大到 1 倍时的边长（道具 SVG 统一成 160 单位见方）
+  // 六样道具：出场顺序、离中线的偏移、翻滚圈数；火箭不翻滚，机头一直朝上
+  const PROPS = [
+    { id: 'mask-book', lane: -16, spin: 0.55, tilt: -14 },
+    { id: 'scroll', lane: 14, spin: -0.5, tilt: 8 },
+    { id: 'pie', lane: -10, spin: 0.65, tilt: -6 },
+    { id: 'soup', lane: 16, spin: -0.55, tilt: 10 },
+    { id: 'go-board', lane: -14, spin: 0.5, tilt: -8 },
+    { id: 'rocket', lane: 10, upright: true },
+  ]
+  const LAUNCH0 = 0.35, LAUNCH_GAP = 0.6, FLIGHT = 1.65  // 每 0.6 秒放一样，一样飞 1.65 秒：空中同时两三个
+
+  const fx = stage.querySelector('.hero-fx')
+  const base = stage.querySelector('.hero-base')
+  const after = stage.querySelector('.hero-after')
+  const btn = stage.querySelector('.hero-replay')
+  const wavesG = fx.querySelector('.fx-waves')
+  const ripples = [...fx.querySelectorAll('.fx-ripple')]
+  const sealG = fx.querySelector('.fx-seal')
+  const props = PROPS.map((p, i) => Object.assign({ i, el: fx.querySelector(`.fx-prop[data-prop="${p.id}"]`) }, p)).filter(p => p.el)
+  const flame = fx.querySelector('.fx-prop[data-prop="rocket"] .flame')
+
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x))
+  const lerp = (a, b, f) => a + (b - a) * f
+  const smooth = (a, b, x) => { const u = clamp((x - a) / (b - a), 0, 1); return u * u * (3 - 2 * u) }
+  const sine = u => 0.5 - 0.5 * Math.cos(Math.PI * clamp(u, 0, 1))
+  const TAU = Math.PI * 2
+
+  // 声浪：12 道线。前三道从嘴边出来，又细又缓；其余的一路从已有的线上分出来，越往员工那边越多、越乱
+  const rnd = (seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed ^ seed >>> 15, 1 | seed); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296 })(20261030)
+  const COLORS = ['ink3', 'brass', 'ink2', 'gold', 'brass', 'ink3', 'ink2', 'gold', 'brass']
+  const LINES = []
+  for (let k = 0; k < 12; k++) {
+    const first = k < 3
+    LINES.push({
+      born: first ? 0 : 0.15 + 0.06 * (k - 3) + (rnd() - 0.5) * 0.04,  // 前 15% 只有三道
+      parent: first ? -1 : Math.floor(rnd() * k),
+      lane: first ? (k - 1) * 0.7 : rnd() * 2 - 1,
+      color: first ? ['ink3', 'brass', 'ink3'][k] : COLORS[k - 3],
+      width: first ? 1.5 : 1.1 + rnd() * 0.9,
+      alpha: first ? 0.85 : 0.5 + rnd() * 0.4,
+      ph: [rnd() * TAU, rnd() * TAU, rnd() * TAU],
+      sp: 0.85 + rnd() * 0.3,
+    })
+  }
+  const paths = LINES.map(L => {
+    const p = document.createElementNS(NS, 'path')
+    p.setAttribute('class', 'w-' + L.color)
+    p.setAttribute('stroke-width', L.width.toFixed(2))
+    wavesG.appendChild(p)
+    return p
+  })
+
+  let G = null   // 由锚点算出来的几何
+  let OFF = []   // 每道线在每个采样点上离中线的偏移
+  let PX = new Float32Array(0), PY = new Float32Array(0)
+
+  function catmull(pts, seg) {
+    const out = []
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)]
+      for (let j = 0; j < seg; j++) {
+        const u = j / seg, u2 = u * u, u3 = u2 * u
+        out.push({
+          x: 0.5 * (2 * p1.x + (-p0.x + p2.x) * u + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * u2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * u3),
+          y: 0.5 * (2 * p1.y + (-p0.y + p2.y) * u + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * u2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * u3),
+        })
+      }
+    }
+    out.push(pts[pts.length - 1])
+    return out
+  }
+
+  function build(a) {
+    const pt = k => ({ x: a[k].x / 100 * W, y: a[k].y / 100 * H })
+    const M = pt('mouth'), N = pt('notebook'), R = pt('recorder'), S = pt('stack')
+    const way = ARCH.map(([f, h]) => ({ x: lerp(M.x, N.x, f), y: lerp(M.y, N.y, f) - h * H }))
+    const dense = catmull(way, 48)
+    const cum = [0]
+    for (let i = 1; i < dense.length; i++) cum.push(cum[i - 1] + Math.hypot(dense[i].x - dense[i - 1].x, dense[i].y - dense[i - 1].y))
+    const len = cum[cum.length - 1]
+    const n = Math.max(8, Math.round(len / STEP))
+    const xs = new Float32Array(n + 1), ys = new Float32Array(n + 1), nx = new Float32Array(n + 1), ny = new Float32Array(n + 1), phase = new Float32Array(n + 1)
+    for (let i = 0, j = 0; i <= n; i++) {
+      const d = len * i / n
+      while (j < cum.length - 2 && cum[j + 1] < d) j++
+      const f = (d - cum[j]) / ((cum[j + 1] - cum[j]) || 1)
+      xs[i] = lerp(dense[j].x, dense[j + 1].x, f)
+      ys[i] = lerp(dense[j].y, dense[j + 1].y, f)
+    }
+    for (let i = 0; i <= n; i++) {
+      const i0 = Math.max(0, i - 1), i1 = Math.min(n, i + 1)
+      const tx = xs[i1] - xs[i0], ty = ys[i1] - ys[i0], l = Math.hypot(tx, ty) || 1
+      nx[i] = -ty / l; ny[i] = tx / l
+      // 波长从嘴边的 190 缩到笔记本前的 75：越往后起伏越密
+      if (i > 0) phase[i] = phase[i - 1] + (len / n) / (190 - 115 * (i / n))
+    }
+    G = { M, N, R, S, n, len, xs, ys, nx, ny, phase,
+      mic: { x: R.x, y: R.y - 0.040 * H },        // 声浪吸进机头
+      foot: { x: R.x, y: R.y + 0.047 * H } }      // 波纹画在机身底部的桌面上
+    OFF = LINES.map(() => new Float32Array(n + 1))
+    PX = new Float32Array(n + 1); PY = new Float32Array(n + 1)
+    // 波纹：三圈椭圆，和底图上录音笔脚下的波纹同心
+    ripples.forEach((el, i) => {
+      const rx = 46 + 27 * i
+      el.setAttribute('cx', G.foot.x.toFixed(1)); el.setAttribute('cy', G.foot.y.toFixed(1))
+      el.setAttribute('rx', rx); el.setAttribute('ry', (rx * 0.17).toFixed(1))
+    })
+    // 点录音笔重播：按钮盖住录音笔
+    if (btn) Object.assign(btn.style, { left: (a.recorder.x - 2.4) + '%', top: (a.recorder.y - 7.6) + '%', width: '4.8%', height: '15.2%' })
+  }
+
+  function sample(s) {
+    const f = clamp(s, 0, 1) * G.n, i = Math.min(G.n - 1, Math.floor(f)), u = f - i
+    return { x: lerp(G.xs[i], G.xs[i + 1], u), y: lerp(G.ys[i], G.ys[i + 1], u), nx: lerp(G.nx[i], G.nx[i + 1], u), ny: lerp(G.ny[i], G.ny[i + 1], u) }
+  }
+
+  function offsets(t) {
+    const n = G.n
+    const grow = 0.8 + 0.2 * smooth(1, 3.5, t)
+    for (let i = 0; i <= n; i++) {
+      const s = i / n
+      // 越往员工那边散得越开、起伏越大，最后 10% 收进笔记本
+      const spread = 4 + (30 + 30 * smooth(0.55, 0.85, s)) * smooth(0, 0.5, s) * (1 - smooth(0.9, 1, s))
+      const amp = (2 + 14 * Math.pow(smooth(0.12, 0.8, s), 1.2)) * (1 - smooth(0.92, 1, s)) * grow
+      const c2 = 0.55 * smooth(0.25, 0.75, s), c3 = 0.35 * smooth(0.45, 0.9, s)
+      const P = G.phase[i] * TAU
+      for (let k = 0; k < LINES.length; k++) {
+        const L = LINES[k]
+        const own = L.lane * spread + amp * (Math.sin(P - TAU * 1.6 * L.sp * t + L.ph[0])
+          + c2 * Math.sin(2.3 * P - TAU * 2.1 * L.sp * t + L.ph[1])
+          + c3 * Math.sin(3.7 * P - TAU * 2.9 * t + L.ph[2]))
+        if (L.parent < 0) OFF[k][i] = own
+        else { const p = OFF[L.parent][i]; OFF[k][i] = p + (own - p) * smooth(L.born, L.born + 0.1, s) }
+      }
+    }
+  }
+
+  function pathD(m) {
+    let d = 'M' + PX[0].toFixed(1) + ' ' + PY[0].toFixed(1)
+    for (let i = 1; i < m - 1; i++) d += 'Q' + PX[i].toFixed(1) + ' ' + PY[i].toFixed(1) + ' ' + ((PX[i] + PX[i + 1]) / 2).toFixed(1) + ' ' + ((PY[i] + PY[i + 1]) / 2).toFixed(1)
+    return d + 'L' + PX[m - 1].toFixed(1) + ' ' + PY[m - 1].toFixed(1)
+  }
+
+  function drawWaves(t) {
+    if (t <= 0 || t >= AFTER) { paths.forEach(p => p.setAttribute('d', '')); return }
+    offsets(t)
+    const n = G.n, mic = G.mic
+    const head = t < 1.8 ? sine(t / 1.8) : 1            // 声浪从嘴边往外走，1.8 秒到笔记本
+    const u = (t - GATHER) / (AFTER - GATHER)              // 收住阶段的进度
+    for (let k = 0; k < LINES.length; k++) {
+      const L = LINES[k], path = paths[k]
+      const i0 = Math.ceil(L.born * n), i1 = Math.floor(head * n)
+      if (i1 - i0 < 2) { path.setAttribute('d', ''); continue }
+      let m = 0
+      for (let i = i0; i <= i1; i++) {
+        const s = i / n
+        const off = OFF[k][i] * smooth(0, 0.05, s)
+        let x = G.xs[i] + G.nx[i] * off, y = G.ys[i] + G.ny[i] * off
+        if (u > 0) {
+          // 掉头：笔记本那头先被拽回来，嘴边那头最后；每一点沿弧线加速吸进机头，起伏一路收平
+          const v = clamp((u - 0.04 - 0.52 * (1 - s)) / 0.38, 0, 1), e = v * v
+          if (e > 0) {
+            const bx = G.xs[i] + G.nx[i] * off * (1 - e), by = G.ys[i] + G.ny[i] * off * (1 - e)
+            const cx = mic.x + (bx - mic.x) * 0.55, cy = by + (mic.y - by) * 0.15 - 40
+            x = (1 - e) * (1 - e) * bx + 2 * (1 - e) * e * cx + e * e * mic.x
+            y = (1 - e) * (1 - e) * by + 2 * (1 - e) * e * cy + e * e * mic.y
+          }
+        }
+        PX[m] = x; PY[m] = y; m++
+      }
+      path.setAttribute('d', pathD(m))
+      path.setAttribute('opacity', (L.alpha * (u > 0 ? 1 - smooth(0.8, 1, u) : 1)).toFixed(3))
+    }
+  }
+
+  // 道具在把脉前的位置：沿声浪的中线从嘴边飘到笔记本，越近越大，到了笔记本缩进去
+  function flight(p, t) {
+    const tt = (t - (LAUNCH0 + LAUNCH_GAP * p.i)) / FLIGHT
+    if (tt <= 0 || tt >= 1) return null
+    const s = 0.05 + 0.935 * sine(tt)
+    const c = sample(s)
+    const lat = p.lane * smooth(0, 0.2, s) * (1 - smooth(0.9, 1, s)) + 7 * Math.sin(TAU * 1.1 * tt + p.i)
+    const scale = (0.32 + 0.93 * smooth(0.02, 0.8, s)) * (1 - 0.85 * smooth(0.86, 1, tt))
+    return {
+      x: c.x + c.nx * lat, y: c.y + c.ny * lat, scale, tt,
+      alpha: smooth(0, 0.08, tt) * (1 - smooth(0.9, 1, tt)),
+      rot: p.upright ? 4 * Math.sin(TAU * 1.4 * tt) : p.tilt + 360 * p.spin * tt + 9 * Math.sin(TAU * 0.9 * tt),
+      sx: p.upright ? 1 : 0.9 + 0.1 * Math.cos(TAU * 1.3 * p.spin * tt),  // 轻微压扁，像在空中翻面
+    }
+  }
+
+  // 收住：4 秒时还在空中的道具，依次被吸进录音笔，边转边缩小
+  const caught = props.filter(p => { const t0 = LAUNCH0 + LAUNCH_GAP * p.i; return t0 < GATHER && GATHER < t0 + FLIGHT })
+  function propState(p, t) {
+    if (t <= 0 || t >= AFTER) return null
+    if (t < GATHER) return flight(p, t)
+    const rank = caught.indexOf(p)
+    if (rank < 0) return null
+    const c0 = GATHER + 0.12 * rank
+    const s0 = flight(p, Math.min(t, c0)) || flight(p, GATHER)
+    if (!s0) return null
+    const e = Math.pow(clamp((t - c0) / 0.9, 0, 1), 2)
+    const mic = G.mic, cx = mic.x + (s0.x - mic.x) * 0.5, cy = s0.y + (mic.y - s0.y) * 0.1 - 60
+    return {
+      x: (1 - e) * (1 - e) * s0.x + 2 * (1 - e) * e * cx + e * e * mic.x,
+      y: (1 - e) * (1 - e) * s0.y + 2 * (1 - e) * e * cy + e * e * mic.y,
+      scale: s0.scale * Math.pow(1 - e, 1.3), alpha: s0.alpha * (1 - smooth(0.8, 1, e)),
+      rot: p.upright ? s0.rot * (1 - e) : s0.rot + 420 * e * Math.sign(p.spin), sx: s0.sx,
+    }
+  }
+
+  function drawProps(t) {
+    for (const p of props) {
+      const st = propState(p, t)
+      if (!st || st.alpha <= 0.001 || st.scale <= 0.005) { p.el.setAttribute('opacity', '0'); p.el.removeAttribute('transform'); continue }
+      const k = st.scale * PROP_PX / 160
+      p.el.setAttribute('transform', `translate(${st.x.toFixed(1)} ${st.y.toFixed(1)}) rotate(${st.rot.toFixed(1)}) scale(${(k * st.sx).toFixed(4)} ${k.toFixed(4)})`)
+      p.el.setAttribute('opacity', st.alpha.toFixed(3))
+    }
+    if (flame) {
+      const fy = 0.85 + 0.2 * Math.sin(TAU * 8 * t) + 0.08 * Math.sin(TAU * 13 * t + 1)
+      flame.setAttribute('transform', `translate(0 42) scale(1 ${fy.toFixed(3)}) translate(0 -42)`)
+    }
+  }
+
+  function drawRipples(t) {
+    ripples.forEach((el, i) => {
+      const x = t - (5.15 + 0.12 * i)
+      if (x <= 0 || t >= END) { el.style.opacity = ''; el.style.transform = ''; return }
+      const a = x < 0.18 ? x / 0.18 : Math.exp(-(x - 0.18) / 0.35)
+      el.style.opacity = (0.95 * a).toFixed(3)
+      el.style.transform = `scale(${(0.94 + 0.12 * smooth(0, 0.6, x)).toFixed(3)})`
+    })
+  }
+
+  // 把脉后：交叉淡入 base-after，朱砂印章盖到那摞材料上（印章贴着纸面，按纸的透视压扁、斜切）
+  function drawAfter(t) {
+    let a, sealA = 0, k = 1
+    if (t < 0) a = rewindFrom * (-t / PREROLL)
+    else a = smooth(AFTER, AFTER + 0.8, t)
+    const x = t - 6.85
+    if (t < 0) { sealA = a; k = 1 }
+    else if (x >= 0) {
+      if (x < 0.28) { k = 1.75 - 0.75 * Math.pow(x / 0.28, 3); sealA = smooth(0, 0.1, x) }
+      else { k = 1 - 0.05 * Math.sin(Math.PI * clamp((x - 0.28) / 0.22, 0, 1)); sealA = 1 }
+    }
+    after.style.opacity = a.toFixed(3)
+    curAfter = a
+    sealG.setAttribute('opacity', (0.92 * sealA).toFixed(3))
+    sealG.setAttribute('transform', `translate(${G.S.x.toFixed(1)} ${G.S.y.toFixed(1)}) rotate(12) skewX(-30) scale(${(0.88 * k).toFixed(4)} ${(0.5 * k).toFixed(4)})`)
+  }
+
+  let t = 0, curAfter = 0, rewindFrom = 0, running = false, raf = 0, last = 0, speed = 1
+  let visible = true, played = false, afterReady = false, baseReady = false
+  let animated = false, mq = null, io = null, destroyed = false
+
+  function render(time) {
+    t = time
+    drawWaves(time); drawProps(time); drawRipples(time); drawAfter(time)
+    if (opts.onFrame) opts.onFrame(time)
+  }
+
+  function frame(now) {
+    raf = 0
+    if (!running) return
+    const dt = Math.min(0.05, (now - last) / 1000)
+    last = now
+    t += dt * speed
+    if (t >= AFTER && !afterReady) t = AFTER  // base-after 还没下载完就停在这里等
+    render(Math.min(t, END))
+    if (t >= END) { running = false; stage.classList.remove('is-playing'); if (opts.onEnd) opts.onEnd(); return }
+    raf = requestAnimationFrame(frame)
+  }
+
+  function play() {
+    if (!animated || destroyed) return
+    if (t >= END) t = 0
+    running = true; played = true
+    stage.classList.add('is-playing'); stage.classList.remove('is-hot')
+    last = performance.now()
+    if (!raf && visible) raf = requestAnimationFrame(frame)
+  }
+  function pause() { running = false; stage.classList.remove('is-playing'); if (raf) cancelAnimationFrame(raf); raf = 0 }
+  function replay() {
+    if (!animated) return
+    rewindFrom = curAfter
+    t = rewindFrom > 0.01 ? -PREROLL : 0
+    play()
+  }
+  function seek(time) { pause(); render(clamp(time, -PREROLL, END)) }
+
+  function loadAfter() {
+    if (!after.getAttribute('src') && after.dataset.src) {
+      if (after.dataset.srcset) after.setAttribute('srcset', after.dataset.srcset)
+      after.setAttribute('src', after.dataset.src)
+    }
+    const ok = () => { afterReady = true }  // 下载失败也放行，不让动画卡在 6 秒
+    if (after.complete && after.naturalWidth) ok()
+    else { after.addEventListener('load', ok, { once: true }); after.addEventListener('error', ok, { once: true }) }
+  }
+
+  function tryStart() {
+    if (!animated || played || !baseReady || !visible || opts.autoplay === false) return
+    play()
+  }
+
+  function applyMode() {
+    animated = !mq.matches || !!opts.force
+    if (animated) {
+      loadAfter()
+      if (played) { pause(); render(END) } else tryStart()
+    } else pause()
+  }
+
+  build(anchors)
+  render(0)
+  mq = window.matchMedia(STATIC_QUERY)
+  mq.addEventListener('change', applyMode)
+  const onBase = () => { baseReady = !!base.naturalWidth; tryStart() }
+  if (base.complete && base.naturalWidth) baseReady = true
+  base.addEventListener('load', onBase)
+  if ('IntersectionObserver' in window) {
+    // 滚出视口：停掉帧循环，时间不走；滚回来接着播
+    io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      if (!visible && raf) { cancelAnimationFrame(raf); raf = 0 }
+      if (visible && running && !raf) { last = performance.now(); raf = requestAnimationFrame(frame) }
+      tryStart()
+    })
+    io.observe(stage)
+  }
+  const hotOn = () => { if (!running) stage.classList.add('is-hot') }
+  const hotOff = () => stage.classList.remove('is-hot')
+  if (btn) {
+    btn.addEventListener('click', replay)
+    btn.addEventListener('pointerenter', hotOn)
+    btn.addEventListener('pointerleave', hotOff)
+    btn.addEventListener('focus', hotOn)
+    btn.addEventListener('blur', hotOff)
+  }
+  applyMode()
+
+  return {
+    play, pause, replay, seek,
+    setAnchors(a) { build(a); render(t) },
+    setSpeed(v) { speed = v },
+    get time() { return t },
+    get playing() { return running },
+    get animated() { return animated },
+    geometry() { return G },
+    // 某一时刻空中有哪几样道具（调试和自查用）
+    propsInAir(time) { return props.filter(p => { const st = propState(p, time); return st && st.alpha > 0.02 && st.scale > 0.05 }).map(p => p.id) },
+    destroy() {
+      destroyed = true; pause()
+      mq.removeEventListener('change', applyMode)
+      base.removeEventListener('load', onBase)
+      if (io) io.disconnect()
+      if (btn) {
+        btn.removeEventListener('click', replay)
+        btn.removeEventListener('pointerenter', hotOn); btn.removeEventListener('pointerleave', hotOff)
+        btn.removeEventListener('focus', hotOn); btn.removeEventListener('blur', hotOff)
+      }
+      paths.forEach(p => p.remove())
+    },
+  }
+}
+/* ?debug=1：在图上标出四个锚点，拖动（或选中后按方向键）微调，画面实时跟着变；
+   面板里能拖时间轴、叠一张参考图，调好以后“复制 JSON”贴回 anchors.json。只在 index.html 里有。 */
+function initHeroDebug(stage, motion, anchors, source) {
+  const NS = 'http://www.w3.org/2000/svg', W = 1916, H = 821
+  const KEYS = ['mouth', 'recorder', 'notebook', 'stack']
+  const FOCUS_T = { mouth: 2.6, notebook: 2.6, recorder: 5.3, stack: 8 }
+  const NOTE = anchors['说明']
+  let a = clone(anchors)
+  const round = v => Math.round(v * 100) / 100
+  function clone(o) { return JSON.parse(JSON.stringify(o)) }
+
+  stage.classList.add('hero-debug-on')
+  const layer = el('div', 'hero-debug')
+  const ref = el('img', 'hero-debug-ref')
+  ref.alt = ''
+  const guides = document.createElementNS(NS, 'svg')
+  guides.setAttribute('viewBox', `0 0 ${W} ${H}`)
+  guides.setAttribute('class', 'hero-debug-guides')
+  layer.append(ref, guides)
+  const pins = {}
+  for (const k of KEYS) {
+    const pin = el('button', 'hero-debug-pin')
+    pin.type = 'button'
+    pin.dataset.key = k
+    pin.innerHTML = '<i></i><span></span>'
+    pin.title = '拖动，或选中后按方向键（Shift 加大步长）'
+    layer.append(pin)
+    pins[k] = pin
+    // 点住哪个锚点，就跳到它起作用的那一刻：嘴边、笔记本看把脉前，录音笔看收住，材料看盖好的印章（base-after）
+    pin.addEventListener('focus', () => { if (!motion.playing) motion.seek(FOCUS_T[k]) })
+    pin.addEventListener('pointerdown', e => {
+      if (!motion.playing) motion.seek(FOCUS_T[k])
+      pin.setPointerCapture(e.pointerId)
+      const move = ev => {
+        const r = stage.getBoundingClientRect()
+        a[k].x = round(Math.min(100, Math.max(0, (ev.clientX - r.left) / r.width * 100)))
+        a[k].y = round(Math.min(100, Math.max(0, (ev.clientY - r.top) / r.height * 100)))
+        update()
+      }
+      const up = () => { pin.removeEventListener('pointermove', move); pin.removeEventListener('pointerup', up) }
+      pin.addEventListener('pointermove', move)
+      pin.addEventListener('pointerup', up)
+      e.preventDefault()
+    })
+    pin.addEventListener('keydown', e => {
+      const step = e.shiftKey ? 0.5 : 0.05
+      const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key]
+      if (!d) return
+      a[k].x = round(a[k].x + d[0]); a[k].y = round(a[k].y + d[1])
+      update(); e.preventDefault()
+    })
+  }
+  stage.append(layer)
+
+  const panel = el('aside', 'hero-debug-panel')
+  panel.innerHTML = `
+    <section>
+      <h2>锚点调试</h2>
+      <div class="hd-row hd-time"><button type="button" data-act="play">播放</button><button type="button" data-act="pause">暂停</button><button type="button" data-act="replay">重播</button>
+        <select data-act="speed"><option value="1">1 倍速</option><option value="0.5">0.5 倍速</option><option value="0.25">0.25 倍速</option></select></div>
+      <div class="hd-row"><input type="range" min="0" max="8" step="0.01" value="0" data-act="seek"><output>0.00 s</output></div>
+      <p class="hd-air"></p>
+      <div class="hd-row"><label>参考图 <select data-act="ref"><option value="hero-static">hero-static</option><option value="base-before">base-before</option><option value="base-after">base-after</option></select></label>
+        <label>不透明度 <input type="range" min="0" max="100" value="0" data-act="refa"></label></div>
+      <div class="hd-row"><label><input type="checkbox" data-act="guides" checked> 显示声浪中线、波纹、印章和重播热区</label></div>
+      <p class="hd-src"></p>
+    </section>
+    <section>
+      <table><thead><tr><th>锚点</th><th>x %</th><th>y %</th></tr></thead><tbody>${KEYS.map(k => `
+        <tr><td>${anchors[k].label}</td><td><input type="number" step="0.05" data-k="${k}" data-c="x"></td><td><input type="number" step="0.05" data-k="${k}" data-c="y"></td></tr>`).join('')}
+      </tbody></table>
+      <div class="hd-row"><button type="button" data-act="copy">复制 JSON</button><button type="button" data-act="reset">恢复</button><span class="hd-msg"></span></div>
+      <p class="hd-note">拖动图上的圆点（或选中后按方向键，Shift 加大步长），也可以改上面的数字，画面实时更新。调好以后点“复制 JSON”，整段贴回 hero-v2/anchors.json，再运行 python3 tools/build.py 同步页面里的内嵌副本。</p>
+    </section>
+    <section><textarea readonly rows="9"></textarea></section>`
+  document.body.append(panel)
+  const $ = s => panel.querySelector(s)
+  $('.hd-src').textContent = source === 'anchors.json'
+    ? '锚点读自 anchors.json（改了文件刷新页面即可）'
+    : 'file:// 打开读不到 anchors.json，用的是页面里的内嵌副本。用 python3 -m http.server 打开，改文件刷新就能看到。'
+  if (!motion.animated) $('.hd-src').textContent += ' 现在是静态图（减少动态效果或窗口窄于 768px），动画不播。'
+  const range = $('[data-act="seek"]'), out = $('output'), air = $('.hd-air')
+  panel.addEventListener('input', e => {
+    const t = e.target
+    if (t.dataset.k) { const v = parseFloat(t.value); if (!isNaN(v)) { a[t.dataset.k][t.dataset.c] = round(v); update(false) } }
+    else if (t.dataset.act === 'seek') motion.seek(parseFloat(t.value))
+    else if (t.dataset.act === 'refa') ref.style.opacity = t.value / 100
+    else if (t.dataset.act === 'ref') ref.src = `img/${t.value}.webp`
+    else if (t.dataset.act === 'speed') motion.setSpeed(parseFloat(t.value))
+    else if (t.dataset.act === 'guides') guides.style.display = t.checked ? '' : 'none'
+  })
+  panel.addEventListener('click', e => {
+    const act = e.target.dataset && e.target.dataset.act
+    if (act === 'play') motion.play()
+    else if (act === 'pause') motion.pause()
+    else if (act === 'replay') motion.replay()
+    else if (act === 'reset') { a = clone(anchors); update() }
+    else if (act === 'copy') copy()
+  })
+  ref.src = 'img/hero-static.webp'
+  ref.style.opacity = 0
+
+  function json() {
+    const rows = KEYS.map(k => `  "${k}": { "label": "${a[k].label}", "x": ${round(a[k].x)}, "y": ${round(a[k].y)} }`)
+    return `{\n  "说明": ${JSON.stringify(NOTE)},\n${rows.join(',\n')}\n}\n`
+  }
+  function copy() {
+    const text = json(), msg = $('.hd-msg')
+    const done = ok => { msg.textContent = ok ? '已复制' : '复制失败，请手动全选下面的文字'; setTimeout(() => { msg.textContent = '' }, 2000) }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => done(true), () => done(false))
+    else { const ta = $('textarea'); ta.select(); done(document.execCommand('copy')) }
+  }
+
+  function update(syncInputs = true) {
+    motion.setAnchors(a)
+    for (const k of KEYS) {
+      pins[k].style.left = a[k].x + '%'
+      pins[k].style.top = a[k].y + '%'
+      pins[k].querySelector('span').textContent = `${anchors[k].label} ${a[k].x.toFixed(2)}, ${a[k].y.toFixed(2)}`
+    }
+    if (syncInputs) panel.querySelectorAll('input[data-k]').forEach(i => { i.value = a[i.dataset.k][i.dataset.c] })
+    $('textarea').value = json()
+    drawGuides()
+  }
+
+  function drawGuides() {
+    const g = motion.geometry()
+    let d = ''
+    for (let i = 0; i <= g.n; i += 2) d += (i ? 'L' : 'M') + g.xs[i].toFixed(1) + ' ' + g.ys[i].toFixed(1)
+    const rip = [46, 73, 100].map(rx => `<ellipse cx="${g.foot.x}" cy="${g.foot.y}" rx="${rx}" ry="${rx * 0.17}"/>`).join('')
+    guides.innerHTML = `<path class="hd-arch" d="${d}"/>${rip}
+      <circle class="hd-mic" cx="${g.mic.x}" cy="${g.mic.y}" r="6"/>
+      <g transform="translate(${g.S.x} ${g.S.y}) rotate(12) skewX(-30) scale(0.88 0.5)"><rect class="hd-seal" x="-32" y="-32" width="64" height="64"/></g>`
+  }
+
+  update()
+  return {
+    onFrame(t) {
+      range.value = Math.max(0, t)
+      out.textContent = t.toFixed(2) + ' s'
+      const ids = motion.propsInAir(t)
+      air.textContent = `空中道具 ${ids.length} 样` + (ids.length ? '：' + ids.join('、') : '')
+    },
+  }
+
+  function el(tag, cls) { const e = document.createElement(tag); e.className = cls; return e }
+}
+(async () => {
+  const stage = document.querySelector('.hero-stage')
+  let anchors = HERO_ANCHORS, source = 'inline'
+  if (location.protocol.startsWith('http')) {
+    try {
+      const r = await fetch('anchors.json', { cache: 'no-store' })
+      if (r.ok) { anchors = await r.json(); source = 'anchors.json' }
+    } catch (e) { /* 读不到就用内嵌副本 */ }
+  }
+  let dbg = null
+  const motion = createHeroMotion(stage, anchors, { onFrame: t => dbg && dbg.onFrame(t) })
+  if (new URLSearchParams(location.search).get('debug') === '1') dbg = initHeroDebug(stage, motion, anchors, source)
+  window.heroMotion = motion  // 控制台里可以 heroMotion.seek(5)、heroMotion.replay()
+})()
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -80 160 160" width="160" height="160" role="img" aria-label="脸谱线装书">
+<title>脸谱线装书</title>
+<style>/* style:start */
+.f-sheet{fill:var(--sheet,#F8F7F2)}
+.f-paper{fill:var(--paper,#ECEAE1)}
+.f-line{fill:var(--line,#D6D2C4)}
+.f-ink{fill:var(--ink,#24231F)}
+.f-ink2{fill:var(--ink-2,#4E4C45)}
+.f-ink3{fill:var(--ink-3,#6B685F)}
+.f-indigo{fill:var(--indigo,#1F3A4D)}
+.f-indigo2{fill:var(--indigo-2,#2B4D65)}
+.f-gold{fill:var(--gold,#D9B865)}
+.f-brass{fill:var(--brass,#85682F)}
+.f-wood{fill:var(--wood,#6B4A2B)}
+.f-cinnabar{fill:var(--cinnabar,#B5382A)}
+.o{stroke:var(--ink,#24231F);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.k-ink,.k-ink3,.k-line,.k-sheet,.k-gold,.k-brass,.k-wood,.k-indigo2{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.k-ink{stroke:var(--ink,#24231F)}
+.k-ink3{stroke:var(--ink-3,#6B685F)}
+.k-line{stroke:var(--line,#D6D2C4)}
+.k-sheet{stroke:var(--sheet,#F8F7F2)}
+.k-gold{stroke:var(--gold,#D9B865)}
+.k-brass{stroke:var(--brass,#85682F)}
+.k-wood{stroke:var(--wood,#6B4A2B)}
+.k-indigo2{stroke:var(--indigo-2,#2B4D65)}
+/* style:end */</style>
+<!-- 书页（露在封面右边和下边） -->
+<path class="f-sheet o" d="M-38-56H48a4 4 0 0 1 4 4V62a4 4 0 0 1-4 4H-38z"/>
+<path class="k-ink3" stroke-width="1.1" d="M45-50V60M48.5-49V61M-30 62.5H44"/>
+<!-- 书签 -->
+<path class="k-brass" stroke-width="3" d="M26 64l3 12"/>
+<circle class="f-brass" cx="29.6" cy="77" r="2.6"/>
+<!-- 函套青封面 -->
+<rect class="f-indigo o" x="-48" y="-62" width="90" height="122" rx="3"/>
+<path class="k-indigo2" stroke-width="4" d="M37-55V52"/>
+<!-- 线装：订线和针脚 -->
+<path class="k-sheet" stroke-width="1.6" d="M-37-58V56M-48-46h11M-48-24h11M-48-2h11M-48 20h11M-48 42h11"/>
+<!-- 题签 -->
+<rect class="f-sheet" x="-31" y="-54" width="9" height="40" rx="1"/>
+<path class="k-ink" stroke-width="1.6" d="M-26.5-49v6M-26.5-38v6M-26.5-27v7"/>
+<!-- 脸谱 -->
+<path class="f-gold o" d="M6-42C27-42 36-31 36-14 36 3 31 19 21 31 15 39 10 44 6 44 2 44-3 39-9 31-19 19-24 3-24-14-24-31-15-42 6-42z"/>
+<path class="f-ink" d="M6-39C9.5-31 9.5-22 6-14 2.5-22 2.5-31 6-39z"/>
+<path class="f-ink" d="M-19-17C-13-27-3-26 2-15-5-20-12-20-19-17zM31-17C25-27 15-26 10-15 17-20 24-20 31-17z"/>
+<path class="f-ink" d="M0-9C-7-13-16-11-19-1-12-5-5-5 0-9zM12-9C19-13 28-11 31-1 24-5 17-5 12-9z"/>
+<ellipse class="f-sheet" cx="-8.5" cy="-7.2" rx="3.6" ry="2.2" transform="rotate(-14 -8.5 -7.2)"/>
+<ellipse class="f-sheet" cx="20.5" cy="-7.2" rx="3.6" ry="2.2" transform="rotate(14 20.5 -7.2)"/>
+<circle class="f-ink" cx="-8" cy="-7.2" r="1.3"/>
+<circle class="f-ink" cx="20" cy="-7.2" r="1.3"/>
+<path class="k-ink" stroke-width="2" d="M2 6q4 4 8 0"/>
+<path class="k-brass" stroke-width="1.8" d="M-17 8c3 7 8 8 12 4M29 8c-3 7-8 8-12 4"/>
+<path class="f-ink" d="M-9 22C-2 17 14 17 21 22 15 30-3 30-9 22z"/>
+</svg>
