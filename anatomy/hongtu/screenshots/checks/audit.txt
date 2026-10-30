@@ -1,0 +1,21 @@
+settled in 27.9 s
+wrote hongtu.html (596.6 KB) and hongtu.svg (483.1 KB) · 93 items · 104 solids · scale 0.518 px/mm · 600×798
+  tubes in 7702 replayed frames · 3.7 s
+  solids in 24 prefix states · 7.5 s
+  solids in 1926 replayed frames · 16.2 s
+  the rest · 518.5 s
+clearance: 0 problems
+clearance apart: 0 problems
+terminals: 0 ends not on a mount
+loose ends: 0
+screen folds: 0
+support: 0 unsupported solids · 0 hanging tubes · 0 sunk pairs
+depth order: 0 problems
+through in mid-flight: 0 pairs
+self-overlap: 0 chunks whose outline crosses itself on screen
+wobble: 0 smoothed profiles whose slope turns between its ends
+saddles off their host apart: 0
+stand-in shapes: 0 items whose recorded shape covers too little of what it draws
+crowding: 0 pairs where a bend or end touches another line on screen
+audit · 6 tubes · 104 solids · 93 items · 1943 depth states · 7702 replayed frames · 397037 overlaps · 253 order rules · 518.5 s
+audit passed

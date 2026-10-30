@@ -1,0 +1,104 @@
+[
+  {
+    "file": "hongtu-wenkai-1.woff2",
+    "source": "lxgwwenkai-regular-subset-100.woff2",
+    "range": "U+76CF",
+    "glyphs": 1
+  },
+  {
+    "file": "hongtu-wenkai-2.woff2",
+    "source": "lxgwwenkai-regular-subset-102.woff2",
+    "range": "U+5ED3",
+    "glyphs": 1
+  },
+  {
+    "file": "hongtu-wenkai-3.woff2",
+    "source": "lxgwwenkai-regular-subset-104.woff2",
+    "range": "U+94C5",
+    "glyphs": 1
+  },
+  {
+    "file": "hongtu-wenkai-4.woff2",
+    "source": "lxgwwenkai-regular-subset-105.woff2",
+    "range": "U+5256,U+6380",
+    "glyphs": 2
+  },
+  {
+    "file": "hongtu-wenkai-5.woff2",
+    "source": "lxgwwenkai-regular-subset-106.woff2",
+    "range": "U+00B0,U+94F8",
+    "glyphs": 2
+  },
+  {
+    "file": "hongtu-wenkai-6.woff2",
+    "source": "lxgwwenkai-regular-subset-107.woff2",
+    "range": "U+5398,U+679A,U+81C2",
+    "glyphs": 3
+  },
+  {
+    "file": "hongtu-wenkai-7.woff2",
+    "source": "lxgwwenkai-regular-subset-108.woff2",
+    "range": "U+53E0,U+659C,U+6670,U+7891,U+9489",
+    "glyphs": 5
+  },
+  {
+    "file": "hongtu-wenkai-8.woff2",
+    "source": "lxgwwenkai-regular-subset-110.woff2",
+    "range": "U+503E,U+60AC,U+6447",
+    "glyphs": 3
+  },
+  {
+    "file": "hongtu-wenkai-9.woff2",
+    "source": "lxgwwenkai-regular-subset-111.woff2",
+    "range": "U+58A8,U+5B8F,U+5F84,U+622A,U+695A,U+756A",
+    "glyphs": 6
+  },
+  {
+    "file": "hongtu-wenkai-10.woff2",
+    "source": "lxgwwenkai-regular-subset-112.woff2",
+    "range": "U+5360,U+5939,U+5BBD,U+5C3A,U+6302,U+684C,U+7ED8,U+865A",
+    "glyphs": 8
+  },
+  {
+    "file": "hongtu-wenkai-11.woff2",
+    "source": "lxgwwenkai-regular-subset-113.woff2",
+    "range": "U+5012,U+523B,U+53F3,U+5DE6,U+613F,U+6267,U+65D7,U+706F,U+76D6,U+8F6E,U+900F",
+    "glyphs": 11
+  },
+  {
+    "file": "hongtu-wenkai-12.woff2",
+    "source": "lxgwwenkai-regular-subset-114.woff2",
+    "range": "U+505C,U+5708,U+5757,U+5C42,U+63CF,U+67B6,U+7B14,U+7EB8,U+7FFB,U+94C1",
+    "glyphs": 10
+  },
+  {
+    "file": "hongtu-wenkai-13.woff2",
+    "source": "lxgwwenkai-regular-subset-115.woff2",
+    "range": "U+0025,U+4F8B,U+514B,U+516D,U+5199,U+534A,U+54EA,U+5747,U+5C40,U+5E72,U+5E95,U+6309,U+677F,U+6B62,U+753B,U+76D8,U+7B97,U+7C73,U+7EC8,U+7FA4,U+80CC,U+8D8A,U+8FB9,U+8FDC,U+94B1,U+9876",
+    "glyphs": 26
+  },
+  {
+    "file": "hongtu-wenkai-14.woff2",
+    "source": "lxgwwenkai-regular-subset-116.woff2",
+    "range": "U+4EC0,U+5148,U+518D,U+51E0,U+5404,U+5904,U+5C71,U+5F20,U+600E,U+628A,U+6574,U+666F,U+6BCF,U+7167,U+724C,U+7740,U+786E,U+8FD1,U+9886",
+    "glyphs": 19
+  },
+  {
+    "file": "hongtu-wenkai-15.woff2",
+    "source": "lxgwwenkai-regular-subset-117.woff2",
+    "range": "U+201C,U+201D,U+4E24,U+4E48,U+4ECE,U+539F,U+53EA,U+53F0,U+5458,U+56DB,U+5B57,U+5B8C,U+5BFC,U+5DF2,U+5FEB,U+60F3,U+624D,U+6253,U+6392,U+653E,U+6807,U+683C,U+6BD4,U+6E05,U+6E90,U+76EE,U+7A0B,U+7AE0,U+8001,U+8282,U+89E3,U+8BA1,U+8D77,U+8DEF,U+90FD,U+91CC,U+91CD",
+    "glyphs": 37
+  },
+  {
+    "file": "hongtu-wenkai-16.woff2",
+    "source": "lxgwwenkai-regular-subset-118.woff2",
+    "range": "U+4E09,U+4E0A,U+4E0B,U+4E2A,U+4E86,U+4EBA,U+5168,U+51FA,U+5230,U+52A0,U+53EF,U+5408,U+540D,U+548C,U+56FE,U+5728,U+5927,U+597D,U+5B50,U+5B9A,U+5BB6,U+5C0F,U+5E73,U+5E74,U+5EA6,U+5F00,U+5F0F,U+624B,U+63A5,U+65F6,U+660E,U+662F,U+670D,U+6743,U+6765,U+6B63,U+7528,U+770B,U+7EBF,U+884C,U+8868,U+8981,U+8BDD,U+8D44,U+8FC7,U+90E8,U+91D1,U+95F4,U+9762,U+9AD8,U+FF08,U+FF09",
+    "glyphs": 52
+  },
+  {
+    "file": "hongtu-wenkai-17.woff2",
+    "source": "lxgwwenkai-regular-subset-119.woff2",
+    "range": "U+002E,U+002F,U+0030,U+0031,U+0032,U+0033,U+0034,U+0035,U+0036,U+0037,U+0038,U+0039,U+00B7,U+2014,U+3001,U+3002,U+4E00,U+6709,U+70B9,U+7684,U+FF0C,U+FF1A",
+    "glyphs": 22
+  }
+]
