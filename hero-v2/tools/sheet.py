@@ -30,6 +30,24 @@ def main():
         sheet.paste(im.resize((w, h), Image.LANCZOS), (x, y + head))
     sheet.save(out / 'sequence-sheet.png', optimize=True)
     print('sequence-sheet.png', sheet.size)
+    strip(src, out, 'mouth', ['张嘴（底图）', '大半张', '半张', '闭嘴'], 'mouth-close@2x.png')
+    strip(src, out, 'rec', ['把脉前', '把脉后'], 'recorder-close@2x.png')
+
+
+def strip(src, out, prefix, labels, name):
+    """几张特写横排成一张，每张上面写一行说明。"""
+    ims = [Image.open(src / f'{prefix}-{i}.png').convert('RGB') for i in range(len(labels))]
+    w, h = ims[0].size
+    gap, head = 12, 34
+    sheet = Image.new('RGB', (len(ims) * w + (len(ims) + 1) * gap, h + head + gap), (236, 234, 225))
+    d = ImageDraw.Draw(sheet)
+    f = ImageFont.truetype(FONT, 20)
+    for i, (label, im) in enumerate(zip(labels, ims)):
+        x = gap + i * (w + gap)
+        d.text((x, 6), label, font=f, fill=(36, 35, 31))
+        sheet.paste(im, (x, head))
+    sheet.save(out / name, optimize=True)
+    print(name, sheet.size)
 
 
 if __name__ == '__main__':

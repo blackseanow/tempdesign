@@ -105,68 +105,93 @@ async function main() {
   check('滚出视口暂停', off2 === off1 && back > off2, `滚出后 0.8 秒内 t 停在 ${off1.toFixed(2)}，滚回 0.6 秒后 t=${back.toFixed(2)}`)
   check('桌面无报错', page.errors.length === 0, page.errors.length ? page.errors.join(' | ') : '控制台没有错误')
 
-  // ---------- 2. 逐帧取样：道具、声浪、颜色 ----------
-  const samples = await page.evaluate(() => {
+  // ---------- 2. 逐帧取样：道具、嘴、声浪 ----------
+  const sampled = await page.evaluate(() => {
     const fx = document.querySelector('.hero-fx')
     const out = []
     for (let i = 0; i <= 160; i++) {
       const t = i * 0.05
       heroMotion.seek(t)
-      const props = [...fx.querySelectorAll('.fx-prop')].map(g => {
-        const tr = g.getAttribute('transform') || ''
-        const m = /rotate\(([-\d.]+)\) scale\(([-\d.]+) ([-\d.]+)\)/.exec(tr)
-        return { id: g.dataset.prop, op: +g.getAttribute('opacity'), rot: m ? +m[1] : 0, k: m ? +m[3] : 0, x: +(/translate\(([-\d.]+)/.exec(tr) || [0, 0])[1] }
-      })
+      const props = heroMotion.propStates(t).map(p => ({ id: p.id, phase: p.phase || null, x: p.x, y: p.y, k: p.scale || 0, rot: p.rot || 0, op: p.alpha || 0 }))
+      const mouth = [...fx.querySelectorAll('.fx-mouth image')].findIndex(im => im.getAttribute('opacity') === '1')
       const waves = [...fx.querySelectorAll('.fx-waves path')].filter(p => (p.getAttribute('d') || '').length > 0 && +(p.getAttribute('opacity') || 1) > 0.02).length
       const rip = Math.max(...[...fx.querySelectorAll('.fx-ripple')].map(e => +(e.style.opacity || 0)))
       const seal = +fx.querySelector('.fx-seal').getAttribute('opacity')
       const after = +document.querySelector('.hero-after').style.opacity
-      out.push({ t: +t.toFixed(2), props, waves, rip, seal, after })
+      out.push({ t: +t.toFixed(2), props, inAir: heroMotion.propsInAir(t), mouth, waves, rip, seal, after })
     }
-    return out
+    const g = heroMotion.geometry()
+    return { out, N: g.N, mic: g.mic, mouthFrames: fx.querySelectorAll('.fx-mouth image').length }
   })
-  report.samples = samples.map(s => ({ t: s.t, inAir: s.props.filter(p => p.op > 0.02 && p.k > 0.05).map(p => p.id), waves: s.waves, rip: s.rip, seal: s.seal, after: s.after }))
-  const air = report.samples.filter(s => s.t > 0 && s.t < 4).map(s => s.inAir.length)
-  check('同一时刻空中最多三样道具（把脉前）', Math.max(...air) <= 3, `0–4 秒每 0.05 秒取样：最多 ${Math.max(...air)} 样，1 秒以后最少 ${Math.min(...report.samples.filter(s => s.t >= 1 && s.t < 4).map(s => s.inAir.length))} 样`)
+  const samples = sampled.out
+  const dist = (p, q) => Math.hypot(p.x - q.x, p.y - q.y)
+  report.samples = samples.map(s => ({ t: s.t, inAir: s.inAir, rest: s.props.filter(p => p.phase === 'rest').map(p => p.id), caught: s.props.filter(p => p.phase === 'caught' && p.op > 0.02).map(p => p.id), mouth: s.mouth, waves: s.waves, rip: s.rip, seal: s.seal, after: s.after }))
+  const air = samples.filter(s => s.t > 0 && s.t < 4).map(s => s.inAir.length)
+  check('同一时刻空中最多三样道具（把脉前）', Math.max(...air) <= 3, `0–4 秒每 0.05 秒取样：最多 ${Math.max(...air)} 样，1–3.6 秒最少 ${Math.min(...samples.filter(s => s.t >= 1 && s.t <= 3.6).map(s => s.inAir.length))} 样（落在桌上的不算）`)
   const order = []
-  for (const s of report.samples) for (const id of s.inAir) if (!order.includes(id)) order.push(id)
+  for (const s of samples) for (const id of s.inAir) if (!order.includes(id)) order.push(id)
   check('六样道具一样一样飘出来', order.length === 6, `出场顺序：${order.join(' → ')}`)
-  // 每样道具从刚出来（不透明度过半）到落地缩小之前，最大和最小的比；最大的那一刻必须比刚出来时离员工更近
-  const grow = ['mask-book', 'scroll', 'pie', 'soup', 'go-board'].map(id => {
-    const tr = samples.map(s => s.props.find(p => p.id === id)).filter(p => p && p.op > 0.5)
+  const track = id => samples.map(s => Object.assign({ t: s.t }, s.props.find(p => p.id === id)))
+  const ids = order
+  // 每样道具飞的时候（不透明度过半），最大的那一刻比刚出来时离员工更近，大小至少是刚出来时的 2.5 倍
+  const grow = ids.map(id => {
+    const tr = track(id).filter(p => p.phase === 'air' && p.op > 0.5)
     const peak = tr.reduce((a, p) => (p.k > a.k ? p : a))
     return peak.x > tr[0].x ? peak.k / tr[0].k : 0
   })
-  check('越靠近员工越大', grow.every(g => g > 2.5), `每样道具飞到最大时是刚出来时的 ${grow.map(g => g.toFixed(1)).join('、')} 倍（火箭半路被吸走，不算）`)
-  const rocket = samples.map(s => s.props.find(p => p.id === 'rocket')).filter(p => p && p.op > 0.02)
-  const others = ['mask-book', 'scroll', 'pie', 'soup', 'go-board'].map(id => {
-    const r = samples.map(s => s.props.find(p => p.id === id)).filter(p => p && p.op > 0.02).map(p => p.rot)
+  check('越靠近员工越大', grow.every(g => g > 2.5), `每样道具飞到最大时是刚出来时的 ${grow.map(g => g.toFixed(1)).join('、')} 倍`)
+  const rocket = track('rocket').filter(p => p.op > 0.02)
+  const others = ids.filter(id => id !== 'rocket').map(id => {
+    const r = track(id).filter(p => p.phase === 'air' && p.op > 0.02).map(p => p.rot)
     return Math.max(...r) - Math.min(...r)
   })
   check('火箭机头朝上，其他道具翻滚', Math.max(...rocket.map(p => Math.abs(p.rot))) <= 5 && others.every(r => r >= 150),
-    `火箭最大倾角 ${Math.max(...rocket.map(p => Math.abs(p.rot))).toFixed(1)}°；其他五样转过的角度 ${others.map(r => r.toFixed(0) + '°').join('、')}`)
-  const w04 = report.samples.find(s => s.t === 0.4).waves, w30 = report.samples.find(s => s.t === 3).waves
+    `火箭最大倾角 ${Math.max(...rocket.map(p => Math.abs(p.rot))).toFixed(1)}°；其他五样飞的时候转过 ${others.map(r => r.toFixed(0) + '°').join('、')}`)
+  // 每一样都走同一条路：先落在笔记本旁边，收住时再被吸进录音笔（收住阶段每 0.01 秒取一次样，看每样最后出现在哪）
+  const ends = await page.evaluate(() => {
+    const last = {}
+    for (let i = 400; i <= 600; i++) {
+      const t = i / 100
+      for (const p of heroMotion.propStates(t)) if (p.phase && p.alpha > 0.02 && p.scale > 0.005) last[p.id] = { t, x: p.x, y: p.y, phase: p.phase }
+    }
+    return last
+  })
+  const route = ids.map(id => {
+    const firstRest = track(id).find(p => p.phase === 'rest')
+    const end = ends[id]
+    return { id, landT: firstRest ? firstRest.t : null, landD: firstRest ? dist(firstRest, sampled.N) : null, endPhase: end.phase, endD: dist(end, sampled.mic), goneT: end.t + 0.01 }
+  })
+  check('六样道具都先落到笔记本旁边', route.every(r => r.landT !== null && r.landT <= 4.2 && r.landD < 200),
+    route.map(r => `${r.id} ${r.landT}s 落定（离笔记本 ${Math.round(r.landD)} px）`).join('；'))
+  check('六样道具最后都被吸进录音笔', route.every(r => r.endPhase === 'caught' && r.endD < 25),
+    route.map(r => `${r.id} ${r.goneT.toFixed(2)}s 消失在离机头 ${Math.round(r.endD)} px 处`).join('；'))
+  const talk = samples.filter(s => s.t > 0 && s.t < 4)
+  const flips = talk.reduce((n, s, i) => n + (i && s.mouth !== talk[i - 1].mouth ? 1 : 0), 0)
+  const quiet = samples.filter(s => s.t >= 4).every(s => s.mouth === -1)
+  check('领导说话时动嘴', sampled.mouthFrames === 3 && flips >= 20 && quiet,
+    `嘴形 ${sampled.mouthFrames} 帧；0–4 秒取样里换了 ${flips} 次；4 秒以后${quiet ? '停在底图张嘴笑的样子' : '还在动'}`)
+  const w04 = samples.find(s => s.t === 0.4).waves, w30 = samples.find(s => s.t === 3).waves
   check('声浪出嘴时两三道，越往后越多', w04 <= 3 && w30 >= 10, `0.4 秒 ${w04} 道，3 秒 ${w30} 道`)
-  const gone = report.samples.find(s => s.t === 6)
-  const ripMax = Math.max(...report.samples.filter(s => s.t >= 4 && s.t <= 6.5).map(s => s.rip))
-  check('收住：声浪吸进录音笔、道具消失、波纹亮一下', gone.waves === 0 && gone.inAir.length === 0 && ripMax > 0.8,
-    `6 秒时声浪 ${gone.waves} 道、道具 ${gone.inAir.length} 样；波纹最亮 ${ripMax.toFixed(2)}`)
-  const s68 = report.samples.find(s => s.t === 6.8), s8 = report.samples.find(s => s.t === 8)
-  check('把脉后：交叉淡入 base-after，印章盖在材料上', s68.after > 0.99 && report.samples.find(s => s.t === 6).after < 0.01 && s8.seal > 0.9,
+  const gone = samples.find(s => s.t === 6)
+  const ripMax = Math.max(...samples.filter(s => s.t >= 4 && s.t <= 6.5).map(s => s.rip))
+  const left = gone.props.filter(p => p.phase).length
+  check('收住：声浪吸进录音笔、道具消失、波纹亮一下', gone.waves === 0 && left === 0 && ripMax > 0.8,
+    `6 秒时声浪 ${gone.waves} 道、道具 ${left} 样；波纹最亮 ${ripMax.toFixed(2)}`)
+  const s68 = samples.find(s => s.t === 6.8), s8 = samples.find(s => s.t === 8)
+  check('把脉后：交叉淡入 base-after，印章盖在材料上', s68.after > 0.99 && samples.find(s => s.t === 6).after < 0.01 && s8.seal > 0.9,
     `6 秒 → 6.8 秒 base-after 不透明度 0 → ${s68.after}；8 秒印章不透明度 ${s8.seal}`)
 
-  // 颜色：动效层里每个元素的 fill、stroke 都得是设计系统的颜色，朱砂只在印章里
+  // 颜色：动效层和录音笔铭牌里每个元素的 fill、stroke 都得是设计系统的颜色，朱砂只在印章里（嘴形是底图像素，不算）
   const colors = await page.evaluate(() => {
     heroMotion.seek(3)
-    const fx = document.querySelector('.hero-fx')
     const used = []
-    for (const el of fx.querySelectorAll('*')) {
-      if (['g', 'svg'].includes(el.tagName)) continue
+    for (const el of document.querySelectorAll('.hero-fx *, .hero-decal *')) {
+      if (['g', 'svg', 'image'].includes(el.tagName)) continue
       const cs = getComputedStyle(el)
-      const inSeal = !!el.closest('.fx-seal')
+      const inSeal = !!el.closest('.fx-seal'), inDecal = !!el.closest('.hero-decal')
       for (const prop of ['fill', 'stroke']) {
         const v = cs[prop]
-        if (v && v !== 'none') used.push({ v, inSeal, tag: el.tagName, cls: el.getAttribute('class') || '' })
+        if (v && v !== 'none') used.push({ v, inSeal, inDecal, tag: el.tagName, cls: el.getAttribute('class') || '' })
       }
     }
     return used
@@ -174,12 +199,13 @@ async function main() {
   const bad = colors.filter(c => !PAL_RGB[c.v])
   const redOut = colors.filter(c => PAL_RGB[c.v] === 'cinnabar' && !c.inSeal)
   const sealCols = [...new Set(colors.filter(c => c.inSeal).map(c => PAL_RGB[c.v]))]
-  const usedNames = [...new Set(colors.filter(c => !c.inSeal).map(c => PAL_RGB[c.v] || c.v))]
-  check('声浪和道具只用设计系统的颜色', bad.length === 0, bad.length ? `不在色板里：${[...new Set(bad.map(b => b.v))].join('、')}` : `用到 ${usedNames.join('、')}`)
+  const decalCols = [...new Set(colors.filter(c => c.inDecal).map(c => PAL_RGB[c.v] || c.v))]
+  const usedNames = [...new Set(colors.filter(c => !c.inSeal && !c.inDecal).map(c => PAL_RGB[c.v] || c.v))]
+  check('声浪和道具只用设计系统的颜色', bad.length === 0, bad.length ? `不在色板里：${[...new Set(bad.map(b => b.v))].join('、')}` : `声浪和道具用到 ${usedNames.join('、')}；录音笔铭牌用 ${decalCols.join('、')}`)
   check('朱砂只出现在印章上', redOut.length === 0 && sealCols.join() === 'cinnabar', `印章 ${sealCols.join('、')}；印章以外的朱砂元素 ${redOut.length} 个`)
 
   // 帧：联系表
-  const times = [0.5, 1.2, 1.9, 2.6, 3.3, 4.0, 4.5, 5.0, 5.5, 6.4, 7.1, 8.0]
+  const times = [0.5, 1.2, 1.9, 2.6, 3.3, 4.15, 4.5, 4.9, 5.5, 6.4, 7.1, 8.0]
   const stage = await page.$('.hero-stage')
   for (const t of times) {
     await page.evaluate(t => heroMotion.seek(t), t)
@@ -199,17 +225,37 @@ async function main() {
   await page.evaluate(() => heroMotion.seek(8))
   const sb2 = await page.evaluate(() => { const g = heroMotion.geometry(), r = document.querySelector('.hero-stage').getBoundingClientRect(); return { x: r.x + g.S.x / 1916 * r.width, y: r.y + g.S.y / 821 * r.height } })
   await page.screenshot({ path: path.join(OUT, 'seal-close@2x.png'), clip: { x: sb2.x - 120, y: sb2.y - 60, width: 240, height: 120 } })
+  // 嘴形特写：张嘴（底图）、大半张、半张、闭嘴各一帧；录音笔铭牌特写：把脉前、把脉后
+  const mt = await page.evaluate(() => {
+    const want = [-1, 2, 1, 0], got = {}
+    for (let t = 0.1; t < 3.9 && Object.keys(got).length < 4; t += 0.01) {
+      heroMotion.seek(t)
+      const f = [...document.querySelectorAll('.fx-mouth image')].findIndex(im => im.getAttribute('opacity') === '1')
+      if (want.includes(f) && !(f in got)) got[f] = t
+    }
+    const g = heroMotion.geometry(), r = document.querySelector('.hero-stage').getBoundingClientRect()
+    return { times: want.map(f => got[f]), m: { x: r.x + (g.M.x - 22) / 1916 * r.width, y: r.y + g.M.y / 821 * r.height }, rec: { x: r.x + g.R.x / 1916 * r.width, y: r.y + g.R.y / 821 * r.height } }
+  })
+  for (const [i, t] of mt.times.entries()) {
+    await page.evaluate(t => heroMotion.seek(t), t)
+    await page.screenshot({ path: path.join(SCRATCH, `mouth-${i}.png`), clip: { x: mt.m.x - 60, y: mt.m.y - 34, width: 120, height: 68 } })
+  }
+  for (const [i, t] of [2.6, 8].entries()) {
+    await page.evaluate(t => heroMotion.seek(t), t)
+    await page.screenshot({ path: path.join(SCRATCH, `rec-${i}.png`), clip: { x: mt.rec.x - 45, y: mt.rec.y - 60, width: 90, height: 120 } })
+  }
   await page.context().close()
 
   // ---------- 3. 减少动态效果 ----------
   page = await newPage(browser, { reducedMotion: 'reduce' })
   await open(page, `${base}/index.html`)
   await page.waitForTimeout(1500)
-  const rm = await page.evaluate(() => ({ src: document.querySelector('.hero-base').currentSrc, fx: getComputedStyle(document.querySelector('.hero-fx')).display, after: getComputedStyle(document.querySelector('.hero-after')).display, btn: getComputedStyle(document.querySelector('.hero-replay')).display, animated: heroMotion.animated, t: heroMotion.time, playing: heroMotion.playing }))
+  const rm = await page.evaluate(() => ({ decal: getComputedStyle(document.querySelector('.hero-decal')).display, src: document.querySelector('.hero-base').currentSrc, fx: getComputedStyle(document.querySelector('.hero-fx')).display, after: getComputedStyle(document.querySelector('.hero-after')).display, btn: getComputedStyle(document.querySelector('.hero-replay')).display, animated: heroMotion.animated, t: heroMotion.time, playing: heroMotion.playing }))
   const rmReq = page.requests.filter(u => /base-(before|after)/.test(u)).map(u => path.basename(u))
   check('减少动态效果：直接显示 hero-static', rm.src.endsWith('/img/hero-static.webp') && rm.fx === 'none' && rm.after === 'none' && rm.btn === 'none' && !rm.animated && rm.t === 0 && !rm.playing,
     `显示 ${path.basename(rm.src)}；动效层 display:${rm.fx}；1.5 秒后 t=${rm.t}；下载过的底图：${rmReq.length ? rmReq.join('、') : '无'}`)
   await page.screenshot({ path: path.join(OUT, 'reduced-motion-1440.png') })
+  check('静态图上也印着录音笔 logo', rm.decal !== 'none', `减少动态效果时铭牌 display:${rm.decal}`)
   check('减少动态效果无报错', page.errors.length === 0, page.errors.join(' | ') || '控制台没有错误')
   await page.context().close()
 

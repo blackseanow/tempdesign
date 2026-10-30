@@ -8,12 +8,18 @@
 - 道具 props/*.svg 和印章 seal.svg 内联进页面（只有内联，页面的 CSS 变量才传得进去），
   并检查颜色：只能用 props/_style.css 里的 class（都是设计系统变量），不许写死颜色；朱砂只许印章用。
 - index.html 内嵌一份 anchors.json（file:// 打开时用）；HeroSignboard.vue 直接 import anchors.json。
+- 领导说话的嘴形：从页面上显示的同一份 base-before.webp 生成闭嘴、半张、大半张三帧（见 mouth_sprites）。
+- 录音笔正面的铭牌：logo（seal.svg 的反白版）和 wordmark.svg 的“把脉了”，按 recorder 锚点放。
 """
+import base64
+import io
 import json
 import re
 import sys
+from collections import deque
 from pathlib import Path
 
+import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +34,7 @@ STATIC_MEDIA = '(prefers-reduced-motion: reduce), (max-width: 767.98px)'
 ALT = ('插画：领导靠在椅背上侃侃而谈，脸谱、宏图、大饼、鸡汤、棋盘和火箭顺着声浪飘向对面埋头狂记的员工，'
        '会议桌中间的录音笔正在收音。')
 problems = []
+notes_extra = []
 
 
 def build_images():
@@ -126,17 +133,122 @@ def svg_art(path, box, role):
 
 
 def palette_css():
-    """props/_style.css 的规则加上 .hero-fx 前缀，放进页面。"""
+    """props/_style.css 的规则加上 .hero-fx / .hero-decal 前缀，放进页面。"""
     css = (ROOT / 'props' / '_style.css').read_text().split('*/', 1)[1]
     out = []
     for sel, decl in re.findall(r'([^{}]+)\{([^}]*)\}', css):
-        sels = ','.join('.hero-fx ' + s.strip() for s in sel.split(','))
+        sels = ','.join(f'{scope} {s.strip()}' for scope in ('.hero-fx', '.hero-decal') for s in sel.split(','))
         out.append(f'{sels}{{{decl}}}')
     return '\n'.join(out)
 
 
-def stage_markup(img, vue):
-    props = '\n'.join(f'<g class="fx-prop" data-prop="{p}" opacity="0">{svg_art(ROOT / "props" / f"{p}.svg", PROP_BOX, "prop")}</g>' for p in PROPS)
+def mouth_sprites(anchors):
+    """领导说话时换嘴形。底图上嘴是张开的；这里从 base-before 的像素里把嘴“合上”：
+    找出 mouth 锚点左边 46 px 以内那一整块嘴（上唇线、牙、口腔、舌头、下唇线连成的一片），
+    逐列把口腔压扁、下唇线往上提，空出来的地方用这一列嘴下方的皮肤色补上。下巴和脸的轮廓不动。
+    用的是页面上显示的同一份 webp（有 @2x 就用 @2x），拼回去看不出接缝。找不到嘴就不做嘴形动画。"""
+    src = IMG / 'base-before@2x.webp'
+    if not src.exists():
+        src = IMG / 'base-before.webp'
+    im = np.asarray(Image.open(src).convert('RGB')).astype(float)
+    k = im.shape[1] / 1916
+    ax, ay = anchors['mouth']['x'] / 100 * im.shape[1], anchors['mouth']['y'] / 100 * im.shape[0]
+
+    def px(v):
+        return int(round(v * k))
+
+    bx0, bx1, by0, by1 = int(ax) - px(46), int(ax) - px(5), int(ay) - px(9), int(ay) + px(18)
+    skin = np.median(im[int(ay) + px(14):int(ay) + px(20), int(ax) - px(35):int(ax) - px(12)].reshape(-1, 3), 0)
+    dist = np.sqrt(((im - skin) ** 2).sum(2))
+    mask = np.zeros(im.shape[:2], bool)
+    mask[by0:by1, bx0:bx1] = dist[by0:by1, bx0:bx1] > 28
+    sub = dist[by0:by1, bx0 + px(10):bx1 - px(6)]
+    sy, sx = np.unravel_index(np.argmax(sub), sub.shape)
+    seed = (by0 + sy, bx0 + px(10) + sx)
+    comp = np.zeros_like(mask)
+    comp[seed] = True
+    queue = deque([seed])
+    while queue:
+        y, x = queue.popleft()
+        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            yy, xx = y + dy, x + dx
+            if mask[yy, xx] and not comp[yy, xx]:
+                comp[yy, xx] = True
+                queue.append((yy, xx))
+    ys, xs = np.nonzero(comp)
+    if not (150 * k * k <= comp.sum() <= 1500 * k * k and np.ptp(xs) >= 20 * k and np.ptp(ys) >= 8 * k):
+        notes_extra.append('在 mouth 锚点左边没找到嘴，这一版不做嘴形动画（锚点要放在嘴角右边）')
+        return None
+
+    def frame(o):
+        out = im.copy()
+        for x in range(xs.min(), xs.max() + 1):
+            rows = np.nonzero(comp[:, x])[0]
+            if len(rows) < 6:
+                continue
+            a, b = rows.min(), rows.max()
+            top, bot = a + 2, b - 1           # 上唇线 a..a+1，口腔 top..bot-1，下唇线 bot..b
+            h = bot - top
+            if h <= 0:
+                continue
+            n = int(round(h * o))
+            col = []
+            for r in range(n):
+                s = top + (r + 0.5) * h / n - 0.5
+                s0 = int(np.floor(s))
+                f = s - s0
+                col.append(im[s0, x] * (1 - f) + im[min(s0 + 1, bot - 1), x] * f)
+            col += [im[r, x] for r in range(bot, b + 1)]
+            below = [im[r, x] for r in range(b + 2, b + 2 + px(7)) if dist[r, x] < 22]
+            col += [np.median(below, 0) if below else skin] * ((b + 1) - top - len(col))
+            out[top:b + 1, x] = np.array(col)
+        return out
+
+    pad = px(3)
+    x0, x1, y0, y1 = xs.min() - pad, xs.max() + 1 + pad, ys.min() - pad, ys.max() + 1 + pad
+    frames = []
+    for o in (0, 0.4, 0.75):
+        crop = Image.fromarray(frame(o)[y0:y1, x0:x1].clip(0, 255).astype(np.uint8))
+        buf = io.BytesIO()
+        crop.save(buf, 'PNG', optimize=True)
+        frames.append((o, 'data:image/png;base64,' + base64.b64encode(buf.getvalue()).decode()))
+    return {'rect': (x0 / k, y0 / k, (x1 - x0) / k, (y1 - y0) / k), 'frames': frames}
+
+
+def mouth_markup(m):
+    if not m:
+        return ''
+    x, y, w, h = m['rect']
+    imgs = ''.join(f'<image data-o="{o}" x="{x:g}" y="{y:g}" width="{w:g}" height="{h:g}" href="{uri}" opacity="0"/>' for o, uri in m['frames'])
+    return f'<g class="fx-mouth">{imgs}</g>'
+
+
+def wordmark_art(height):
+    """wordmark.svg（“把脉了”的字形路径）缩放到给定高度，返回 (标记, 宽度)。"""
+    s = (ROOT / 'wordmark.svg').read_text()
+    _, _, w, h = (float(v) for v in re.search(r'viewBox="([^"]+)"', s).group(1).split())
+    d = re.search(r'<path class="f-sheet" d="([^"]+)"', s).group(1)
+    k = height / h
+    return f'<path class="f-sheet" transform="scale({k:g})" d="{d}"/>', w * k
+
+
+def decal_markup(anchors):
+    """录音笔正面的铭牌：深色底板盖住按键，上面一枚反白的 logo（seal.svg 换成素笺色），下面横排“把脉了”。
+    坐标以 recorder 锚点（机身中心）为原点，单位是 1916 宽的像素；动效脚本按锚点重新摆。
+    朱砂仍然只留给最后那枚印章。"""
+    rx, ry = anchors['recorder']['x'] / 100 * 1916, anchors['recorder']['y'] / 100 * 821
+    mark = svg_art(ROOT / 'seal.svg', 13, 'seal').replace('f-cinnabar', 'f-sheet')
+    word, ww = wordmark_art(9.6)
+    return (f'<svg class="hero-decal" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">'
+            f'<g class="decal" transform="translate({rx:.1f} {ry:.1f})">'
+            f'<rect class="f-ink decal-plate" x="-16" y="-1" width="32" height="35" rx="3"/>'
+            f'<g transform="translate(0 10.5)">{mark}</g>'
+            f'<g transform="translate({-ww / 2:.2f} 21.5)">{word}</g>'
+            f'</g></svg>')
+
+
+def stage_markup(img, vue, anchors, mouth):
+    props ='\n'.join(f'<g class="fx-prop" data-prop="{p}" opacity="0">{svg_art(ROOT / "props" / f"{p}.svg", PROP_BOX, "prop")}</g>' for p in PROPS)
     seal = svg_art(ROOT / 'seal.svg', SEAL_BOX, 'seal')
     if vue:
         attr = lambda name, value: f':{name}="{value}"'
@@ -160,8 +272,10 @@ def stage_markup(img, vue):
       <img class="hero-base" {base_attrs} width="1916" height="821" alt="{ALT}" fetchpriority="high">
     </picture>
     <img class="hero-after" {after_attrs} width="1916" height="821" alt="" aria-hidden="true" decoding="async">
+    {decal_markup(anchors)}
     <svg class="hero-fx" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">
       <g class="fx-ripples"><ellipse class="fx-ripple"/><ellipse class="fx-ripple"/><ellipse class="fx-ripple"/></g>
+      {mouth_markup(mouth)}
       <g class="fx-waves"></g>
       <g class="fx-props">
 {indent(props, 8)}
@@ -185,10 +299,11 @@ def main():
     for k in ('mouth', 'recorder', 'notebook', 'stack'):
         if not (0 <= anchors[k]['x'] <= 100 and 0 <= anchors[k]['y'] <= 100):
             problems.append(f'anchors.json: {k} 超出 0–100')
+    mouth = mouth_sprites(anchors)
 
     page = (SRC / 'page.html').read_text()
     page = (page.replace('{{CSS}}', css)
-                .replace('{{MARKUP}}', stage_markup(img, vue=False))
+                .replace('{{MARKUP}}', stage_markup(img, False, anchors, mouth))
                 .replace('{{ANCHORS}}', json.dumps(anchors, ensure_ascii=False))
                 .replace('{{MOTION}}', motion)
                 .replace('{{DEBUG}}', (SRC / 'debug.js').read_text().strip()))
@@ -212,7 +327,7 @@ def main():
     vue = (SRC / 'HeroSignboard.vue.tpl').read_text()
     vue = (vue.replace('{{IMPORTS}}', '\n'.join(imports))
               .replace('{{MOTION}}', motion)
-              .replace('{{MARKUP}}', indent(stage_markup(img, vue=True), 2))
+              .replace('{{MARKUP}}', indent(stage_markup(img, True, anchors, mouth), 2))
               .replace('{{CSS}}', css))
     (ROOT / 'HeroSignboard.vue').write_text(vue)
 
@@ -220,8 +335,10 @@ def main():
     for f in sorted(IMG.glob('*.webp')):
         im = Image.open(f)
         print(f'  {f.name} {im.size[0]}×{im.size[1]} {f.stat().st_size / 1024:.0f} KB')
-    for n in notes:
+    for n in notes + notes_extra:
         print('说明：', n)
+    if mouth:
+        print('嘴形：{} 帧，位置 {}'.format(len(mouth['frames']), ', '.join(f'{v:g}' for v in mouth['rect'])))
     print(f'index.html {(ROOT / "index.html").stat().st_size / 1024:.0f} KB，HeroSignboard.vue {(ROOT / "HeroSignboard.vue").stat().st_size / 1024:.0f} KB')
     if problems:
         print('\n要处理：\n  ' + '\n  '.join(problems))

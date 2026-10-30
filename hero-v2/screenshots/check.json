@@ -18,12 +18,12 @@
   {
    "item": "点录音笔重播",
    "ok": true,
-   "detail": "点击 0.2 秒后 t=-0.25（先用 0.45 秒淡回把脉前），0.9 秒后 t=0.45，base-after 不透明度 0"
+   "detail": "点击 0.2 秒后 t=-0.26（先用 0.45 秒淡回把脉前），0.9 秒后 t=0.46，base-after 不透明度 0"
   },
   {
    "item": "滚出视口暂停",
    "ok": true,
-   "detail": "滚出后 0.8 秒内 t 停在 0.47，滚回 0.6 秒后 t=1.06"
+   "detail": "滚出后 0.8 秒内 t 停在 0.48，滚回 0.6 秒后 t=1.07"
   },
   {
    "item": "桌面无报错",
@@ -33,7 +33,7 @@
   {
    "item": "同一时刻空中最多三样道具（把脉前）",
    "ok": true,
-   "detail": "0–4 秒每 0.05 秒取样：最多 3 样，1 秒以后最少 2 样"
+   "detail": "0–4 秒每 0.05 秒取样：最多 3 样，1–3.6 秒最少 2 样（落在桌上的不算）"
   },
   {
    "item": "六样道具一样一样飘出来",
@@ -43,12 +43,27 @@
   {
    "item": "越靠近员工越大",
    "ok": true,
-   "detail": "每样道具飞到最大时是刚出来时的 3.8、3.8、3.8、3.8、3.8 倍（火箭半路被吸走，不算）"
+   "detail": "每样道具飞到最大时是刚出来时的 3.8、3.8、3.8、3.8、3.8、3.8 倍"
   },
   {
    "item": "火箭机头朝上，其他道具翻滚",
    "ok": true,
-   "detail": "火箭最大倾角 4.0°；其他五样转过的角度 178°、177°、212°、194°、496°"
+   "detail": "火箭最大倾角 4.0°；其他五样飞的时候转过 356°、356°、351°、359°、353°"
+  },
+  {
+   "item": "六样道具都先落到笔记本旁边",
+   "ok": true,
+   "detail": "mask-book 1.7s 落定（离笔记本 120 px）；scroll 2.2s 落定（离笔记本 51 px）；pie 2.7s 落定（离笔记本 173 px）；soup 3.2s 落定（离笔记本 106 px）；go-board 3.7s 落定（离笔记本 166 px）；rocket 4.2s 落定（离笔记本 117 px）"
+  },
+  {
+   "item": "六样道具最后都被吸进录音笔",
+   "ok": true,
+   "detail": "mask-book 5.00s 消失在离机头 11 px 处；scroll 5.12s 消失在离机头 13 px 处；pie 5.24s 消失在离机头 10 px 处；soup 5.36s 消失在离机头 12 px 处；go-board 5.48s 消失在离机头 11 px 处；rocket 5.60s 消失在离机头 13 px 处"
+  },
+  {
+   "item": "领导说话时动嘴",
+   "ok": true,
+   "detail": "嘴形 3 帧；0–4 秒取样里换了 58 次；4 秒以后停在底图张嘴笑的样子"
   },
   {
    "item": "声浪出嘴时两三道，越往后越多",
@@ -68,7 +83,7 @@
   {
    "item": "声浪和道具只用设计系统的颜色",
    "ok": true,
-   "detail": "用到 gold、ink-3、brass、ink-2、sheet、ink、indigo、indigo-2、wood、line"
+   "detail": "声浪和道具用到 gold、ink-3、brass、ink-2、sheet、ink、indigo、indigo-2、wood、line；录音笔铭牌用 ink、ink-2、sheet"
   },
   {
    "item": "朱砂只出现在印章上",
@@ -79,6 +94,11 @@
    "item": "减少动态效果：直接显示 hero-static",
    "ok": true,
    "detail": "显示 hero-static.webp；动效层 display:none；1.5 秒后 t=0；下载过的底图：无"
+  },
+  {
+   "item": "静态图上也印着录音笔 logo",
+   "ok": true,
+   "detail": "减少动态效果时铭牌 display:block"
   },
   {
    "item": "减少动态效果无报错",
@@ -135,6 +155,9 @@
   {
    "t": 0,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0,
    "seal": 0,
@@ -143,6 +166,9 @@
   {
    "t": 0.05,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0,
    "seal": 0,
@@ -151,6 +177,9 @@
   {
    "t": 0.1,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 0,
    "rip": 0,
    "seal": 0,
@@ -159,6 +188,9 @@
   {
    "t": 0.15,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -167,6 +199,9 @@
   {
    "t": 0.2,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -175,6 +210,9 @@
   {
    "t": 0.25,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -182,7 +220,12 @@
   },
   {
    "t": 0.3,
-   "inAir": [],
+   "inAir": [
+    "mask-book"
+   ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -190,7 +233,12 @@
   },
   {
    "t": 0.35,
-   "inAir": [],
+   "inAir": [
+    "mask-book"
+   ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -201,6 +249,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -211,6 +262,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 3,
    "rip": 0,
    "seal": 0,
@@ -221,6 +275,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 4,
    "rip": 0,
    "seal": 0,
@@ -231,6 +288,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 4,
    "rip": 0,
    "seal": 0,
@@ -241,6 +301,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 5,
    "rip": 0,
    "seal": 0,
@@ -251,6 +314,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 5,
    "rip": 0,
    "seal": 0,
@@ -261,6 +327,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 6,
    "rip": 0,
    "seal": 0,
@@ -271,6 +340,9 @@
    "inAir": [
     "mask-book"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 7,
    "rip": 0,
    "seal": 0,
@@ -279,8 +351,12 @@
   {
    "t": 0.8,
    "inAir": [
-    "mask-book"
+    "mask-book",
+    "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 8,
    "rip": 0,
    "seal": 0,
@@ -289,8 +365,12 @@
   {
    "t": 0.85,
    "inAir": [
-    "mask-book"
+    "mask-book",
+    "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 8,
    "rip": 0,
    "seal": 0,
@@ -299,8 +379,12 @@
   {
    "t": 0.9,
    "inAir": [
-    "mask-book"
+    "mask-book",
+    "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 9,
    "rip": 0,
    "seal": 0,
@@ -309,8 +393,12 @@
   {
    "t": 0.95,
    "inAir": [
-    "mask-book"
+    "mask-book",
+    "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 10,
    "rip": 0,
    "seal": 0,
@@ -322,6 +410,9 @@
     "mask-book",
     "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 11,
    "rip": 0,
    "seal": 0,
@@ -333,6 +424,9 @@
     "mask-book",
     "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 11,
    "rip": 0,
    "seal": 0,
@@ -344,6 +438,9 @@
     "mask-book",
     "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -355,6 +452,9 @@
     "mask-book",
     "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -366,6 +466,9 @@
     "mask-book",
     "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -377,6 +480,9 @@
     "mask-book",
     "scroll"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -386,8 +492,12 @@
    "t": 1.3,
    "inAir": [
     "mask-book",
-    "scroll"
+    "scroll",
+    "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -397,8 +507,12 @@
    "t": 1.35,
    "inAir": [
     "mask-book",
-    "scroll"
+    "scroll",
+    "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -408,8 +522,12 @@
    "t": 1.4,
    "inAir": [
     "mask-book",
-    "scroll"
+    "scroll",
+    "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -419,8 +537,12 @@
    "t": 1.45,
    "inAir": [
     "mask-book",
-    "scroll"
+    "scroll",
+    "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -430,8 +552,12 @@
    "t": 1.5,
    "inAir": [
     "mask-book",
-    "scroll"
+    "scroll",
+    "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -441,8 +567,12 @@
    "t": 1.55,
    "inAir": [
     "mask-book",
-    "scroll"
+    "scroll",
+    "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -455,6 +585,9 @@
     "scroll",
     "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -467,6 +600,9 @@
     "scroll",
     "pie"
    ],
+   "rest": [],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -475,10 +611,14 @@
   {
    "t": 1.7,
    "inAir": [
-    "mask-book",
     "scroll",
     "pie"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -487,10 +627,14 @@
   {
    "t": 1.75,
    "inAir": [
-    "mask-book",
     "scroll",
     "pie"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -499,10 +643,15 @@
   {
    "t": 1.8,
    "inAir": [
-    "mask-book",
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -511,10 +660,15 @@
   {
    "t": 1.85,
    "inAir": [
-    "mask-book",
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -523,10 +677,15 @@
   {
    "t": 1.9,
    "inAir": [
-    "mask-book",
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -535,10 +694,15 @@
   {
    "t": 1.95,
    "inAir": [
-    "mask-book",
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -548,8 +712,14 @@
    "t": 2,
    "inAir": [
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -559,8 +729,14 @@
    "t": 2.05,
    "inAir": [
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -570,8 +746,14 @@
    "t": 2.1,
    "inAir": [
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -581,8 +763,14 @@
    "t": 2.15,
    "inAir": [
     "scroll",
-    "pie"
+    "pie",
+    "soup"
    ],
+   "rest": [
+    "mask-book"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -591,10 +779,15 @@
   {
    "t": 2.2,
    "inAir": [
-    "scroll",
     "pie",
     "soup"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -603,10 +796,15 @@
   {
    "t": 2.25,
    "inAir": [
-    "scroll",
     "pie",
     "soup"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -615,10 +813,16 @@
   {
    "t": 2.3,
    "inAir": [
-    "scroll",
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -627,10 +831,16 @@
   {
    "t": 2.35,
    "inAir": [
-    "scroll",
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -639,10 +849,16 @@
   {
    "t": 2.4,
    "inAir": [
-    "scroll",
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -651,10 +867,16 @@
   {
    "t": 2.45,
    "inAir": [
-    "scroll",
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -663,10 +885,16 @@
   {
    "t": 2.5,
    "inAir": [
-    "scroll",
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -675,10 +903,16 @@
   {
    "t": 2.55,
    "inAir": [
-    "scroll",
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -688,8 +922,15 @@
    "t": 2.6,
    "inAir": [
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -699,8 +940,15 @@
    "t": 2.65,
    "inAir": [
     "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -709,9 +957,16 @@
   {
    "t": 2.7,
    "inAir": [
-    "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -720,9 +975,16 @@
   {
    "t": 2.75,
    "inAir": [
-    "pie",
-    "soup"
+    "soup",
+    "go-board"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -731,10 +993,17 @@
   {
    "t": 2.8,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -743,10 +1012,17 @@
   {
    "t": 2.85,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -755,10 +1031,17 @@
   {
    "t": 2.9,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -767,10 +1050,17 @@
   {
    "t": 2.95,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -779,10 +1069,17 @@
   {
    "t": 3,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -791,10 +1088,17 @@
   {
    "t": 3.05,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -803,10 +1107,17 @@
   {
    "t": 3.1,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -815,10 +1126,17 @@
   {
    "t": 3.15,
    "inAir": [
-    "pie",
     "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -827,9 +1145,17 @@
   {
    "t": 3.2,
    "inAir": [
-    "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -838,9 +1164,17 @@
   {
    "t": 3.25,
    "inAir": [
-    "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -849,9 +1183,17 @@
   {
    "t": 3.3,
    "inAir": [
-    "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -860,9 +1202,17 @@
   {
    "t": 3.35,
    "inAir": [
-    "soup",
-    "go-board"
+    "go-board",
+    "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -871,10 +1221,17 @@
   {
    "t": 3.4,
    "inAir": [
-    "soup",
     "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -883,10 +1240,17 @@
   {
    "t": 3.45,
    "inAir": [
-    "soup",
     "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -895,10 +1259,17 @@
   {
    "t": 3.5,
    "inAir": [
-    "soup",
     "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -907,10 +1278,17 @@
   {
    "t": 3.55,
    "inAir": [
-    "soup",
     "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -919,10 +1297,17 @@
   {
    "t": 3.6,
    "inAir": [
-    "soup",
     "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -931,10 +1316,17 @@
   {
    "t": 3.65,
    "inAir": [
-    "soup",
     "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "caught": [],
+   "mouth": 0,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -943,10 +1335,17 @@
   {
    "t": 3.7,
    "inAir": [
-    "soup",
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": 1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -955,10 +1354,17 @@
   {
    "t": 3.75,
    "inAir": [
-    "soup",
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": 2,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -967,9 +1373,17 @@
   {
    "t": 3.8,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -978,9 +1392,17 @@
   {
    "t": 3.85,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -989,9 +1411,17 @@
   {
    "t": 3.9,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1000,9 +1430,17 @@
   {
    "t": 3.95,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1011,9 +1449,17 @@
   {
    "t": 4,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1022,9 +1468,17 @@
   {
    "t": 4.05,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1033,9 +1487,17 @@
   {
    "t": 4.1,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1044,9 +1506,17 @@
   {
    "t": 4.15,
    "inAir": [
-    "go-board",
     "rocket"
    ],
+   "rest": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1054,10 +1524,18 @@
   },
   {
    "t": 4.2,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "scroll",
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1065,10 +1543,18 @@
   },
   {
    "t": 4.25,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "scroll",
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1076,10 +1562,18 @@
   },
   {
    "t": 4.3,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "scroll",
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1087,10 +1581,18 @@
   },
   {
    "t": 4.35,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1098,10 +1600,18 @@
   },
   {
    "t": 4.4,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1109,10 +1619,18 @@
   },
   {
    "t": 4.45,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1120,10 +1638,18 @@
   },
   {
    "t": 4.5,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1131,10 +1657,18 @@
   },
   {
    "t": 4.55,
-   "inAir": [
+   "inAir": [],
+   "rest": [
+    "soup",
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1142,10 +1676,18 @@
   },
   {
    "t": 4.6,
-   "inAir": [
+   "inAir": [],
+   "rest": [
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1153,10 +1695,18 @@
   },
   {
    "t": 4.65,
-   "inAir": [
+   "inAir": [],
+   "rest": [
     "go-board",
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1164,10 +1714,18 @@
   },
   {
    "t": 4.7,
-   "inAir": [
-    "go-board",
+   "inAir": [],
+   "rest": [
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1175,10 +1733,18 @@
   },
   {
    "t": 4.75,
-   "inAir": [
-    "go-board",
+   "inAir": [],
+   "rest": [
     "rocket"
    ],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1186,10 +1752,17 @@
   },
   {
    "t": 4.8,
-   "inAir": [
+   "inAir": [],
+   "rest": [],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1197,10 +1770,17 @@
   },
   {
    "t": 4.85,
-   "inAir": [
+   "inAir": [],
+   "rest": [],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
     "go-board",
     "rocket"
    ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1208,9 +1788,17 @@
   },
   {
    "t": 4.9,
-   "inAir": [
+   "inAir": [],
+   "rest": [],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board",
     "rocket"
    ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1218,9 +1806,17 @@
   },
   {
    "t": 4.95,
-   "inAir": [
+   "inAir": [],
+   "rest": [],
+   "caught": [
+    "mask-book",
+    "scroll",
+    "pie",
+    "soup",
+    "go-board",
     "rocket"
    ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1229,6 +1825,15 @@
   {
    "t": 5,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "scroll",
+    "pie",
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1237,6 +1842,15 @@
   {
    "t": 5.05,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "scroll",
+    "pie",
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1245,6 +1859,15 @@
   {
    "t": 5.1,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "scroll",
+    "pie",
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1253,6 +1876,14 @@
   {
    "t": 5.15,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "pie",
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0,
    "seal": 0,
@@ -1261,6 +1892,14 @@
   {
    "t": 5.2,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "pie",
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.264,
    "seal": 0,
@@ -1269,6 +1908,13 @@
   {
    "t": 5.25,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.528,
    "seal": 0,
@@ -1277,6 +1923,13 @@
   {
    "t": 5.3,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.792,
    "seal": 0,
@@ -1285,6 +1938,13 @@
   {
    "t": 5.35,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "soup",
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.897,
    "seal": 0,
@@ -1293,6 +1953,12 @@
   {
    "t": 5.4,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.778,
    "seal": 0,
@@ -1301,6 +1967,12 @@
   {
    "t": 5.45,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "go-board",
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.95,
    "seal": 0,
@@ -1309,6 +1981,11 @@
   {
    "t": 5.5,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.824,
    "seal": 0,
@@ -1317,6 +1994,11 @@
   {
    "t": 5.55,
    "inAir": [],
+   "rest": [],
+   "caught": [
+    "rocket"
+   ],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.844,
    "seal": 0,
@@ -1325,6 +2007,9 @@
   {
    "t": 5.6,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.872,
    "seal": 0,
@@ -1333,6 +2018,9 @@
   {
    "t": 5.65,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.756,
    "seal": 0,
@@ -1341,6 +2029,9 @@
   {
    "t": 5.7,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.655,
    "seal": 0,
@@ -1349,6 +2040,9 @@
   {
    "t": 5.75,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.568,
    "seal": 0,
@@ -1357,6 +2051,9 @@
   {
    "t": 5.8,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.492,
    "seal": 0,
@@ -1365,6 +2062,9 @@
   {
    "t": 5.85,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.427,
    "seal": 0,
@@ -1373,6 +2073,9 @@
   {
    "t": 5.9,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.37,
    "seal": 0,
@@ -1381,6 +2084,9 @@
   {
    "t": 5.95,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 12,
    "rip": 0.321,
    "seal": 0,
@@ -1389,6 +2095,9 @@
   {
    "t": 6,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.278,
    "seal": 0,
@@ -1397,6 +2106,9 @@
   {
    "t": 6.05,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.241,
    "seal": 0,
@@ -1405,6 +2117,9 @@
   {
    "t": 6.1,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.209,
    "seal": 0,
@@ -1413,6 +2128,9 @@
   {
    "t": 6.15,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.181,
    "seal": 0,
@@ -1421,6 +2139,9 @@
   {
    "t": 6.2,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.157,
    "seal": 0,
@@ -1429,6 +2150,9 @@
   {
    "t": 6.25,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.136,
    "seal": 0,
@@ -1437,6 +2161,9 @@
   {
    "t": 6.3,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.118,
    "seal": 0,
@@ -1445,6 +2172,9 @@
   {
    "t": 6.35,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.102,
    "seal": 0,
@@ -1453,6 +2183,9 @@
   {
    "t": 6.4,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.089,
    "seal": 0,
@@ -1461,6 +2194,9 @@
   {
    "t": 6.45,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.077,
    "seal": 0,
@@ -1469,6 +2205,9 @@
   {
    "t": 6.5,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.067,
    "seal": 0,
@@ -1477,6 +2216,9 @@
   {
    "t": 6.55,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.058,
    "seal": 0,
@@ -1485,6 +2227,9 @@
   {
    "t": 6.6,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.05,
    "seal": 0,
@@ -1493,6 +2238,9 @@
   {
    "t": 6.65,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.043,
    "seal": 0,
@@ -1501,6 +2249,9 @@
   {
    "t": 6.7,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.038,
    "seal": 0,
@@ -1509,6 +2260,9 @@
   {
    "t": 6.75,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.033,
    "seal": 0,
@@ -1517,6 +2271,9 @@
   {
    "t": 6.8,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.028,
    "seal": 0,
@@ -1525,6 +2282,9 @@
   {
    "t": 6.85,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.025,
    "seal": 0,
@@ -1533,6 +2293,9 @@
   {
    "t": 6.9,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.021,
    "seal": 0.46,
@@ -1541,6 +2304,9 @@
   {
    "t": 6.95,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.018,
    "seal": 0.92,
@@ -1549,6 +2315,9 @@
   {
    "t": 7,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.016,
    "seal": 0.92,
@@ -1557,6 +2326,9 @@
   {
    "t": 7.05,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.014,
    "seal": 0.92,
@@ -1565,6 +2337,9 @@
   {
    "t": 7.1,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.012,
    "seal": 0.92,
@@ -1573,6 +2348,9 @@
   {
    "t": 7.15,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.01,
    "seal": 0.92,
@@ -1581,6 +2359,9 @@
   {
    "t": 7.2,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.009,
    "seal": 0.92,
@@ -1589,6 +2370,9 @@
   {
    "t": 7.25,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.008,
    "seal": 0.92,
@@ -1597,6 +2381,9 @@
   {
    "t": 7.3,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.007,
    "seal": 0.92,
@@ -1605,6 +2392,9 @@
   {
    "t": 7.35,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.006,
    "seal": 0.92,
@@ -1613,6 +2403,9 @@
   {
    "t": 7.4,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.005,
    "seal": 0.92,
@@ -1621,6 +2414,9 @@
   {
    "t": 7.45,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.004,
    "seal": 0.92,
@@ -1629,6 +2425,9 @@
   {
    "t": 7.5,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.004,
    "seal": 0.92,
@@ -1637,6 +2436,9 @@
   {
    "t": 7.55,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.003,
    "seal": 0.92,
@@ -1645,6 +2447,9 @@
   {
    "t": 7.6,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.003,
    "seal": 0.92,
@@ -1653,6 +2458,9 @@
   {
    "t": 7.65,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.002,
    "seal": 0.92,
@@ -1661,6 +2469,9 @@
   {
    "t": 7.7,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.002,
    "seal": 0.92,
@@ -1669,6 +2480,9 @@
   {
    "t": 7.75,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.002,
    "seal": 0.92,
@@ -1677,6 +2491,9 @@
   {
    "t": 7.8,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.002,
    "seal": 0.92,
@@ -1685,6 +2502,9 @@
   {
    "t": 7.85,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.001,
    "seal": 0.92,
@@ -1693,6 +2513,9 @@
   {
    "t": 7.9,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.001,
    "seal": 0.92,
@@ -1701,6 +2524,9 @@
   {
    "t": 7.95,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0.001,
    "seal": 0.92,
@@ -1709,6 +2535,9 @@
   {
    "t": 8,
    "inAir": [],
+   "rest": [],
+   "caught": [],
+   "mouth": -1,
    "waves": 0,
    "rip": 0,
    "seal": 0.92,

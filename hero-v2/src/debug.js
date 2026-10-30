@@ -3,7 +3,7 @@
 function initHeroDebug(stage, motion, anchors, source) {
   const NS = 'http://www.w3.org/2000/svg', W = 1916, H = 821
   const KEYS = ['mouth', 'recorder', 'notebook', 'stack']
-  const FOCUS_T = { mouth: 2.6, notebook: 2.6, recorder: 5.3, stack: 8 }
+  const FOCUS_T = { mouth: 1.3, notebook: 4.18, recorder: 5.3, stack: 8 }
   const NOTE = anchors['说明']
   let a = clone(anchors)
   const round = v => Math.round(v * 100) / 100
@@ -26,7 +26,7 @@ function initHeroDebug(stage, motion, anchors, source) {
     pin.title = '拖动，或选中后按方向键（Shift 加大步长）'
     layer.append(pin)
     pins[k] = pin
-    // 点住哪个锚点，就跳到它起作用的那一刻：嘴边、笔记本看把脉前，录音笔看收住，材料看盖好的印章（base-after）
+    // 点住哪个锚点，就跳到它起作用的那一刻：嘴边看说话，笔记本看堆满的道具，录音笔看收住，材料看盖好的印章（base-after）
     pin.addEventListener('focus', () => { if (!motion.playing) motion.seek(FOCUS_T[k]) })
     pin.addEventListener('pointerdown', e => {
       if (!motion.playing) motion.seek(FOCUS_T[k])
@@ -130,7 +130,9 @@ function initHeroDebug(stage, motion, anchors, source) {
     const rip = [46, 73, 100].map(rx => `<ellipse cx="${g.foot.x}" cy="${g.foot.y}" rx="${rx}" ry="${rx * 0.17}"/>`).join('')
     guides.innerHTML = `<path class="hd-arch" d="${d}"/>${rip}
       <circle class="hd-mic" cx="${g.mic.x}" cy="${g.mic.y}" r="6"/>
-      <g transform="translate(${g.S.x} ${g.S.y}) rotate(12) skewX(-30) scale(0.88 0.5)"><rect class="hd-seal" x="-32" y="-32" width="64" height="64"/></g>`
+      <g transform="translate(${g.S.x} ${g.S.y}) rotate(12) skewX(-30) scale(0.88 0.5)"><rect class="hd-seal" x="-32" y="-32" width="64" height="64"/></g>
+      ${g.slots.map(s => `<circle class="hd-slot" cx="${s.x}" cy="${s.y}" r="9"/>`).join('')}
+      <rect class="hd-seal" x="${g.R.x - 16}" y="${g.R.y - 1}" width="32" height="35"/>`
   }
 
   update()

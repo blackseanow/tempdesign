@@ -9,16 +9,19 @@ function createHeroMotion(stage, anchors, opts = {}) {
   const ARCH = [[0, 0], [0.227, 0.197], [0.533, 0.415], [0.797, 0.447], [0.921, 0.289], [0.963, 0.084], [1, 0]]
   const STEP = 9            // 声浪采样间距
   const PROP_PX = 150       // 道具放大到 1 倍时的边长（道具 SVG 统一成 160 单位见方）
-  // 六样道具：出场顺序、离中线的偏移、翻滚圈数；火箭不翻滚，机头一直朝上
+  // 六样道具：出场顺序、离中线的偏移、翻滚圈数，落到笔记本旁边的位置（相对笔记本锚点，px）和落定的角度。
+  // 每一样走同一条路：嘴边 → 笔记本旁边堆起来 → 收住时被吸进录音笔。火箭不翻滚，机头一直朝上
   const PROPS = [
-    { id: 'mask-book', lane: -16, spin: 0.55, tilt: -14 },
-    { id: 'scroll', lane: 14, spin: -0.5, tilt: 8 },
-    { id: 'pie', lane: -10, spin: 0.65, tilt: -6 },
-    { id: 'soup', lane: 16, spin: -0.55, tilt: 10 },
-    { id: 'go-board', lane: -14, spin: 0.5, tilt: -8 },
-    { id: 'rocket', lane: 10, upright: true },
+    { id: 'mask-book', lane: -16, spin: 0.55, tilt: -14, slot: [-120, -4], rest: -10 },
+    { id: 'scroll', lane: 14, spin: -0.5, tilt: 8, slot: [-48, -16], rest: 7 },
+    { id: 'pie', lane: -10, spin: 0.65, tilt: -6, slot: [-168, -40], rest: -5 },
+    { id: 'soup', lane: 16, spin: -0.55, tilt: 10, slot: [-92, -52], rest: 6 },
+    { id: 'go-board', lane: -14, spin: 0.7, tilt: -8, slot: [-142, -86], rest: -4 },
+    { id: 'rocket', lane: 10, upright: true, slot: [-60, -100], rest: 0 },
   ]
-  const LAUNCH0 = 0.35, LAUNCH_GAP = 0.6, FLIGHT = 1.65  // 每 0.6 秒放一样，一样飞 1.65 秒：空中同时两三个
+  const LAUNCH0 = 0.25, LAUNCH_GAP = 0.5, FLIGHT = 1.42  // 每 0.5 秒放一样，一样飞 1.42 秒：空中最多三样，最后一样 4.17 秒落定
+  const REST_SCALE = 0.5                                 // 堆在桌上的大小
+  const CATCH0 = 4.2, CATCH_GAP = 0.12, CATCH_DUR = 0.8  // 收住：按落下的先后，每 0.12 秒吸走一样，一样 0.8 秒进录音笔
 
   const fx = stage.querySelector('.hero-fx')
   const base = stage.querySelector('.hero-base')
@@ -29,6 +32,9 @@ function createHeroMotion(stage, anchors, opts = {}) {
   const sealG = fx.querySelector('.fx-seal')
   const props = PROPS.map((p, i) => Object.assign({ i, el: fx.querySelector(`.fx-prop[data-prop="${p.id}"]`) }, p)).filter(p => p.el)
   const flame = fx.querySelector('.fx-prop[data-prop="rocket"] .flame')
+  // 领导的嘴：build.py 从底图生成的闭嘴、半张、大半张三帧，data-o 是张开的程度（原图 = 1）
+  const mouths = [...fx.querySelectorAll('.fx-mouth image')].map(el => ({ el, o: parseFloat(el.dataset.o) }))
+  const decal = stage.querySelector('.hero-decal .decal')
 
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x))
   const lerp = (a, b, f) => a + (b - a) * f
@@ -106,8 +112,9 @@ function createHeroMotion(stage, anchors, opts = {}) {
       if (i > 0) phase[i] = phase[i - 1] + (len / n) / (190 - 115 * (i / n))
     }
     G = { M, N, R, S, n, len, xs, ys, nx, ny, phase,
-      mic: { x: R.x, y: R.y - 0.040 * H },        // 声浪吸进机头
-      foot: { x: R.x, y: R.y + 0.047 * H } }      // 波纹画在机身底部的桌面上
+      mic: { x: R.x, y: R.y - 0.040 * H },        // 声浪和道具吸进机头
+      foot: { x: R.x, y: R.y + 0.047 * H },       // 波纹画在机身底部的桌面上
+      slots: PROPS.map(p => ({ x: N.x + p.slot[0], y: N.y + p.slot[1] })) }  // 道具落在笔记本旁边的位置
     OFF = LINES.map(() => new Float32Array(n + 1))
     PX = new Float32Array(n + 1); PY = new Float32Array(n + 1)
     // 波纹：三圈椭圆，和底图上录音笔脚下的波纹同心
@@ -116,8 +123,9 @@ function createHeroMotion(stage, anchors, opts = {}) {
       el.setAttribute('cx', G.foot.x.toFixed(1)); el.setAttribute('cy', G.foot.y.toFixed(1))
       el.setAttribute('rx', rx); el.setAttribute('ry', (rx * 0.17).toFixed(1))
     })
-    // 点录音笔重播：按钮盖住录音笔
+    // 点录音笔重播：按钮盖住录音笔；录音笔正面的铭牌（logo 和“把脉了”）跟着锚点走
     if (btn) Object.assign(btn.style, { left: (a.recorder.x - 2.4) + '%', top: (a.recorder.y - 7.6) + '%', width: '4.8%', height: '15.2%' })
+    if (decal) decal.setAttribute('transform', `translate(${R.x.toFixed(1)} ${R.y.toFixed(1)})`)
   }
 
   function sample(s) {
@@ -184,54 +192,85 @@ function createHeroMotion(stage, anchors, opts = {}) {
     }
   }
 
-  // 道具在把脉前的位置：沿声浪的中线从嘴边飘到笔记本，越近越大，到了笔记本缩进去
+  const quad = (a, c, b, e) => (1 - e) * (1 - e) * a + 2 * (1 - e) * e * c + e * e * b
+  const turnTo = (from, to) => ((to - from) % 360 + 540) % 360 - 180  // 转到目标角度走近的那一边
+
+  // 把脉前：道具沿声浪的中线从嘴边飘向笔记本，越近越大；最后一段落到笔记本旁边那一堆上，缩到桌面上的大小，停住
   function flight(p, t) {
-    const tt = (t - (LAUNCH0 + LAUNCH_GAP * p.i)) / FLIGHT
-    if (tt <= 0 || tt >= 1) return null
-    const s = 0.05 + 0.935 * sine(tt)
-    const c = sample(s)
-    const lat = p.lane * smooth(0, 0.2, s) * (1 - smooth(0.9, 1, s)) + 7 * Math.sin(TAU * 1.1 * tt + p.i)
-    const scale = (0.32 + 0.93 * smooth(0.02, 0.8, s)) * (1 - 0.85 * smooth(0.86, 1, tt))
-    return {
-      x: c.x + c.nx * lat, y: c.y + c.ny * lat, scale, tt,
-      alpha: smooth(0, 0.08, tt) * (1 - smooth(0.9, 1, tt)),
-      rot: p.upright ? 4 * Math.sin(TAU * 1.4 * tt) : p.tilt + 360 * p.spin * tt + 9 * Math.sin(TAU * 0.9 * tt),
-      sx: p.upright ? 1 : 0.9 + 0.1 * Math.cos(TAU * 1.3 * p.spin * tt),  // 轻微压扁，像在空中翻面
+    const t0 = LAUNCH0 + LAUNCH_GAP * p.i
+    const tt = (t - t0) / FLIGHT
+    if (tt <= 0) return null
+    const slot = G.slots[p.i]
+    if (tt >= 1) {
+      const since = t - t0 - FLIGHT
+      const bounce = 1 + 0.08 * Math.exp(-since / 0.12) * Math.sin(since * 30)   // 落下时轻轻一弹
+      return { x: slot.x, y: slot.y, scale: REST_SCALE * bounce, alpha: 1, sx: 1, phase: 'rest',
+        rot: p.rest + (p.upright ? 0 : 1.2 * Math.sin(TAU * 1.3 * t + p.i)) }
     }
+    const s = 0.05 + 0.88 * sine(Math.min(1, tt / 0.82))
+    const c = sample(s)
+    const lat = p.lane * smooth(0, 0.2, s) * (1 - smooth(0.85, 1, s)) + 7 * Math.sin(TAU * 1.1 * tt + p.i)
+    let x = c.x + c.nx * lat, y = c.y + c.ny * lat
+    let scale = 0.32 + 0.93 * smooth(0.02, 0.8, s)
+    let rot = p.upright ? 4 * Math.sin(TAU * 1.4 * tt) : p.tilt + 360 * p.spin * tt + 9 * Math.sin(TAU * 0.9 * tt)
+    let sx = p.upright ? 1 : 0.9 + 0.1 * Math.cos(TAU * 1.3 * p.spin * tt)  // 轻微压扁，像在空中翻面
+    if (tt > 0.82) {
+      const v = 1 - Math.pow(1 - (tt - 0.82) / 0.18, 3)
+      x = lerp(x, slot.x, v); y = lerp(y, slot.y, v)
+      scale = lerp(scale, REST_SCALE, v)
+      rot += turnTo(rot, p.rest) * v
+      sx = lerp(sx, 1, v)
+    }
+    return { x, y, scale, alpha: smooth(0, 0.08, tt), rot, sx, phase: 'air' }
   }
 
-  // 收住：4 秒时还在空中的道具，依次被吸进录音笔，边转边缩小
-  const caught = props.filter(p => { const t0 = LAUNCH0 + LAUNCH_GAP * p.i; return t0 < GATHER && GATHER < t0 + FLIGHT })
+  // 收住：笔记本旁边那一堆，按落下的先后一样一样被吸进录音笔，边转边缩小
   function propState(p, t) {
     if (t <= 0 || t >= AFTER) return null
-    if (t < GATHER) return flight(p, t)
-    const rank = caught.indexOf(p)
-    if (rank < 0) return null
-    const c0 = GATHER + 0.12 * rank
-    const s0 = flight(p, Math.min(t, c0)) || flight(p, GATHER)
-    if (!s0) return null
-    const e = Math.pow(clamp((t - c0) / 0.9, 0, 1), 2)
-    const mic = G.mic, cx = mic.x + (s0.x - mic.x) * 0.5, cy = s0.y + (mic.y - s0.y) * 0.1 - 60
+    const c0 = CATCH0 + CATCH_GAP * p.i
+    if (t < c0) return flight(p, t)
+    const s0 = flight(p, c0)
+    const e = Math.pow(clamp((t - c0) / CATCH_DUR, 0, 1), 2)
+    if (!s0 || e >= 1) return null
+    const mic = G.mic, cx = lerp(s0.x, mic.x, 0.5), cy = Math.min(s0.y, mic.y) - 70
     return {
-      x: (1 - e) * (1 - e) * s0.x + 2 * (1 - e) * e * cx + e * e * mic.x,
-      y: (1 - e) * (1 - e) * s0.y + 2 * (1 - e) * e * cy + e * e * mic.y,
-      scale: s0.scale * Math.pow(1 - e, 1.3), alpha: s0.alpha * (1 - smooth(0.8, 1, e)),
-      rot: p.upright ? s0.rot * (1 - e) : s0.rot + 420 * e * Math.sign(p.spin), sx: s0.sx,
+      x: quad(s0.x, cx, mic.x, e), y: quad(s0.y, cy, mic.y, e),
+      scale: s0.scale * Math.pow(1 - e, 1.2), alpha: 1 - smooth(0.8, 1, e), sx: 1, phase: 'caught',
+      rot: p.upright ? 0 : s0.rot + 420 * e * Math.sign(p.spin),
     }
   }
 
   function drawProps(t) {
+    let rocket = null
     for (const p of props) {
       const st = propState(p, t)
+      if (p.id === 'rocket') rocket = st
       if (!st || st.alpha <= 0.001 || st.scale <= 0.005) { p.el.setAttribute('opacity', '0'); p.el.removeAttribute('transform'); continue }
       const k = st.scale * PROP_PX / 160
       p.el.setAttribute('transform', `translate(${st.x.toFixed(1)} ${st.y.toFixed(1)}) rotate(${st.rot.toFixed(1)}) scale(${(k * st.sx).toFixed(4)} ${k.toFixed(4)})`)
       p.el.setAttribute('opacity', st.alpha.toFixed(3))
     }
     if (flame) {
-      const fy = 0.85 + 0.2 * Math.sin(TAU * 8 * t) + 0.08 * Math.sin(TAU * 13 * t + 1)
+      // 飞的时候尾焰一闪一闪；落在桌上就熄了
+      const fy = rocket && rocket.phase === 'rest' ? 0.001 : 0.85 + 0.2 * Math.sin(TAU * 8 * t) + 0.08 * Math.sin(TAU * 13 * t + 1)
       flame.setAttribute('transform', `translate(0 42) scale(1 ${fy.toFixed(3)}) translate(0 -42)`)
     }
+  }
+
+  // 领导说话时嘴一张一合：一秒四五个字，有的字张得大、有的小；4 秒以后停下，回到底图上张嘴笑的样子
+  function mouthOpen(t) {
+    if (t <= 0.05 || t >= GATHER - 0.1) return 1
+    const env = smooth(0.05, 0.2, t) * (1 - smooth(GATHER - 0.4, GATHER - 0.1, t))
+    const syl = 0.5 + 0.5 * Math.sin(TAU * 4.6 * t + 1.3 * Math.sin(TAU * 0.7 * t))
+    const stress = 0.55 + 0.45 * Math.abs(Math.sin(TAU * 0.9 * t + 0.4))
+    return 1 - env * (1 - syl * stress)
+  }
+
+  function drawMouth(t) {
+    if (!mouths.length) return
+    const o = mouthOpen(t)
+    const pick = o >= 0.88 ? null : mouths.reduce((a, m) => (Math.abs(m.o - o) < Math.abs(a.o - o) ? m : a))
+    mouths.forEach(m => m.el.setAttribute('opacity', m === pick ? '1' : '0'))
   }
 
   function drawRipples(t) {
@@ -267,7 +306,7 @@ function createHeroMotion(stage, anchors, opts = {}) {
 
   function render(time) {
     t = time
-    drawWaves(time); drawProps(time); drawRipples(time); drawAfter(time)
+    drawWaves(time); drawMouth(time); drawProps(time); drawRipples(time); drawAfter(time)
     if (opts.onFrame) opts.onFrame(time)
   }
 
@@ -363,8 +402,10 @@ function createHeroMotion(stage, anchors, opts = {}) {
     get playing() { return running },
     get animated() { return animated },
     geometry() { return G },
-    // 某一时刻空中有哪几样道具（调试和自查用）
-    propsInAir(time) { return props.filter(p => { const st = propState(p, time); return st && st.alpha > 0.02 && st.scale > 0.05 }).map(p => p.id) },
+    // 某一时刻空中有哪几样道具（不算已经落在桌上的）、每样道具的状态、嘴张开的程度（调试和自查用）
+    propsInAir(time) { return props.filter(p => { const st = propState(p, time); return st && st.phase === 'air' && st.alpha > 0.02 && st.scale > 0.05 }).map(p => p.id) },
+    propStates(time) { return props.map(p => Object.assign({ id: p.id }, propState(p, time))) },
+    mouthOpen,
     destroy() {
       destroyed = true; pause()
       mq.removeEventListener('change', applyMode)
