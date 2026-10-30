@@ -10,7 +10,7 @@ import * as k from "../../.claude/skills/anatomy/kit/iso-kit.mjs";
 import * as G from "../../.claude/skills/anatomy/kit/lathe.mjs";
 import * as A from "../../.claude/skills/anatomy/kit/audit.mjs";
 import { kitScript } from "../../.claude/skills/anatomy/scripts/inline-kit.mjs";
-import { ACTUAL_TOTAL, BASE, DIAL_FULL, LAYERS, NOMINAL_TOTAL, readoutOf, restingAll, restingApart, weighOf } from "./model.mjs";
+import { ACTUAL_TOTAL, ALL_LIFTED, DIAL_FULL, LAYERS, NOMINAL_TOTAL, NONE_LIFTED, numbersOf, readoutOf, readoutParts } from "./model.mjs";
 import { TAG, TAG_RING, tagFace, tagFrame, tagSolid } from "./tag.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -31,8 +31,10 @@ const PLATE_TOP = STAND.plate[1];
 const CAKE_R = 150;
 const LAYER_H = 6;
 const GAP = 38;
+const BASE = LAYERS.length - 1;
 const layerZ = (index) => PLATE_TOP + LAYER_H * (BASE - index);
-const liftOf = (index) => (index === BASE ? 0 : (BASE - index) * GAP);
+// apart, every layer stands GAP above the one below it, the base GAP above the plate
+const liftOf = (index) => (LAYERS.length - index) * GAP;
 
 const DIAL = { o: [170, 0, 200], r: 80, back: -19, front: 19, bezel: 23, face: 67, bezelR: 82 };
 const COLUMN = { x: 142, y: -26, w: 56, d: 52, r: 10 };
@@ -535,8 +537,9 @@ const body = ordered
 const LABEL =
   "一张直径 30 厘米、七层的芝麻千层大饼，放在函套青的高脚圆盘里，圆盘放在一台带圆表盘的老式台秤上。每层边缘插着竹签，挂一块小木牌，正面写名字：愿景、升职、加薪、年终奖、评优、培训机会、表扬；翻过来是领导的原话。标称总重 1000 克，台秤指针只指到 65 克。";
 
-const assembled = weighOf(restingAll);
-const apart = weighOf(restingApart);
+const closedReadout = readoutParts(NONE_LIFTED);
+const openReadout = readoutParts(ALL_LIFTED);
+const readoutHtml = (parts) => `<span class="ro-scope">${parts.scope}：</span><span class="ro-nums">${numbersOf(parts)}</span>`;
 
 const STAGE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" class="iso-svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="${LABEL}">${body}</svg>`;
 
@@ -617,7 +620,10 @@ body{margin:0;background:var(--anatomy-page);color:var(--anatomy-text);font:15px
   .iso-plate{padding:50px 10px 74px}
   .iso-plate-corner{font-size:12px}
   .iso-plate-corner[data-corner="readout"]{font-size:11.5px;letter-spacing:.02em}
-  .iso-plate-corner[data-corner="hint"]{bottom:22px}
+  .iso-plate{padding-bottom:92px}
+  .iso-plate-corner[data-corner="hint"]{bottom:40px}
+  .iso-plate-corner[data-corner="readout"]{line-height:1.4}
+  .ro-scope{display:block;text-align:right}
   .weigh .q{display:none}
   .weigh .q2{display:block;color:var(--ink-3);font-size:12.5px;line-height:1.5}
 }
@@ -640,10 +646,10 @@ const keys = [
   ["flat", "高脚圆盘和台秤（已去皮）"],
   ["dim", "木牌：正面写名字，背面是原话"],
 ];
-const CAPTION = `领导说这张饼有 ${NOMINAL_TOTAL} 克，台秤只称出 ${ACTUAL_TOTAL} 克，兑现率 ${((ACTUAL_TOTAL / NOMINAL_TOTAL) * 100).toFixed(1)}%。把饼从上往下一层层抬起来，指针几乎不动：愿景只有面上 2 克芝麻，升职、加薪、评优一克也没有，年终奖 8 克，培训机会 5 克。抬走六层以后，秤上只剩饼底那层表扬：标称 50 克，实称 50 克，是唯一兑现的一层。`;
+const CAPTION = `领导说这张饼有 ${NOMINAL_TOTAL} 克，台秤只称出 ${ACTUAL_TOTAL} 克，兑现率 ${((ACTUAL_TOTAL / NOMINAL_TOTAL) * 100).toFixed(1)}%。把饼从上往下一层层抬起来，每抬走一层，指针就退回这一层的实际分量：愿景只有面上 2 克芝麻，升职、加薪、评优一克也没有，年终奖 8 克，培训机会 5 克，前六层合起来不过 15 克。最后抬起饼底那层表扬，指针一下退回 50 克，回到零：标称 50 克，实称 50 克，是唯一兑现的一层。`;
 const legend = `<figcaption class="iso-legend"><span class="iso-keys">${keys.map(([mark, label]) => `<span class="iso-key">${swatch(mark)}${label}</span>`).join("")}</span>${table}<span class="iso-caption">${CAPTION}</span></figcaption>`;
 
-const plate = `<figure class="iso-figure dabing"><div class="iso-plate"><div class="iso-plate-corners" aria-hidden="true"><span class="iso-plate-corner" data-corner="fig">图 1</span><span class="iso-plate-corner" data-corner="title">大饼解剖图</span><span class="iso-plate-corner" data-corner="hint">悬停，一层层看</span><span class="iso-plate-corner" data-corner="readout" data-readout>${readoutOf(assembled)}</span></div><div class="iso-stage" tabindex="0" role="button" aria-label="大饼解剖图。按空格或回车，把饼从上到下一层层抬起来；再按一次合上。" aria-describedby="dabing-state">${STAGE_SVG}</div><p class="sr" id="dabing-state" aria-live="polite"></p></div>${legend}</figure>`;
+const plate = `<figure class="iso-figure dabing"><div class="iso-plate"><div class="iso-plate-corners" aria-hidden="true"><span class="iso-plate-corner" data-corner="fig">图 1</span><span class="iso-plate-corner" data-corner="title">大饼解剖图</span><span class="iso-plate-corner" data-corner="hint">悬停，一层层看</span><span class="iso-plate-corner" data-corner="readout" data-readout>${readoutHtml(closedReadout)}</span></div><div class="iso-stage" tabindex="0" role="button" aria-label="大饼解剖图。按空格或回车，把饼从上到下一层层抬起来；再按一次合上。" aria-describedby="dabing-state">${STAGE_SVG}</div><p class="sr" id="dabing-state" aria-live="polite"></p></div>${legend}</figure>`;
 
 // ---- the page's live code -----------------------------------------------------------------------
 const DATA = {
@@ -654,8 +660,6 @@ const DATA = {
   slots: SLOTS,
   spring: SPRING,
   lifts: LAYERS.map((_, index) => liftOf(index)),
-  layers: LAYERS.map(({ name, nominal, actual }) => ({ name, nominal, actual })),
-  base: BASE,
   tops: LAYERS.map((_, index) => tagTop(index).map(f2)),
   needle: NEEDLE_MATRIX,
   full: DIAL_FULL,
@@ -663,13 +667,10 @@ const DATA = {
   EY: k.axisVector(P, [0, 1, 0]),
   EZ: k.axisVector(P, [0, 0, 1]),
   V: R.V,
-  readouts: { assembled: readoutOf(assembled), apart: readoutOf(apart) },
 };
-const tagSource = readFileSync(join(HERE, "tag.mjs"), "utf8")
-  .replace(/^import .*$/m, "")
-  .replace(/^export /gm, "");
+const inline = (file) => readFileSync(join(HERE, file), "utf8").replace(/^import .*$/gm, "").replace(/^export /gm, "");
 const LIVE = readFileSync(join(HERE, "live.js"), "utf8").replace("__DATA__", JSON.stringify(DATA));
-const SCRIPT = kitScript() + "\n" + tagSource + "\n" + LIVE;
+const SCRIPT = [kitScript(), inline("model.mjs"), inline("tag.mjs"), LIVE].join("\n");
 
 const html = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>大饼解剖图</title><meta name="description" content="画大饼：领导许诺的大饼，拆开、称一称，看看里面到底有几层是实的。"><link rel="stylesheet" href="${FONT_CSS_URL}"><style>${embedded}${k.ISO_CSS}${TOKENS}${PAGE_CSS}</style></head><body class="iso" data-theme="light"><main class="iso-page">${plate}</main><script type="module">${SCRIPT.replace(/<\/(script)/gi, "<\\/$1")}</script></body></html>`;
 
@@ -677,7 +678,8 @@ const html = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><met
 const standalone = `<svg xmlns="http://www.w3.org/2000/svg" class="iso-svg iso" data-theme="light" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}" role="img" aria-label="${LABEL}"><title>大饼解剖图</title><style>@import url("${FONT_CSS_URL}");${embedded}${k.ISO_CSS}${TOKENS}.iso-svg{background:var(--sheet)}</style><rect width="${WIDTH}" height="${HEIGHT}" fill="#F8F7F2"/>${body}</svg>`;
 
 if (process.argv.includes("--chars")) {
-  const texts = [LABEL, CAPTION, table, plate, readoutOf(apart), ...LAYERS.flatMap((layer) => [layer.name, layer.quote]), "已兑现克", "0123456789.%·—：，。“”（）"];
+  const readouts = LAYERS.map((_, count) => readoutOf(readoutParts(LAYERS.map((__, index) => index < count + 1))));
+  const texts = [LABEL, CAPTION, table, plate, readoutOf(closedReadout), readoutOf(openReadout), ...readouts, ...LAYERS.flatMap((layer) => [layer.name, layer.quote]), "已兑现克", "0123456789.%·—：，。“”（）"];
   const chars = [...new Set(texts.join("").replace(/<[^>]*>/g, "").replace(/\s/g, ""))].sort().join("");
   writeFileSync(join(HERE, "fonts", "chars.txt"), chars + "\n");
   console.log(`chars: ${chars.length}`);

@@ -1,5 +1,5 @@
-settled in 324.7 s
-wrote dabing.html (490.6 KB) and dabing.svg (436.6 KB) · 57 items · scale 0.908 px/mm
+settled in 347.1 s
+wrote dabing.html (494.0 KB) and dabing.svg (437.9 KB) · 57 items · scale 0.908 px/mm
 clearance: 0 problems
 clearance apart: 0 problems
 terminals: 0 ends not on a mount
@@ -13,5 +13,5 @@ wobble: 0 smoothed profiles whose slope turns between its ends
 saddles off their host apart: 0
 stand-in shapes: 0 items whose recorded shape covers too little of what it draws
 crowding: 0 pairs where a bend or end touches another line on screen
-audit · 7 tubes · 59 solids · 57 items · 1521 depth states · 356983 overlaps · 317 order rules · 24.2 s
+audit · 7 tubes · 59 solids · 57 items · 1521 depth states · 343818 overlaps · 319 order rules · 24.2 s
 audit passed

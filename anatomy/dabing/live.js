@@ -3,6 +3,8 @@ const root = document.querySelector(".dabing");
 const stage = root.querySelector(".iso-stage");
 const svg = stage.querySelector("svg");
 const readout = root.querySelector("[data-readout]");
+const readoutScope = readout.querySelector(".ro-scope");
+const readoutNumbers = readout.querySelector(".ro-nums");
 const live = root.querySelector("#dabing-state");
 const needle = svg.querySelector("[data-needle]");
 const still = matchMedia("(prefers-reduced-motion: reduce)");
@@ -44,27 +46,10 @@ const smooth = (a, b, x) => {
   return t * t * (3 - 2 * t);
 };
 
-function onScale() {
-  return SLOTS.map((id, index) => index === D.base || D.lifts[index] * slot[id].x < 0.3);
-}
-
-function weigh() {
-  const resting = onScale();
-  let nominal = 0;
-  let actual = 0;
-  D.layers.forEach((layer, index) => {
-    if (resting[index]) (nominal += layer.nominal), (actual += layer.actual);
-  });
-  return { nominal, actual };
-}
-
-function rateText(nominal, actual) {
-  if (!nominal) return "—";
-  const rate = (actual / nominal) * 100;
-  return rate >= 99.95 ? "100%" : `${rate.toFixed(1)}%`;
-}
-
-const readoutOf = ({ nominal, actual }) => `标称总重 ${nominal} 克 · 实际总重 ${actual} 克 · 兑现率 ${rateText(nominal, actual)}`;
+// a layer presses on the plate until it is 0.3 mm clear of whatever is under it
+const onScale = () => SLOTS.map((id, index) => D.lifts[index] * slot[id].x < 0.3);
+const weigh = () => weighOf(onScale());
+const tally = () => readoutParts(onScale().map((on) => !on));
 
 function toggle(value) {
   const goal = value ? 1 : 0;
@@ -159,19 +144,21 @@ function draw() {
   place();
   tags.forEach((_, index) => drawTag(index));
   needle.setAttribute("transform", `${D.needle} rotate(${((scale.x * 360) / D.full).toFixed(3)})`);
-  const text = readoutOf(weigh());
+  const parts = tally();
+  const text = readoutOf(parts);
   if (text !== shownReadout) {
     shownReadout = text;
-    readout.textContent = text;
+    readoutScope.textContent = `${parts.scope}：`;
+    readoutNumbers.textContent = numbersOf(parts);
   }
 }
 
 function settledPhase() {
   const resting = SLOTS.every((id) => !slot[id].pending && slot[id].x === slot[id].target);
   if (!resting) return;
-  const w = weigh();
-  if (apart) announce(`已拆开。秤上只剩表扬：标称 ${w.nominal} 克，实际 ${w.actual} 克，兑现率 ${rateText(w.nominal, w.actual)}。`);
-  else announce(`已合上。标称总重 ${w.nominal} 克，实际总重 ${w.actual} 克，兑现率 ${rateText(w.nominal, w.actual)}。`);
+  const parts = tally();
+  if (apart) announce(`七层都拆开了，秤上空了。${numbersOf(parts)}，只有表扬一层是实的。`);
+  else announce(`已合上。整张饼${numbersOf(parts)}。`);
 }
 
 function tick(now) {
@@ -187,6 +174,11 @@ function tick(now) {
     if (step(flip[index], s.target, dt, 22, 9.4)) moving = true;
   });
   if (step(scale, weigh().actual, dt, 70, 7.5)) moving = true;
+  if (scale.x < 0) {
+    // an empty scale: the needle comes back onto its stop pin at zero and settles there
+    scale.x = 0;
+    if (scale.v < 0) scale.v *= -0.25;
+  }
   draw();
   settledPhase();
   frame = visible && moving ? requestAnimationFrame(tick) : 0;
