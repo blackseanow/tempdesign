@@ -9,11 +9,13 @@
 | `dabing.html` | 独立页面：kit、动效脚本、样式和字体子集都内联，只从 CDN 取霞鹜文楷（取不到时用内嵌子集） |
 | `dabing.svg` | 独立 SVG：合拢状态的整张图，样式和字体子集都在文件里，可以直接打开，也可以 `<img>` 引用 |
 | `screenshots/closed.png`、`screenshots/open.png` | 合拢、分开两种状态的卡片预览，浅色，桌面 1440 宽，2 倍像素 |
+| `dabing.gif`、`dabing.mp4` | 动图：页面动画逐帧录下来，循环播放，见“动图” |
 | `screenshots/checks/` | 自查截图和审计记录，见“自查” |
 | `build.mjs` | 几何、画家顺序、审计、页面和 SVG 的生成脚本 |
 | `model.mjs` | 称量模型：七层的名字、原话、标称和实际分量；读数从这里算 |
 | `tag.mjs` | 木牌绕绳子转动的几何；生成脚本和页面共用同一份代码 |
 | `live.js` | 页面里的动效：弹簧、交错、木牌翻面、指针、读数、减少动态效果 |
+| `tools/record.mjs` | 录动图的脚本 |
 | `tools/subset.py`、`fonts/` | 霞鹜文楷子集（只留用到的 178 个字）和它的许可证 |
 
 ## 物件和数字
@@ -57,6 +59,17 @@
 | 减少动态效果 | 只显示分开后的静态画面：七层都抬起、木牌全翻好、指针停在零、读数是七层的总账，不响应悬停和点按；运行中切换系统设置会跟着变 |
 | 滚出视口 | 停止动画（IntersectionObserver），回来接着走 |
 
+## 动图
+
+`dabing.gif`（约 3.7 MB）和 `dabing.mp4`（约 1 MB，H.264，画质更好）是同一段录像：910 × 1014 像素（卡片 1.25 倍），25 帧/秒，一轮 13.8 秒，GIF 无限循环。
+
+1. 整张饼在秤上，读数“整张饼……兑现率 6.5%”，静止约 2 秒；
+2. 七层从上往下依次抬起，木牌翻面，指针一层层回落到零，约 4 秒多；
+3. 分开的样子静止约 3 秒，读数“七层都拆开……”；
+4. 从饼底开始依次落回，约 4 秒多，回到开头。
+
+每一帧都是页面自己的 `live.js` 画的：录制脚本只把 `requestAnimationFrame` 换成自己推进的时钟，每帧固定 40 毫秒，截图再慢也不掉帧、不变速。动图里去掉了“悬停，一层层看”这行提示（动图不能悬停），其余和卡片一样。GIF 全片共用一套 256 色调色板、不抖动，平涂的颜色基本不走样。
+
 ## 尺寸、镜头和颜色
 
 世界单位是毫米，方位角 60°，仰角 30°，viewBox `600 × 616`，0.908 px/mm。台秤底座 560 × 224 × 40 毫米，四只脚；表盘鼓直径 160 毫米，表面直径 134 毫米，100 格（每格 10 克），每 100 克一根长刻度，零点加粗。木牌 34 × 68 × 3 毫米。
@@ -96,6 +109,12 @@
 node build.mjs            # 写 dabing.html 和 dabing.svg（约 6 分钟，大部分时间在解深度顺序）
 node build.mjs --quick    # 草稿：不解深度顺序
 node build.mjs --audit    # 同时跑审计
+```
+
+重录动图（约 1 分钟，需要 Chrome 或 Chromium 和 ffmpeg）：
+
+```sh
+CHROME_PATH=/path/to/chromium node tools/record.mjs   # 写 dabing.gif 和 dabing.mp4；--no-mp4 只出 GIF
 ```
 
 改了文字以后重做字体子集：`node build.mjs --chars`，再 `python3 tools/subset.py --package <解开的 lxgw-wenkai-webfont 包目录>`（需要 fontTools 和 brotli）。截图脚本需要 Chrome 或 Chromium：设 `CHROME_PATH`，或者 `npx playwright install chromium`。
