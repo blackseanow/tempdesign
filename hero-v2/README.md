@@ -5,7 +5,7 @@
 - **领导说话时会动嘴**，一秒四五个字，4 秒后停下。
 - **六样道具走同一条路**：从嘴边飘到员工的笔记本旁边堆起来，收住时整堆按顺序被吸进录音笔。
 - **录音笔正面印着 logo**：上面是 logo，下面是“把脉了”。最后盖在材料上的朱砂印章用的也是这枚 logo。
-- **logo 还没定**：用的是仓库里的候选，现在默认 logo-b/A1。12 款在招牌里的样子见 `screenshots/logo-options.png`，选好后改 `logo.json` 里的一行，再跑 `python3 tools/build.py`。
+- **logo 定为 logo-b/A1（略斜三指）**：录音笔上的铭牌和最后那枚朱砂印章都用它。12 款候选在招牌里的样子留在 `screenshots/logo-options.png`，以后要换，改 `logo.json` 里的一行再跑 `python3 tools/build.py`。
 
 先看效果：`screenshots/hero-v2.mp4`（录像）、`screenshots/sequence-sheet.png`（12 帧联系表）；`mouth-close@2x.png`、`recorder-close@2x.png` 分别是嘴形和录音笔的特写。
 
@@ -13,9 +13,7 @@
 
 1. **base-after 不是在 base-before 上只改员工得到的。** 员工以外还有 7.9% 的像素看得出差别：领导的脸、手、茶杯、录音笔、月洞门里的竹子都重画过，整张图越往下越往上偏（2–8 px）。交叉淡入那 0.8 秒里，领导和桌沿会往上跳几像素，竹子和领导的脸会变样。我照你说的做完了，原图没改。细节见下文“差异图检查”。建议在 base-before 上只重绘员工和他面前的桌面（局部重绘）再出一张 base-after；换上以后跑 `build.py` 和 `check_diff.py` 就行。
 2. **原图只有 1916 宽，只生成了 1x。** 不到 3000 像素。桌面和平板的高清屏（比如 Mac 的 Retina）上，图会被放大 1.1–2 倍，略糊；手机宽度小，1x 已经够用。拿到 ≥ 3000 宽（最好 3832 × 1642）的三张原图后，替换 PNG 再跑 `python3 tools/build.py`，会自动生成 `@2x.webp`，并写进 index.html 和 HeroSignboard.vue 的 srcset。
-3. **两样素材要定。**
-   - 道具（替身）：`anatomy/` 里只有大饼（dabing）和宏图（hongtu）两张解剖图，没有导出的 icon.svg，也没有脸谱、鸡汤、棋盘、火箭。六样道具是我照 hero-static 里的样子重画的（`props/*.svg`），只用设计系统变量。拿到 anatomy 导出的 icon.svg 后，覆盖 `props/` 里同名的文件，再跑 `build.py`。viewBox 随意，build 会统一大小。它也会检查颜色：不能写死颜色，道具不能用朱砂。
-   - logo：印章和录音笔上的 logo 都取自仓库里的候选：`logo-b/` 六款（A1 略斜三指、A2 斜入三指、B1 指腹压线、B2 指腹留红、C1 点按指尖、C2 斜按指尖，那边推荐 A1），`logo/` 六款（A1 稳按、A2 轻搭、B1 三点轻落、B2 随脉而落、C1 回锋、C2 连绵，那边推荐 A2）。现在默认 `logo-b/A1`。选哪一款写在 `logo.json`，例如 `"logo": "logo/A2"`；对比图 `screenshots/logo-options.png`。
+3. **道具是替身。** `anatomy/` 里只有大饼（dabing）和宏图（hongtu）两张解剖图，没有导出的 icon.svg，也没有脸谱、鸡汤、棋盘、火箭。六样道具是我照 hero-static 里的样子重画的（`props/*.svg`），只用设计系统变量。拿到 anatomy 导出的 icon.svg 后，覆盖 `props/` 里同名的文件，再跑 `build.py`。viewBox 随意，build 会统一大小。它也会检查颜色：不能写死颜色，道具不能用朱砂。
 4. **版式变了：** 新图中间上方是道具飞过的路线，牌匾和标语不再压在画上，改放在插画上方（所有宽度都这样）。
 
 ## 文件
@@ -27,7 +25,7 @@
 | `anchors.json` | 四个锚点，单位是图片宽、高的百分比 |
 | `img/*.webp` | 三张图的 1x WebP（1916 × 821，质量 88）：hero-static 153 KB、base-before 118 KB、base-after 105 KB |
 | `props/*.svg`、`props/_style.css` | 六样道具（替身）和配色 class，class 都对应设计系统变量 |
-| `logo.json` | 用哪一款 logo（仓库 `logo-b/`、`logo/` 里的候选），印章和录音笔共用 |
+| `logo.json` | 用哪一款 logo：定为 `logo-b/A1`，印章和录音笔共用。可以换成仓库 `logo-b/`、`logo/` 里的其他候选 |
 | `wordmark-bold.svg`、`wordmark-regular.svg` | 录音笔上的“把脉了”：霞鹜文楷的字形轮廓转成的路径，不依赖字体加载。选 logo-b 的候选用 Bold，选 logo 的用 Regular，和两套字标一致。由 `tools/make_wordmark.py` 生成 |
 | `checks/diff.png`、`diff-pairs.png`、`diff-report.json` | 差异图、各处的前后对照、数字 |
 | `screenshots/` | 录像、联系表，logo 候选对比图，桌面、手机、减少动态效果、调试模式截图，印章、嘴形、录音笔特写，`check.json`（自查结果） |
