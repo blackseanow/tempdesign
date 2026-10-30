@@ -1,0 +1,17 @@
+settled in 324.7 s
+wrote dabing.html (490.6 KB) and dabing.svg (436.6 KB) · 57 items · scale 0.908 px/mm
+clearance: 0 problems
+clearance apart: 0 problems
+terminals: 0 ends not on a mount
+loose ends: 0
+screen folds: 0
+support: 0 unsupported solids · 0 hanging tubes · 0 sunk pairs
+depth order: 0 problems
+through in mid-flight: 0 pairs
+self-overlap: 0 chunks whose outline crosses itself on screen
+wobble: 0 smoothed profiles whose slope turns between its ends
+saddles off their host apart: 0
+stand-in shapes: 0 items whose recorded shape covers too little of what it draws
+crowding: 0 pairs where a bend or end touches another line on screen
+audit · 7 tubes · 59 solids · 57 items · 1521 depth states · 356983 overlaps · 317 order rules · 24.2 s
+audit passed

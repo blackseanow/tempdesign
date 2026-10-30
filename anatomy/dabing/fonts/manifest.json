@@ -1,0 +1,92 @@
+[
+  {
+    "file": "dabing-wenkai-1.woff2",
+    "source": "lxgwwenkai-regular-subset-102.woff2",
+    "range": "U+79E4",
+    "glyphs": 1
+  },
+  {
+    "file": "dabing-wenkai-2.woff2",
+    "source": "lxgwwenkai-regular-subset-105.woff2",
+    "range": "U+5256",
+    "glyphs": 1
+  },
+  {
+    "file": "dabing-wenkai-3.woff2",
+    "source": "lxgwwenkai-regular-subset-107.woff2",
+    "range": "U+5398,U+62AC",
+    "glyphs": 2
+  },
+  {
+    "file": "dabing-wenkai-4.woff2",
+    "source": "lxgwwenkai-regular-subset-108.woff2",
+    "range": "U+5151,U+51FD,U+85AA",
+    "glyphs": 3
+  },
+  {
+    "file": "dabing-wenkai-5.woff2",
+    "source": "lxgwwenkai-regular-subset-109.woff2",
+    "range": "U+5269,U+997C",
+    "glyphs": 2
+  },
+  {
+    "file": "dabing-wenkai-6.woff2",
+    "source": "lxgwwenkai-regular-subset-110.woff2",
+    "range": "U+60AC,U+7AF9",
+    "glyphs": 2
+  },
+  {
+    "file": "dabing-wenkai-7.woff2",
+    "source": "lxgwwenkai-regular-subset-111.woff2",
+    "range": "U+5F84,U+626C",
+    "glyphs": 2
+  },
+  {
+    "file": "dabing-wenkai-8.woff2",
+    "source": "lxgwwenkai-regular-subset-112.woff2",
+    "range": "U+6302,U+7F18,U+829D,U+8651",
+    "glyphs": 4
+  },
+  {
+    "file": "dabing-wenkai-9.woff2",
+    "source": "lxgwwenkai-regular-subset-113.woff2",
+    "range": "U+4E4E,U+552F,U+5706,U+613F,U+63D2,U+811A,U+8BAD,U+9488,U+9EBB",
+    "glyphs": 9
+  },
+  {
+    "file": "dabing-wenkai-10.woff2",
+    "source": "lxgwwenkai-regular-subset-114.woff2",
+    "range": "U+4E03,U+505C,U+5708,U+5757,U+57F9,U+5C42,U+6279,U+6728,U+76AE,U+7FFB,U+989D",
+    "glyphs": 11
+  },
+  {
+    "file": "dabing-wenkai-11.woff2",
+    "source": "lxgwwenkai-regular-subset-115.woff2",
+    "range": "U+0025,U+514B,U+516D,U+5199,U+5343,U+5347,U+5956,U+5957,U+5C40,U+5E72,U+5E95,U+5F80,U+6838,U+6EE1,U+7387,U+76CA,U+76D8,U+7C73,U+7EC8,U+804C,U+80CC,U+8FB9,U+9002,U+9519,U+FF1B",
+    "glyphs": 25
+  },
+  {
+    "file": "dabing-wenkai-12.woff2",
+    "source": "lxgwwenkai-regular-subset-116.woff2",
+    "range": "U+4ECA,U+4F18,U+51E0,U+5E26,U+5F20,U+628A,U+6307,U+6548,U+666F,U+6BCF,U+724C,U+7559,U+7740,U+79F0,U+7B7E,U+8003,U+8BA9,U+8D70,U+90A3,U+9645,U+9752,U+9886",
+    "glyphs": 22
+  },
+  {
+    "file": "dabing-wenkai-13.woff2",
+    "source": "lxgwwenkai-regular-subset-117.woff2",
+    "range": "U+201C,U+201D,U+4E5F,U+4ECE,U+539F,U+53BB,U+53EA,U+53F0,U+5B57,U+5BFC,U+5C31,U+5DF2,U+5F97,U+603B,U+6253,U+653E,U+6807,U+683C,U+6CA1,U+76F4,U+7ED9,U+8001,U+89E3,U+8BA1,U+8BC4,U+8D77,U+91CC,U+91CD,U+91CF",
+    "glyphs": 29
+  },
+  {
+    "file": "dabing-wenkai-14.woff2",
+    "source": "lxgwwenkai-regular-subset-118.woff2",
+    "range": "U+4E0A,U+4E0B,U+4E0D,U+4E86,U+4EE5,U+4F1A,U+4F60,U+5168,U+51FA,U+5206,U+5230,U+52A0,U+52A8,U+5408,U+540D,U+540E,U+548C,U+56FE,U+5728,U+5927,U+597D,U+5B9E,U+5C0F,U+5E74,U+5F00,U+5F0F,U+660E,U+662F,U+673A,U+6765,U+6B21,U+6B63,U+73B0,U+770B,U+7B49,U+8868,U+8981,U+8BDD,U+8BF4,U+8FC7,U+8FD9,U+9762,U+9AD8,U+FF08,U+FF09",
+    "glyphs": 45
+  },
+  {
+    "file": "dabing-wenkai-15.woff2",
+    "source": "lxgwwenkai-regular-subset-119.woff2",
+    "range": "U+002E,U+0030,U+0031,U+0032,U+0033,U+0034,U+0035,U+0036,U+0037,U+0038,U+0039,U+00B7,U+2014,U+3001,U+3002,U+4E00,U+6709,U+7684,U+FF0C,U+FF1A",
+    "glyphs": 20
+  }
+]
