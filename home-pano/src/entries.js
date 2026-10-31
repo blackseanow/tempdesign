@@ -63,6 +63,11 @@ export class Entries {
       });
       this.items.set(def.id, { def, anchor, parts, pad: anchor.pad || 0 });
     }
+    // 叠放次序：近层在远层上面；同一层里面积小的在上面（抽屉压在百子柜上、日历压在门帘上），小东西总能点到
+    const list = [...this.items.values()].filter(it => !it.hud);
+    const area = it => it.parts.reduce((a, p) => a + p.rect.w * p.rect.h, 0);
+    list.sort((a, b) => (a.anchor.layer === b.anchor.layer ? area(b) - area(a) : a.anchor.layer === 'near' ? 1 : -1));
+    list.forEach((it, i) => it.parts.forEach(p => { p.el.style.zIndex = String(10 + i); }));
     this.resample();
     this.applyState();
   }
@@ -105,7 +110,14 @@ export class Entries {
     if (this.state !== 'free' && this.active && this.active !== 'recorder') this.hover(this.active, false);
   }
 
+  enabled(id) {
+    const it = this.items.get(id);
+    if (!it) return false;
+    return it.hud || this.state === 'free' || (this.state === 'recorder' && id === 'recorder');
+  }
+
   hover(id, on, focus = false) {
+    if (on && !this.enabled(id)) return;
     if (on) {
       if (this.active !== id) { this.active = id; this.activeSince = performance.now(); this.drawRing(id); }
       this.hoverFocus = focus;
@@ -200,9 +212,7 @@ export class Entries {
           if (b) {
             const s = `translate(${b.x.toFixed(1)}px,${b.y.toFixed(1)}px) scale(${(b.w / 100).toFixed(4)},${(b.h / 100).toFixed(4)})`;
             if (p.lastT !== s) { p.el.style.transform = s; p.lastT = s; }
-            p.el.style.width = p.el.style.height = '100px';
             if (p.el.dataset.off) delete p.el.dataset.off;
-            p.el.style.zIndex = String(Math.round(100 - b.z * 10));
           } else if (!p.el.dataset.off) { p.el.dataset.off = '1'; p.el.style.transform = 'translate(-9999px,-9999px)'; }
         }
         if (b) union = union ? unionBox(union, b) : b;

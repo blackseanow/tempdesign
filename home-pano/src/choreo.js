@@ -64,7 +64,7 @@ export function captions(s) {
   if (s.mode === 'quick') { out.tagline = span(at(s, 'quick') ?? 0, 0.3, 1.0); return out; }
   const sit = at(s, 'sit'), talk = at(s, 'talk'), rev = at(s, 'reverse'), settle = at(s, 'settle');
   if (sit != null) out.surface = span(sit, 0.9, 1.5) * (talk == null ? 1 : 1 - span(talk, 0.6, 1.3));
-  if (rev != null) out.actually = span(rev, 1.2, 1.8) * (settle == null ? 1 : 1 - span(settle, 0.2, 0.8));
+  if (rev != null) out.actually = span(rev, 1.0, 1.6) * (settle == null ? 1 : 1 - span(settle, 0.2, 0.8));
   if (settle != null) out.tagline = span(settle, 1.2, 2.0);
   return out;
 }
@@ -122,7 +122,7 @@ export function waves(s) {
 
 // 六个道具：开讲 1 秒起每 1.7 秒放出一个，2.1 秒飘到镜头前的位置停住、轻轻浮动；反转时一个个掉头吸进录音笔
 export const PROP_IDS = ['juben', 'hongtu', 'dabing', 'jitang', 'daqi', 'huojian'];
-export const PROP_FLIGHT = 2.1, PROP_SUCK = 0.85;
+export const PROP_FLIGHT = 2.1, PROP_SUCK = 1.0;
 export function props(s) {
   if (s.mode !== 'full' || s.T.talk == null) return PROP_IDS.map(id => ({ id, phase: 'hidden' }));
   return PROP_IDS.map((id, k) => {
@@ -132,7 +132,7 @@ export function props(s) {
     if (rev != null && s.now >= rev) {
       if (launch >= rev) return { id, k, phase: 'hidden' };
       const p0 = Math.min(1, (rev - launch) / PROP_FLIGHT);
-      const start = rev + 0.12 + k * 0.14;
+      const start = rev + 0.2 + k * 0.22;
       const q = (s.now - start) / PROP_SUCK;
       if (q >= 1) return { id, k, phase: 'gone' };
       return { id, k, phase: 'suck', p: p0, q: clamp(q, 0, 1), age: rev - launch };

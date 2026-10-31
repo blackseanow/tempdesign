@@ -15,7 +15,8 @@ button,a{font:inherit;color:inherit}
 #ink,#tags{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 
 /* 热区：透明按钮，盖在画面里的物件上；键盘能 Tab 到，读屏读 aria-label */
-.hot{position:absolute;left:0;top:0;margin:0;padding:0;border:0;background:transparent;pointer-events:auto;cursor:pointer;border-radius:10px;will-change:transform}
+.hot{position:absolute;left:0;top:0;width:100px;height:100px;margin:0;padding:0;border:0;background:transparent;pointer-events:auto;cursor:pointer;border-radius:10px;transform-origin:0 0;will-change:transform}
+.flat-strip .hot{width:auto;height:auto;transform:none}
 .hot[data-off]{visibility:hidden}
 .hot:focus-visible{outline:none}
 #stage.locked .hot{pointer-events:none}

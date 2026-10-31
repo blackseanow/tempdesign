@@ -2,7 +2,7 @@
   "_说明": [
     "场景参数。几何（全景横向 180°、视平线在第 300 行、底边补 48 行）以 img/tiles/manifest.json 为准，那是切图时写进去的。",
     "layers：远层、近层圆柱面的半径（米）。近层越近，转头时比远层多移动得越明显。",
-    "camera：neutralPitch 是坐定时的俯仰；yawLimit / pitchUp / pitchDown 是转头范围；neck 是眼睛到转头轴的距离（米），景深错位从这里来；breath 是镜头静止时的呼吸感。",
+    "camera：neutralYaw 是坐定时正对的方向（'mouth' = 对着领导的嘴，也可以写度数）；neutralPitch 是坐定时的俯仰；yawLimit / pitchUp / pitchDown 是以正对领导为准的转头范围；neck 是眼睛到转头轴的距离（米），景深错位从这里来；breath 是镜头静止时的呼吸感。",
     "intro.mode：first = 第一次完整播放、之后推门一秒直接到落定；always = 每次都完整播放；quick = 每次都推门一秒到落定；off = 不要门和开场，直接坐在诊桌前。URL 里加 ?intro=off（或 first / always / quick）可以临时覆盖。",
     "entries：每个入口的物件名、毛笔字标签、卡片文字和去处。数据（数量、列表）在 mock.json。"
   ],
@@ -28,7 +28,8 @@
     "introLook": {
       "yaw": 12,
       "pitch": 3
-    }
+    },
+    "neutralYaw": "mouth"
   },
   "intro": {
     "mode": "first",

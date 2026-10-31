@@ -1,7 +1,7 @@
 // 沉浸式首页的主程序：一条主时间线驱动开场，镜头 = 时间线给的位置 + 用户转头 + 呼吸，渲染交给 Worker。
 import { Timeline } from './timeline.js';
 import * as C from './choreo.js';
-import { makePano, makeCamera, panoTo3, DEG, clamp, span } from './geom.js';
+import { makePano, makeCamera, panoTo3, DEG, clamp, span, easeInOut } from './geom.js';
 import { createHost } from './render/host.js';
 import { Look } from './look.js';
 import { Door } from './door.js';
@@ -119,6 +119,21 @@ async function boot() {
     const hf = 2 * Math.atan(Math.tan(v * DEG / 2) * aspect) / DEG;
     return { v, h: hf };
   }
+  // 坐定时正对领导（全景正中不是领导的位置，他在 +7.8° 左右）
+  const neutralYaw = cfgCam.neutralYaw === 'mouth' ? pano.yawOf(anchors.points.mouth.x / 100 * pano.W) / DEG : (+cfgCam.neutralYaw || 0);
+  // 伸手那一步：窄屏上录音笔在画面外，镜头自动偏过去一点；反转后回来
+  const rec = pano.pctToPx(anchors.entries.recorder.rect);
+  const recYaw = pano.yawOf(rec.x + rec.w / 2) / DEG;
+  function recorderBias(s, fov) {
+    const need = Math.max(0, recYaw - neutralYaw - (fov.h / 2) * 0.55);
+    if (!need || s.mode !== 'full') return 0;
+    const reach = s.T.reach != null ? s.now - s.T.reach : null;
+    const settle = s.T.settle != null ? s.now - s.T.settle : null;
+    if (reach == null) return 0;
+    const inK = easeInOut(span(reach, 0, 1.2));
+    const outK = settle == null ? 0 : easeInOut(span(settle, 0.4, 2.2));
+    return need * inK * (1 - outK);
+  }
   // 往下最多看多少度不出画（全景补边以后的底边）
   const bottomElev = Math.atan((pano.vh - (pano.H + pano.padBottom)) / pano.k) / DEG;
 
@@ -169,9 +184,9 @@ async function boot() {
     const cc = C.camera(s);
     const downMax = cfgCam.neutralPitch + cc.pitch - (bottomElev + fov.v / 2 + 0.6);
     const lk = look.update(dt, { free: cc.free, downMax, upMax: cfgCam.pitchUp });
-    pose = makePose(s, cc, lk, fov, amb());
+    pose = makePose(s, cc, lk, fov, amb(), neutralYaw + recorderBias(s, fov));
     if (host && !flat) {
-      host.frame({ type: 'frame', cam: pose, tl: plainState(s), amb: amb(), w: view.w, h: view.h, slow });
+      host.frame({ type: 'frame', cam: pose, tl: plainState(s), amb: amb(), w: view.w, h: view.h, yaw0: neutralYaw, slow });
       if (!renderStart && host.acks.length) renderStart = now;
       checkLag(now);
     }
@@ -186,16 +201,18 @@ async function boot() {
     api.frameCount = (api.frameCount || 0) + 1;
   }
 
-  function makePose(s, cc, lk, fov, t) {
+  function makePose(s, cc, lk, fov, t, yaw0) {
     const b = cfgCam.breath;
     const breathe = reduced ? 0 : 1;
     const ph = t * Math.PI * 2 / b.period;
-    const yawDeg = lk.yaw + breathe * b.yaw * Math.sin(ph / 1.63);
+    const yawDeg = yaw0 + lk.yaw + breathe * b.yaw * Math.sin(ph / 1.63);
     const rel = cc.pitch + lk.pitch + breathe * b.pitch * Math.sin(ph + 0.7);
     const pitchDeg = cfgCam.neutralPitch + rel;
     // 眼睛不在转头轴上：轴在眼睛后面 neck 米。转头时眼睛绕轴走一小段弧，近层就比远层多移动一点
-    const d = cfgCam.neck, yr = yawDeg * DEG, pr = rel * DEG;
-    const ex = d * Math.sin(yr) * Math.cos(pr), ey = d * Math.sin(pr), ez = d - d * Math.cos(yr) * Math.cos(pr);
+    // 转头轴在坐定时眼睛的正后方（朝 neutralYaw）；正对领导时眼睛正好在圆柱的圆心，远近两层严丝合缝
+    const d = cfgCam.neck, yr = yawDeg * DEG, pr = rel * DEG, y0 = yaw0 * DEG;
+    const nx = -d * Math.sin(y0), nz = d * Math.cos(y0);
+    const ex = nx + d * Math.sin(yr) * Math.cos(pr), ey = d * Math.sin(pr), ez = nz - d * Math.cos(yr) * Math.cos(pr);
     return { yaw: yr, pitch: pitchDeg * DEG, fov: fov.v, pos: [ex, ey + cc.y + breathe * b.y * Math.sin(ph), ez + cc.z] };
   }
 
@@ -270,7 +287,7 @@ async function boot() {
     const elev = Math.atan(pano.heightOf(r.y + r.h / 2, R) / R) / DEG;
     const box = entries.boxOf(id);
     const inView = box && box.x > view.w * 0.12 && box.x + box.w < view.w * 0.88 && box.y > view.h * 0.1 && box.y + box.h < view.h * 0.9;
-    if (!inView) look.lookAt(yaw, clamp(elev - cfgCam.neutralPitch, -cfgCam.pitchDown, cfgCam.pitchUp) * 0.6);
+    if (!inView) look.lookAt(yaw - neutralYaw, clamp(elev - cfgCam.neutralPitch, -cfgCam.pitchDown, cfgCam.pitchUp) * 0.6);
   }
 
   function toast(text) {
@@ -301,14 +318,29 @@ async function boot() {
 
   // —— 调试 / 截图钩子 ——
   Object.assign(api, {
-    tl, look, entries, scene, anchors, pano,
+    tl, look, entries, scene, anchors, pano, host: () => host,
     state: () => ({ ...plainState(tl.state()), pose, flat: api.flat || null }),
     seek: (step, t, holds) => tl.seek(step, t, holds),
     pause: () => { tl.pause(); ambPaused = performance.now(); },
+    // 录像用：暂停状态下把"环境时间"（呼吸感、眨眼）也摆到指定秒数
+    setAmb: sec => { ambPaused = sec * 1000; },
     resume: () => { tl.resume(); ambPaused = null; },
+    // yaw：以正对领导为 0（右正）
     lookAt: (yaw, pitch, instant = true) => look.lookAt(yaw, pitch, instant),
+    neutralYaw: () => neutralYaw,
     box: id => entries.boxOf(id),
     hover: id => entries.hover(id, true),
+    // 截图用：把镜头转到某个入口（立即）
+    aim: (id, instant = true) => {
+      const a = entries.anchorOf(id);
+      if (!a) return null;
+      const r = pano.pctToPx(a.rect);
+      const R = a.layer === 'near' ? Rn : Rf;
+      const yaw = pano.yawOf(r.x + r.w / 2) / DEG;
+      const elev = Math.atan(pano.heightOf(r.y + r.h / 2, R) / R) / DEG;
+      look.lookAt(yaw - neutralYaw, clamp(elev - cfgCam.neutralPitch, -cfgCam.pitchDown, cfgCam.pitchUp) * 0.7, instant);
+      return { yaw, elev };
+    },
     rendered: () => new Promise(res => { const n = host ? host.acks.length : 0; const t0 = performance.now(); const chk = () => (!host || host.acks.length > n + 1 || performance.now() - t0 > 4000) ? res() : requestAnimationFrame(chk); chk(); }),
   });
   if (qs.get('debug') === '1') import('./debug.js').then(m => m.startDebug({ api, anchors, pano, scene, host: () => host, entries, door }));

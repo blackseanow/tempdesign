@@ -145,14 +145,13 @@ export async function createCore(canvas, init, env) {
     const g = cv.getContext('2d');
     g.fillStyle = manifest.far.ceilingColor || '#e1cfba';
     g.fillRect(0, 0, size, size);
-    // 椽子：前后方向，等距；颜色用松烟墨压淡
-    g.globalAlpha = 0.22;
-    g.fillStyle = INK;
-    const half = Rf * 1.05, toPx = v => (v + half) / (2 * half) * size;
-    for (let x = -half; x <= half; x += 0.62) g.fillRect(toPx(x) - 6, 0, 12, size);
-    g.globalAlpha = 0.12;
-    for (let z = -half; z <= half; z += 1.9) g.fillRect(0, toPx(z) - 10, size, 20);
-    g.globalAlpha = 1;
+    // 素净的天花板：越往头顶越暗一点点（松烟墨 6%），不画椽子，免得和画里的屋梁打架
+    const half = Rf * 1.05;
+    const rg = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    rg.addColorStop(0, 'rgba(36,35,31,0.07)');
+    rg.addColorStop(1, 'rgba(36,35,31,0)');
+    g.fillStyle = rg;
+    g.fillRect(0, 0, size, size);
     const tex = texFrom(cv, { mip: true });
     const geo = quad(2 * half, 2 * half);
     geo.rotateX(Math.PI / 2);
@@ -189,8 +188,8 @@ export async function createCore(canvas, init, env) {
       }, { res: 5 });
     }
     // 横匾：落定时浮现
-    addDecal('plaque', anchors.texts.plaque, 'far', (g, w, h) => {
-      textCanvas(g, w, h, cfg.text.plaque, { family: FONT_KAI, color: INK, size: h * 0.72, weight: 400, tracking: 0.12 });
+    addDecal('plaque', anchors.texts.plaque.rect, 'far', (g, w, h) => {
+      textCanvas(g, w, h, cfg.text.plaque, { family: FONT_KAI, color: INK, size: h * 0.86, weight: 400, tracking: 0.16 });
     }, { res: 5, opacity: 0 });
     details.build({ addDecal, anchors, cfg, textCanvas, FONT_KAI });
   }
@@ -233,15 +232,20 @@ export async function createCore(canvas, init, env) {
 
   // —— 特效：声浪、道具、飘字 ——
   const fx = { waves: [], props: {}, phrases: [] };
+  // 声浪：嘴边左右两道弧"( )"，毛笔那样中间粗、两头收尖
   function ringTexture() {
     const s = 256, cv = new env.OffscreenCanvas(s, s), g = cv.getContext('2d');
-    g.strokeStyle = INK; g.lineCap = 'round';
-    // 一圈带笔触粗细变化的墨线：分 48 段，线宽沿圆周起伏，像毛笔转一圈
-    for (let i = 0; i < 48; i++) {
-      const a0 = i / 48 * Math.PI * 2, a1 = (i + 1.15) / 48 * Math.PI * 2;
-      g.lineWidth = 3 + 4.5 * (0.5 + 0.5 * Math.sin(i / 48 * Math.PI * 2 * 2 + 1));
-      g.beginPath(); g.arc(s / 2, s / 2, s / 2 - 10, a0, a1); g.stroke();
-    }
+    g.fillStyle = INK;
+    const arc = (a0, a1) => {
+      const n = 120, R = s / 2 - 14;
+      for (let i = 0; i < n; i++) {
+        const t = i / (n - 1), a = a0 + (a1 - a0) * t;
+        const w = 1.2 + 6.5 * Math.sin(Math.PI * t);
+        g.beginPath(); g.arc(s / 2 + Math.cos(a) * R, s / 2 + Math.sin(a) * R, w / 2, 0, Math.PI * 2); g.fill();
+      }
+    };
+    arc(Math.PI * 0.72, Math.PI * 1.28);
+    arc(-Math.PI * 0.28, Math.PI * 0.28);
     return texFrom(cv, { mip: true });
   }
   function buildFx(icons) {
@@ -288,21 +292,22 @@ export async function createCore(canvas, init, env) {
   const mouth3 = () => anchor3(anchors.points.mouth, 'near', 0.03);
   const recTop3 = () => anchor3(anchors.points.recorderTop, 'near', 0.02);
   // 道具停的位置：按坐定时的视野（正前方、俯 neutralPitch）取屏幕上的相对位置，再放到 0.8 米左右的深度
-  const SLOTS = [[-0.62, 0.46, 0.92], [0.6, 0.5, 0.92], [-0.8, -0.02, 0.82], [0.8, 0.04, 0.82], [-0.36, 0.78, 0.98], [0.34, 0.8, 0.98]];
+  const SLOTS = [[-0.72, 0.4, 0.9], [0.74, 0.6, 0.9], [-0.84, -0.1, 0.82], [0.9, -0.22, 0.82], [-0.4, 0.8, 0.95], [0.52, 0.86, 0.95]];
   function viewPoint(nx, ny, dist) {
     const fov = state.fov * DEG, asp = state.aspect;
     const t = Math.tan(fov / 2);
     const dir = new THREE.Vector3(nx * t * asp * 0.92, ny * t * 0.9, -1).normalize();
-    dir.applyEuler(new THREE.Euler(cfg.camera.neutralPitch * DEG, 0, 0, 'YXZ'));
+    dir.applyEuler(new THREE.Euler(cfg.camera.neutralPitch * DEG, -state.yaw0, 0, 'YXZ'));
     return dir.multiplyScalar(dist);
   }
   function slot3(k) {
     const [nx, ny, dist] = SLOTS[k];
-    const fov = state.fov * DEG, asp = state.aspect;
-    const t = Math.tan(fov / 2);
-    const dir = new THREE.Vector3(nx * t * asp * 0.92, ny * t * 0.9, -1).normalize();
-    dir.applyEuler(new THREE.Euler(cfg.camera.neutralPitch * DEG, 0, 0, 'YXZ'));
-    return dir.multiplyScalar(dist);
+    return viewPoint(nx, ny, dist);
+  }
+  // 竖屏视野窄，道具、飘字按横向视野缩小一点，不至于占满屏
+  function fovScale() {
+    const hf = 2 * Math.atan(Math.tan(state.fov * DEG / 2) * state.aspect) / DEG;
+    return Math.min(1, Math.max(0.6, hf / 70));
   }
   const _v = new THREE.Vector3(), _q = new THREE.Quaternion(), _z = new THREE.Vector3(0, 0, 1);
   function billboard(m, pos, size, aspect = 1, spin = 0, flip = 1) {
@@ -320,22 +325,26 @@ export async function createCore(canvas, init, env) {
     const M = mouth3(), Rt = recTop3();
     // 声浪：从嘴边朝镜头飞来、变大、变淡；反转时掉头吸进录音笔
     const ws = C.waves(s);
-    const eye = new THREE.Vector3(0, -0.04, -0.38);
+    const eye = new THREE.Vector3(0, -0.02, 0);
     fx.waves.forEach((m, i) => {
       const w = ws[i];
       if (!w) { m.visible = false; return; }
-      const pOut = t => _v.copy(M).lerp(eye, easeOut(t * 0.92));
-      const sizeOut = t => lerp(0.05, 0.42, easeOut(t));
-      const alphaOut = t => span(t, 0, 0.12) * (1 - span(t, 0.55, 1)) * 0.5;
+      const jit = hash(w.i * 7 + 3) - 0.5;
+      const end = M.clone().lerp(eye, 0.46).add(new THREE.Vector3(jit * 0.05, 0.03 + jit * 0.03, 0));
+      const pOut = t => _v.copy(M).lerp(end, easeOut(t));
+      const sizeOut = t => lerp(0.035, 0.26, easeOut(t));
+      const alphaOut = t => span(t, 0, 0.14) * (1 - span(t, 0.45, 1)) * 0.5;
+      const tilt = jit * 0.35;
       if (w.phase === 'out') {
-        billboard(m, pOut(w.p), sizeOut(w.p));
+        billboard(m, pOut(w.p), sizeOut(w.p), 1, tilt);
         m.material.opacity = alphaOut(w.p);
       } else {
         const start = pOut(w.p).clone();
-        const ctrl = start.clone().lerp(Rt, 0.4).add(new THREE.Vector3(0, 0.18, 0));
+        const ctrl = start.clone().lerp(Rt, 0.4).add(new THREE.Vector3(0, 0.12, 0));
         const q = easeIn(w.q);
-        billboard(m, bez(start, ctrl, Rt, q, _v), lerp(sizeOut(w.p), 0.015, q), 1, (1 - q) * Math.PI * 0.6);
-        m.material.opacity = Math.max(alphaOut(w.p), 0.28) * (1 - span(w.q, 0.75, 1));
+        // 掉头：两道弧先转半圈，再被拽向录音笔
+        billboard(m, bez(start, ctrl, Rt, q, _v), lerp(sizeOut(w.p), 0.012, q), 1, tilt + span(w.q, 0, 0.3) * Math.PI);
+        m.material.opacity = Math.max(alphaOut(w.p), 0.3) * (1 - span(w.q, 0.75, 1));
       }
       m.visible = m.material.opacity > 0.003;
     });
@@ -347,7 +356,7 @@ export async function createCore(canvas, init, env) {
       const S = slot3(k);
       const ctrl = M.clone().lerp(S, 0.5).add(new THREE.Vector3((k % 2 ? 1 : -1) * 0.12, 0.22, 0.1));
       const rocket = st.id === 'huojian';
-      const size = 0.115;
+      const size = 0.115 * fovScale();
       let pos, sz, spin, op = 1, flip = 1;
       const bob = (t) => new THREE.Vector3(0, 0.008 * Math.sin(t * 2.6 + k), 0);
       if (st.phase === 'out' || st.phase === 'hover') {
@@ -380,10 +389,10 @@ export async function createCore(canvas, init, env) {
       const tx = fx.phraseTex[ph.j % 3];
       if (m.material.map !== tx.tex) { m.material.map = tx.tex; m.material.needsUpdate = true; }
       const side = ph.j % 2 ? 1 : -1;
-      const to = viewPoint(side * 0.5, 0.5 + 0.1 * (ph.j % 3), 1.05);
+      const to = viewPoint(side * 0.36, 0.22 + 0.1 * (ph.j % 3), 1.25);
       const ctrl = M.clone().lerp(to, 0.5).add(new THREE.Vector3(side * 0.1, 0.12, 0));
       const out = t => bez(M, ctrl, to, easeOut(t), new THREE.Vector3());
-      const h = 0.085;
+      const h = 0.085 * Math.max(0.78, fovScale());
       if (ph.phase === 'out') {
         billboard(m, out(ph.p), h * lerp(0.6, 1, easeOut(ph.p)), tx.aspect);
         m.material.opacity = span(ph.p, 0, 0.12) * (1 - span(ph.p, 0.76, 1));
@@ -433,7 +442,7 @@ export async function createCore(canvas, init, env) {
 
   function frame(f) {
     clock.now = f.amb;
-    state.fov = f.cam.fov; state.aspect = f.w / f.h;
+    state.fov = f.cam.fov; state.aspect = f.w / f.h; state.yaw0 = (f.yaw0 || 0) * DEG;
     camera.position.set(f.cam.pos[0], f.cam.pos[1], f.cam.pos[2]);
     camera.rotation.set(f.cam.pitch, -f.cam.yaw, f.cam.roll || 0, 'YXZ');
     if (camera.fov !== f.cam.fov || camera.aspect !== state.aspect) {
@@ -456,6 +465,7 @@ export async function createCore(canvas, init, env) {
   }
 
   return {
+    debug: { decals, scene, camera, groups, fx },
     info: { renderer: 'three r' + THREE.REVISION, maxTex, webgl2: renderer.capabilities.isWebGL2 },
     frame,
     resize(w, h, dpr) { renderer.setPixelRatio(dpr); renderer.setSize(w, h, false); state.aspect = w / h; },
