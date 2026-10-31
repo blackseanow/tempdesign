@@ -2,7 +2,7 @@
 
 第一人称坐在诊桌前，前方约 180° 的半全景。开场：门外 → 推门 → 坐下 → 领导开讲 → 伸手按录音笔 → 反转 → 落定，之后可以自由转头看整间屋子，点屋里的东西进各个入口。
 
-先看效果：`shots/intro.webm`（开场录像），`shots/desktop/`、`shots/mobile/`（截图）。进度和交接记录在 `PROGRESS.md`。
+先看效果：`shots/intro.webm`（开场录像）、`shots/look-around.webm`（落定后从最左转到最右），`shots/desktop/`、`shots/mobile/`（截图）。进度和交接记录在 `PROGRESS.md`。
 
 ## 本地打开
 
@@ -51,16 +51,17 @@ node home-pano/tools/serve.cjs 8000
 | `src/entries.js` | 入口：热区按钮、松烟墨线圈、毛笔字标签、卡片、彩蛋检查、解剖图查看器 |
 | `src/audio.js` | 空间声音（HRTF），没有声音文件时用合成音 |
 | `src/flat.js`、`src/debug.js` | 平面版；?debug=1 的锚点叠加 |
-| `src/render/` | Three.js 渲染（默认在 Worker 里）：`core.js` 场景和开场特效，`details.js` 第二阶段的细节，`text.js` 画字，`worker.js`、`host.js` |
+| `src/render/` | Three.js 渲染（默认在 Worker 里）：`core.js` 场景、开场特效、横匾和抽屉标签；`details.js` 差分贴片（嘴、眨眼、按下）、日历锦旗木牌档案盒上的字、热气、阳光、录音笔指示灯；`text.js` 画字；`worker.js`、`host.js` |
 | `vendor/three.pano.min.js` | Three.js r187 精简包（只含用到的类，0.5 MB）。`tools/build-three.mjs` 生成 |
-| `fonts/` | 霞鹜文楷、马善政毛笔楷书的子集（只有页面用到的字）和许可证，见 `fonts/SOURCE.md` |
+| `fonts/` | 霞鹜文楷（938 字，192 KB）、马善政毛笔楷书（79 字，30 KB）的子集，只有页面用到的字；许可证和来源见 `fonts/SOURCE.md` |
 | `icons/*.svg` | 六个道具图标（剧本、宏图、大饼、鸡汤、大棋、火箭） |
 | `img/src/` | 原图（剪贴板文件名，对应关系见 `img/sources.json`），没动 |
 | `img/pano*.png`、`img/door.png` | 配准、放大以后的全景图（8424 × 2988）和门外（3344 × 1882）；`pano-near.png` 是抠出来的近层 |
 | `img/tiles/` | 切好的 webp 小块（三级：1x、2x、4x）和清单 `manifest.json`；`flat/` 是平面版用的整图 |
+| `img/patches/` | 差分贴片：闭嘴、闭眼、按下（RGBA webp）和位置 `patches.json`；`desk-mask.webp` 是桌面木头的遮罩（阳光只照在桌面上） |
 | `img/door/` | 门外的墙（门扇处挖空）和门扇，各有小图和高清 |
 | `audio/` | 放声音文件的地方（见"声音"） |
-| `checks/` | 素材处理的检查：配准报告和热图、放大参数、抠层检查、图标对比图 |
+| `checks/` | 素材处理的检查：配准报告和热图、放大参数、抠层检查、图标对比图、贴片检查 |
 | `shots/` | 截图、录像、性能检查结果 |
 | `tools/` | 处理素材和自查的脚本（见"重新生成"） |
 
@@ -73,6 +74,9 @@ node home-pano/tools/serve.cjs 8000
 - **先小图后高清**：进门前只加载 1x 小图（远+近 0.19 MB），坐下以后在后台加载高清（电脑 4x、手机 2x），一块块淡入。
 - **卡顿时**：先降渲染分辨率（每次 ×0.75，最低 0.5），还卡（最近 40 帧间隔中位数超过 55 ms）才退回平面版。
 - **动画**：全部是时间的函数（开场由 `timeline.js` 的一条主时间线驱动），只动位移、旋转、缩放、透明度。
+- **差分贴片**：闭嘴、闭眼、按下三块小贴片贴在近层同一个圆柱面上，只切换显示（不会抖）。说话时嘴跟着说话声的音节张合，每 3–5 秒眨一次眼，按下录音笔时切成按下。
+- **代码画的细节**：横匾、日历、锦旗、木牌、抽屉标签、档案盒标签上的字（霞鹜文楷），盖碗、鸡汤锅、药罐的热气，开讲时桌上跟着挂钟从右往左移的阳光，录音笔指示灯。颜色只用竹纸 #ECEAE1、素笺 #F8F7F2、松烟墨 #24231F、函套青 #1F3A4D、古铜金 #C9A86A；朱砂 #B5382A 只在右上角的名章上。
+- **颜色管线**：贴图都是预乘 alpha，颜色不做 sRGB ⇄ 线性换算（和浏览器合成一样），半透明的边不会有亮边、暗边。
 
 ## 怎么调锚点
 
@@ -150,13 +154,27 @@ Real-ESRGAN 的插画模型 RealESRGAN_x4plus_anime_6B，CPU 分块（块 512、
 
 `tools/tiles.py`：远层、近层各三级（1x 两块、2x 三块、4x 六 × 二块），每块不超过 1404 × 1590 的 webp；近层整块透明的不出文件。门外拆成墙（门扇处挖空）和门扇两层。先加载 1x，进屋后换高清。
 
+### 12. 差分贴片
+
+`tools/patches.py` → `img/patches/`。每块先在小范围内用 ECC 再配准，范围取一整块实心区域（嘴、眼睛：变化区域填满取凸包；按下的手：两张图里不是桌面木头的部分取并集，旧手新手都盖住），再用泊松融合贴进 pano.png：里面是差分图的笔画，边界和底图一致。差分图整张重画过、肤色和线条深浅不一样，直接贴会有一圈亮边、旧手会留残影，泊松融合以后没有。检查图 `checks/patches-*.webp`（从左到右：原图、差分图、贴好的、alpha），数字 `checks/patches.json`。锚点改了 `fx.mouthPatch`、`fx.eyes`、`fx.pressHand` 要重跑这个脚本。
+
 ## 自查
 
 - `node tools/shoot.cjs`：电脑（1440 × 900）和手机（390 × 844，2 倍）各拍：开场 7 个镜头（`intro-1-door` … `intro-7-settle`）、落定后左中右（`view-*`）、每个入口的悬停状态（`hover-*`，手机上是点按的样子）、几张卡片和彩蛋、平面版、减少动态效果、调试叠加。
 - `node tools/perf.cjs`：实时跑一遍完整开场，量门出现的时间和主线程长任务，结果在 `shots/perf-*.json`。
 - `node tools/record.cjs intro`：逐帧录开场（`shots/intro.webm`，1280 × 720，30 帧/秒，约 32 秒，没有声音）。
+- `node tools/record.cjs look`：落定后从正前方转到最左、再一路转到最右、再回来（`shots/look-around.webm`，12 秒），看分层、贴片、文字有没有穿帮。
 
-这台机器没有 GPU（Chromium 用 SwiftShader 软件渲染），实时帧率靠自适应分辨率维持；截图和录像都是"暂停时间线 → 摆到某一刻 → 等 Worker 画完"逐帧拍的，画面和节奏不受影响。
+最近一次结果：门 116 ms（电脑）/ 104 ms（手机）画出来；整个开场主线程没有超过 50 ms 的长任务（最长 0 / 0 ms）；没有退平面版。
+
+这台机器没有 GPU（Chromium 用 SwiftShader 软件渲染）：页面认出软件渲染后用一半分辨率、30 帧封顶，帧间隔中位约 33 ms。截图和录像都是"暂停时间线 → 摆到某一刻 → 等 Worker 画完"逐帧拍的，画面和节奏不受影响。有 GPU 的设备上不会降分辨率。
+
+## 已知问题
+
+- 三张差分图是整张重画的，和 pano.png 有 0.2–3 px 的细小错位（见"对齐"）。只从里面取嘴、眼睛、手三小块（泊松融合），其余地方没用差分图，所以看不出来。
+- 还没放声音文件时，控制台会有 `audio/*.mp3` 的 404；点没做好的彩蛋抽屉时，会有对应解剖图的 404（检查它在不在）。都是预期的。
+- 开场录像里没有声音（声音是页面实时合成的）。
+- 陀螺仪只在触屏设备上启用；iOS 要在推门时授权，不授权就用手指拖。
 
 ## 重新生成
 
@@ -168,9 +186,11 @@ python3 tools/upscale.py --weights RealESRGAN_x4plus_anime_6B.pth
 python3 tools/check_upscaled.py
 python3 tools/matte.py
 python3 tools/tiles.py
+python3 tools/patches.py
 node tools/icons_sheet.cjs
 python3 tools/subset.py --kai <lxgw-wenkai-webfont 包目录> --brush <@fontsource/ma-shan-zheng 包目录>
 node tools/shoot.cjs
 node tools/perf.cjs
 node tools/record.cjs intro
+node tools/record.cjs look
 ```
