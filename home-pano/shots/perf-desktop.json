@@ -1,0 +1,25 @@
+{
+  "device": "desktop",
+  "doorRenderMs": 136,
+  "fcpMs": 136,
+  "doorWithin1s": true,
+  "longTasks": [],
+  "longTasksOver50": [],
+  "maxLongTaskMs": 0,
+  "introFromMs": 0,
+  "introToMs": 29343,
+  "pushedAtMs": 1404,
+  "fellBackToFlat": null,
+  "renderScale": 0.5,
+  "medianFrameMs": 33,
+  "renderer": {
+    "mode": "worker",
+    "renderer": "three r187",
+    "maxTex": 8192,
+    "webgl2": true,
+    "gpu": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "software": true
+  },
+  "pageErrors": [],
+  "pass": true
+}

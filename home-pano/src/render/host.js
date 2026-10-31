@@ -9,7 +9,7 @@ export async function createHost(canvas, init, cb) {
   const useWorker = !init.forceMain && typeof Worker !== 'undefined' && 'transferControlToOffscreen' in canvas && typeof OffscreenCanvas !== 'undefined';
   let inFlight = false, lastSent = 0, nextId = 1;
   const acks = [];
-  const host = { mode: useWorker ? 'worker' : 'main', info: null, acks, busy: () => inFlight };
+  const host = { mode: useWorker ? 'worker' : 'main', info: null, acks, ackCount: 0, busy: () => inFlight };
 
   if (useWorker) {
     const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
@@ -18,7 +18,7 @@ export async function createHost(canvas, init, cb) {
       worker.onmessage = e => {
         const m = e.data;
         if (m.type === 'ready') { host.info = m.info; resolve(); }
-        else if (m.type === 'rendered') { inFlight = false; if (!m.skipped) { acks.push(performance.now()); if (acks.length > 120) acks.shift(); } cb.onRendered && cb.onRendered(m); }
+        else if (m.type === 'rendered') { inFlight = false; if (!m.skipped) { host.ackCount++; acks.push(performance.now()); if (acks.length > 120) acks.shift(); } cb.onRendered && cb.onRendered(m); }
         else if (m.type === 'hd-done') cb.onHD && cb.onHD(m.level);
         else if (m.type === 'error') { (host.info ? cb.onError : reject)(new Error(m.message)); }
         else if (m.type === 'lost') cb.onLost && cb.onLost();
@@ -53,7 +53,7 @@ export async function createHost(canvas, init, cb) {
   host.frame = f => {
     const t0 = performance.now();
     core.frame(f);
-    acks.push(performance.now()); if (acks.length > 120) acks.shift();
+    host.ackCount++; acks.push(performance.now()); if (acks.length > 120) acks.shift();
     cb.onRendered && cb.onRendered({ id: nextId++, ms: performance.now() - t0 });
     return true;
   };

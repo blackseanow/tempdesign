@@ -60,7 +60,8 @@ async function waitHD(page) {
     page.on('pageerror', e => report.console.push(`${dev} pageerror: ${e.message}`));
     const base = `http://127.0.0.1:${port}/home-pano/`;
     const shots = [];
-    const shot = async (name) => { const f = path.join(dir, name + '.png'); await page.screenshot({ path: f }); shots.push(name); };
+    // JPEG（质量 90）：和 PNG 看不出差别，体积小很多（截图要进仓库）
+    const shot = async (name) => { const f = path.join(dir, name + '.jpg'); await page.screenshot({ path: f, type: 'jpeg', quality: 90 }); shots.push(name); };
     // —— 开场 ——
     await page.goto(base + '?intro=always&nofallback=1');
     await page.mouse.move(opts.viewport.width / 2, opts.viewport.height - 4);
@@ -129,6 +130,16 @@ async function waitHD(page) {
   }
   await browser.close();
   srv.close();
-  fs.writeFileSync(path.join(OUT, 'shoot.json'), JSON.stringify(report, null, 2));
+  // 只拍了一部分（--only、--device）时，和上一次的结果合并
+  const prevPath = path.join(OUT, 'shoot.json');
+  if ((only.length || devArg) && fs.existsSync(prevPath)) {
+    const prev = JSON.parse(fs.readFileSync(prevPath, 'utf8'));
+    for (const [d, v] of Object.entries(report.devices)) {
+      const old = (prev.devices && prev.devices[d] && prev.devices[d].shots) || [];
+      report.devices[d] = { shots: [...new Set([...old, ...v.shots])] };
+    }
+    report.devices = { ...prev.devices, ...report.devices };
+  }
+  fs.writeFileSync(prevPath, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 1).slice(0, 3000));
 })();

@@ -33,13 +33,16 @@ export function startDebug({ api, anchors, pano, scene, host, entries }) {
       e.stopPropagation(); e.preventDefault();
       select(it);
       const cam = currentCam();
+      if (!cam) return;
       const p0 = screenToPano(pano, cam, e.clientX, e.clientY, radius(it));
       drag = { it, p0, x: it.obj.x, y: it.obj.y };
       el.setPointerCapture(e.pointerId);
     });
     el.addEventListener('pointermove', e => {
       if (!drag || drag.it !== it) return;
-      const p = screenToPano(pano, currentCam(), e.clientX, e.clientY, radius(it));
+      const cam = currentCam();
+      if (!cam) return;
+      const p = screenToPano(pano, cam, e.clientX, e.clientY, radius(it));
       if (!p || !drag.p0) return;
       it.obj.x = round(drag.x + (p.u - drag.p0.u) / pano.W * 100);
       it.obj.y = round(drag.y + (p.v - drag.p0.v) / pano.H * 100);
@@ -51,7 +54,8 @@ export function startDebug({ api, anchors, pano, scene, host, entries }) {
   }
   function radius(it) { return it.layer === 'near' ? scene.layers.nearRadius : scene.layers.farRadius; }
   function round(v) { return Math.round(v * 1000) / 1000; }
-  function currentCam() { return makeCamera(api.state().pose, innerWidth, innerHeight); }
+  // 第一帧之前镜头还没算出来，返回 null，调用的地方跳过这一次
+  function currentCam() { const pose = api.state().pose; return pose ? makeCamera(pose, innerWidth, innerHeight) : null; }
   function select(it) {
     if (sel) sel.el.classList.remove('sel');
     sel = it; it.el.classList.add('sel');
@@ -80,6 +84,7 @@ export function startDebug({ api, anchors, pano, scene, host, entries }) {
   panel.querySelector('[data-hide]').addEventListener('click', e => { visible = !visible; layer.style.display = visible ? '' : 'none'; e.target.textContent = visible ? '隐藏框' : '显示框'; });
   addEventListener('pointermove', e => {
     const cam = currentCam();
+    if (!cam) return;
     const f = screenToPano(pano, cam, e.clientX, e.clientY, scene.layers.farRadius);
     const n = screenToPano(pano, cam, e.clientX, e.clientY, scene.layers.nearRadius);
     const fmt = p => p ? `${(p.u / pano.W * 100).toFixed(2)}%, ${(p.v / pano.H * 100).toFixed(2)}%` : '—';
@@ -89,6 +94,7 @@ export function startDebug({ api, anchors, pano, scene, host, entries }) {
     requestAnimationFrame(tick);
     if (!visible) return;
     const cam = currentCam();
+    if (!cam) return;
     for (const it of items) {
       const R = radius(it);
       let b;

@@ -28,6 +28,9 @@ export async function createCore(canvas, init, env) {
   renderer.setClearColor(new THREE.Color(manifest.far.ceilingColor || PAPER), 1);
   const gl = renderer.getContext();
   const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+  // 显卡名称：认出软件渲染（没有 GPU 的机器）用
+  const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+  const gpu = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, init.w / init.h, 0.03, 40);
@@ -466,7 +469,7 @@ export async function createCore(canvas, init, env) {
 
   return {
     debug: { decals, scene, camera, groups, fx },
-    info: { renderer: 'three r' + THREE.REVISION, maxTex, webgl2: renderer.capabilities.isWebGL2 },
+    info: { renderer: 'three r' + THREE.REVISION, maxTex, webgl2: renderer.capabilities.isWebGL2, gpu, software: /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gpu) },
     frame,
     resize(w, h, dpr) { renderer.setPixelRatio(dpr); renderer.setSize(w, h, false); state.aspect = w / h; },
     async loadHD(level) {

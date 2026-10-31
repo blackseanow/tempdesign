@@ -123,8 +123,9 @@ export class Hud {
   showCue(text, box, o) {
     const el = this.cue;
     if (!box || o <= 0.001) { el.style.opacity = '0'; return; }
-    if (el.textContent !== text) el.textContent = text;
-    const w = el.offsetWidth, h = el.offsetHeight;
+    if (el.textContent !== text) { el.textContent = text; this.cueSize = null; }
+    if (!this.cueSize) this.cueSize = [el.offsetWidth, el.offsetHeight];   // 字变了才量一次，不在每帧里读布局
+    const [w, h] = this.cueSize;
     let x = box.x + box.w + 14, y = box.y + box.h * 0.35 - h / 2;
     if (x + w > innerWidth - 12) x = box.x - w - 14;
     x = clamp(x, 8, innerWidth - w - 8); y = clamp(y, 8, innerHeight - h - 8);

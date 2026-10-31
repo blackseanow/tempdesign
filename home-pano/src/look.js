@@ -124,8 +124,11 @@ export class Look {
   }
 
   // —— 陀螺仪 ——
+  // 推门那一下调用。只在触屏设备上用陀螺仪（电脑上用鼠标拖）。
+  // iOS 的授权请求必须在手势里同步发出；注册监听（浏览器要初始化传感器）挪到下一个任务，不拖长推门那一下
   async enableGyro() {
     if (typeof DeviceOrientationEvent === 'undefined') return 'none';
+    if (!matchMedia('(pointer: coarse)').matches && !('ontouchstart' in window)) return 'desktop';
     try {
       if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         const r = await DeviceOrientationEvent.requestPermission();
@@ -134,6 +137,7 @@ export class Look {
     } catch (e) { return 'denied'; }
     if (this._gyroBound) return 'ok';
     this._gyroBound = true;
+    await new Promise(r => setTimeout(r, 0));
     window.addEventListener('deviceorientation', e => this._onOrient(e));
     return 'ok';
   }

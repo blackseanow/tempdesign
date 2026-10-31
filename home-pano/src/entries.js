@@ -32,6 +32,7 @@ export class Entries {
   }
 
   build() {
+    if (!this.resizeBound) { this.resizeBound = true; addEventListener('resize', () => { this.hudDirty = true; }); }
     this.hot.textContent = '';
     this.items.clear();
     for (const def of this.defs()) {
@@ -118,6 +119,8 @@ export class Entries {
 
   hover(id, on, focus = false) {
     if (on && !this.enabled(id)) return;
+    // 伸手那一步：录音笔有自己的墨线圈和"按下录音笔"提示，不再叠一个普通的悬停标签
+    if (on && id === 'recorder' && this.state === 'recorder') return;
     if (on) {
       if (this.active !== id) { this.active = id; this.activeSince = performance.now(); this.drawRing(id); }
       this.hoverFocus = focus;
@@ -163,6 +166,7 @@ export class Entries {
     const small = document.createElement('small'); small.textContent = it.def.name; r.tag.append(small);
     r.g.classList.remove('on');
     r.tag.style.opacity = '0';
+    r.tagSize = null;
     r.shownAt = performance.now();
     // 下一帧再加 on，过渡才会从 0 开始
     requestAnimationFrame(() => { if (r.id === id && this.active === id) r.g.classList.add('on'); });
@@ -187,11 +191,15 @@ export class Entries {
   placeTag(r, box) {
     if (!box || !r.id) return;
     const t = r.tag;
-    const w = t.offsetWidth, h = t.offsetHeight;
+    if (!r.tagSize) r.tagSize = [t.offsetWidth, t.offsetHeight];      // 内容变了才量一次
+    const [w, h] = r.tagSize;
     const pad = Math.max(10, Math.min(box.w, box.h) * 0.16);
     let x = box.x + box.w / 2 - w / 2, y = box.y - pad - h - 8;
+    // 标签不压在底部的按钮、字幕上：手机上底部留 150 px，电脑上 110 px
+    const bottom = innerHeight - (innerWidth <= 640 ? 150 : 110);
     if (y < 64) y = box.y + box.h + pad + 8;
-    x = clamp(x, 8, innerWidth - w - 8); y = clamp(y, 8, innerHeight - h - 8);
+    if (y + h > bottom) y = Math.max(64, Math.min(box.y - pad - h - 8, bottom - h));
+    x = clamp(x, 8, innerWidth - w - 8); y = clamp(y, 8, Math.max(8, bottom - h));
     const shown = (performance.now() - r.shownAt) > 60;
     t.style.transform = `translate(${x.toFixed(1)}px, ${(y + (shown || this.reduced ? 0 : 6)).toFixed(1)}px)`;
     if (shown) t.style.opacity = '1';
@@ -202,7 +210,12 @@ export class Entries {
     this.view = view;
     const boxes = {};
     for (const [id, it] of this.items) {
-      if (it.hud) { boxes[id] = it.el ? domBox(it.el) : null; continue; }
+      if (it.hud) {
+        // 界面上的按钮（名章）位置只在窗口变化时量一次，不在每帧里读布局
+        if (!it.box || this.hudDirty) it.box = it.el ? domBox(it.el) : null;
+        boxes[id] = it.box;
+        continue;
+      }
       let union = null;
       for (const p of it.parts) {
         let b;
@@ -220,6 +233,7 @@ export class Entries {
       boxes[id] = union;
     }
     this.boxes = boxes;
+    this.hudDirty = false;
     const r = this.rings && this.rings.hover;
     if (r && r.id) { this.placeRing(r, boxes[r.id]); this.placeTag(r, boxes[r.id]); }
     if (this.cardFor && boxes[this.cardFor]) this.placeCard(boxes[this.cardFor]);
@@ -289,7 +303,8 @@ export class Entries {
     if (c.hidden) return;
     const mobile = matchMedia('(max-width:640px),(pointer:coarse) and (max-width:900px)').matches;
     if (mobile) { c.style.transform = `translateY(${this.cardShown || this.reduced ? 0 : 8}px)`; return; }
-    const w = c.offsetWidth, h = c.offsetHeight;
+    if (initial || !this.cardSize) this.cardSize = [c.offsetWidth, c.offsetHeight];
+    const [w, h] = this.cardSize;
     let x, y;
     if (box) {
       x = box.x + box.w + 22;

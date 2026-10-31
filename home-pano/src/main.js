@@ -89,6 +89,7 @@ async function boot() {
     tl.pushDoor(quick || flat);
   }
   doorBtn.addEventListener('click', pushDoor);
+  doorBtn.addEventListener('pointerdown', () => { if (!muted) audio.prepare(); });
   // 跳过（按钮或空格）
   function skip() {
     const s = tl.state();
@@ -138,7 +139,7 @@ async function boot() {
   const bottomElev = Math.atan((pano.vh - (pano.H + pano.padBottom)) / pano.k) / DEG;
 
   // —— 渲染 ——
-  let host = null, flat = qs.get('flat') === '1' || !hasWebGL();
+  let host = null, flat = qs.get('flat') === '1' || !hasWebGL(), softwareStart = false;
   const dpr = Math.min(window.devicePixelRatio || 1, qs.get('dpr') ? +qs.get('dpr') : 2);
   const view = { w: innerWidth, h: innerHeight };
   const fonts = [{ family: 'PanoKai', url: new URL('fonts/pano-kai.woff2', base).href }];
@@ -153,6 +154,8 @@ async function boot() {
         onHD: level => { api.hdLevel = level; hdLoadingUntil = performance.now() + 1000; },
       });
       api.renderer = { mode: host.mode, ...host.info };
+      // 没有 GPU、靠 CPU 软件渲染的机器：一开始就用一半分辨率、30 帧封顶，不和页面抢 CPU
+      if (host.info.software && qs.get('nofallback') !== '1') { softwareStart = true; host.resize(view.w, view.h, dpr * 0.5); }
     } catch (e) {
       console.warn('WebGL 不可用，换平面版', e);
       flat = true;
@@ -169,7 +172,7 @@ async function boot() {
 
   // —— 每帧 ——
   let last = performance.now(), hdRequested = false, hdLoadingUntil = 0, pose = null, renderStart = 0, lastStep = null;
-  let ambPaused = null;
+  let ambPaused = null, frameNo = 0;
   const amb = () => (ambPaused ?? performance.now()) / 1000;
   const slow = +qs.get('slow') || 0;
   function frame(now) {
@@ -185,7 +188,12 @@ async function boot() {
     const downMax = cfgCam.neutralPitch + cc.pitch - (bottomElev + fov.v / 2 + 0.6);
     const lk = look.update(dt, { free: cc.free, downMax, upMax: cfgCam.pitchUp });
     pose = makePose(s, cc, lk, fov, amb(), neutralYaw + recorderBias(s, fov));
-    if (host && !flat) {
+    // 门关着的时候画布被门挡住，画两帧以后就不画了（省下 CPU/GPU 给门和首屏）；
+    // 慢设备（已经降过分辨率）帧率封顶 30
+    frameNo++;
+    const doorClosed = s.step === 'door' && host && host.ackCount >= 2 && !api.paused;
+    const cap30 = renderScale < 1 && frameNo % 2 === 1;
+    if (host && !flat && !doorClosed && !cap30) {
       host.frame({ type: 'frame', cam: pose, tl: plainState(s), amb: amb(), w: view.w, h: view.h, yaw0: neutralYaw, slow });
       if (!renderStart && host.acks.length) renderStart = now;
       checkLag(now);
@@ -245,7 +253,7 @@ async function boot() {
 
   // 明显卡顿：渲染两秒以后量最近 40 帧间隔的中位数。先降渲染分辨率（每次 ×0.75，最低 0.5），
   // 降到底还超过 55 毫秒，就退回平面版。加载高清块时不算。
-  let renderScale = 1, lagSince = 0;
+  let renderScale = softwareStart ? 0.5 : 1, lagSince = 0;
   function checkLag(now) {
     if (!renderStart || now - renderStart < 2000 || now < hdLoadingUntil || now < lagSince || document.hidden) return;
     const a = host.acks, n = scene.quality.lagWindowFrames;
@@ -321,10 +329,10 @@ async function boot() {
     tl, look, entries, scene, anchors, pano, host: () => host,
     state: () => ({ ...plainState(tl.state()), pose, flat: api.flat || null }),
     seek: (step, t, holds) => tl.seek(step, t, holds),
-    pause: () => { tl.pause(); ambPaused = performance.now(); },
+    pause: () => { tl.pause(); ambPaused = performance.now(); api.paused = true; },
     // 录像用：暂停状态下把"环境时间"（呼吸感、眨眼）也摆到指定秒数
     setAmb: sec => { ambPaused = sec * 1000; },
-    resume: () => { tl.resume(); ambPaused = null; },
+    resume: () => { tl.resume(); ambPaused = null; api.paused = false; },
     // yaw：以正对领导为 0（右正）
     lookAt: (yaw, pitch, instant = true) => look.lookAt(yaw, pitch, instant),
     neutralYaw: () => neutralYaw,
@@ -341,7 +349,8 @@ async function boot() {
       look.lookAt(yaw - neutralYaw, clamp(elev - cfgCam.neutralPitch, -cfgCam.pitchDown, cfgCam.pitchUp) * 0.7, instant);
       return { yaw, elev };
     },
-    rendered: () => new Promise(res => { const n = host ? host.acks.length : 0; const t0 = performance.now(); const chk = () => (!host || host.acks.length > n + 1 || performance.now() - t0 > 4000) ? res() : requestAnimationFrame(chk); chk(); }),
+    // 等 Worker 再画完两帧（截图、录像用）：第一帧可能是改状态之前就发出去的
+    rendered: () => new Promise(res => { const n = host ? host.ackCount : 0; const t0 = performance.now(); const chk = () => (!host || host.ackCount > n + 1 || performance.now() - t0 > 4000) ? res() : requestAnimationFrame(chk); chk(); }),
   });
   if (qs.get('debug') === '1') import('./debug.js').then(m => m.startDebug({ api, anchors, pano, scene, host: () => host, entries, door }));
   requestAnimationFrame(frame);

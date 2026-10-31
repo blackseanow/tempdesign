@@ -29,13 +29,24 @@ export class AudioScene {
     this.lastTalking = false;
   }
 
-  // 用户点击里调用：建上下文、开始加载文件
-  unlock() {
-    if (this.ctx) { this.ctx.resume(); return; }
+  // 用户点击里调用：只建上下文并 resume（浏览器要求在手势里）；节点、噪声缓冲放到下一个任务里建，
+  // 免得推门那一下的任务超过 50 毫秒
+  // 按下（pointerdown）时先建上下文（约 20 毫秒），和点击里的其他工作分开两个任务
+  prepare() {
+    if (this.ctx) return;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
-    const ctx = this.ctx = new AC({ latencyHint: 'interactive' });
-    ctx.resume();
+    this.ctx = new AC({ latencyHint: 'interactive' });
+    this.pending = this.pending || [];
+  }
+  unlock() {
+    if (!this.ctx) this.prepare();
+    if (!this.ctx) return;
+    this.ctx.resume();
+    if (!this.building) { this.building = true; setTimeout(() => this._build(), 0); }
+  }
+  _build() {
+    const ctx = this.ctx;
     this.master = ctx.createGain();
     this.master.gain.value = this.muted ? 0 : 0.32;
     // 轻压一下，防止叠在一起爆音
@@ -53,11 +64,12 @@ export class AudioScene {
       g.connect(p).connect(this.master);
       this.bus[key] = { panner: p, gain: g };
     }
-    // 鸡汤的底噪（小火慢炖），音量跟强度走
+    // 鸡汤的底噪（小火慢炖）、药炉的小火，音量跟强度走
     this.soupBed = loopNoise(ctx, this.noise, 'lowpass', 320, 0.0, this.bus.soup.gain);
     this.stoveBed = loopNoise(ctx, this.noise, 'bandpass', 900, 0.09, this.bus.stove.gain);
     this.ready = true;
-    this._loadFiles();
+    for (const k of this.pending.splice(0)) this.play(k);
+    setTimeout(() => this._loadFiles(), 0);
   }
 
   async _loadFiles() {
@@ -195,7 +207,7 @@ export class AudioScene {
   }
   // 单次：按下录音笔、推门
   play(key) {
-    if (!this.ready) return;
+    if (!this.ready) { if (this.ctx && this.pending && !this.pending.includes(key)) this.pending.push(key); return; }
     const ctx = this.ctx, t = ctx.currentTime + 0.01;
     if (this.buffers[key]) {
       const s = ctx.createBufferSource(); s.buffer = this.buffers[key];
