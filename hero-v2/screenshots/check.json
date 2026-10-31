@@ -18,12 +18,12 @@
   {
    "item": "点录音笔重播",
    "ok": true,
-   "detail": "点击 0.2 秒后 t=-0.25（先用 0.45 秒淡回把脉前），0.9 秒后 t=0.45，base-after 不透明度 0"
+   "detail": "点击 0.2 秒后 t=-0.26（先用 0.45 秒淡回把脉前），0.9 秒后 t=0.46，base-after 不透明度 0"
   },
   {
    "item": "滚出视口暂停",
    "ok": true,
-   "detail": "滚出后 0.8 秒内 t 停在 0.47，滚回 0.6 秒后 t=1.06"
+   "detail": "滚出后 0.8 秒内 t 停在 0.47，滚回 0.6 秒后 t=1.07"
   },
   {
    "item": "桌面无报错",
@@ -106,7 +106,7 @@
    "detail": "控制台没有错误"
   },
   {
-   "item": "窄于 768px：直接显示 hero-static",
+   "item": "不宽于 820px：直接显示 hero-static",
    "ok": true,
    "detail": "显示 hero-static.webp；下载的图：hero-static.webp"
   },
@@ -116,12 +116,12 @@
    "detail": "scrollWidth 390，clientWidth 390"
   },
   {
-   "item": "767 宽",
+   "item": "820 宽",
    "ok": true,
    "detail": "hero-static.webp，静态"
   },
   {
-   "item": "768 宽",
+   "item": "821 宽",
    "ok": true,
    "detail": "base-before.webp，播动画"
   },

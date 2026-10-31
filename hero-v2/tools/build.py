@@ -31,7 +31,7 @@ MIN_2X = 3000        # 原图宽度不到 3000 只出 1x
 QUALITY = 88
 PROPS = ['mask-book', 'scroll', 'pie', 'soup', 'go-board', 'rocket']
 PROP_BOX, SEAL_BOX = 160, 64
-STATIC_MEDIA = '(prefers-reduced-motion: reduce), (max-width: 767.98px)'
+STATIC_MEDIA = '(prefers-reduced-motion: reduce), (max-width: 820px)'
 ALT = ('插画：领导靠在椅背上侃侃而谈，脸谱、宏图、大饼、鸡汤、棋盘和火箭顺着声浪飘向对面埋头狂记的员工，'
        '会议桌中间的录音笔正在收音。')
 problems = []
