@@ -1,0 +1,107 @@
+{
+  "mouth-closed": {
+    "source": "pano-mouth.png",
+    "mask_mode": "region",
+    "local_align": {
+      "matrix": [
+        [
+          0.9984,
+          -0.0003,
+          0.2846
+        ],
+        [
+          -0.0002,
+          1.001,
+          0.0434
+        ]
+      ]
+    },
+    "patch_px_4x": [
+      4494,
+      779,
+      193,
+      162
+    ],
+    "feather_band_vs_pano": {
+      "mean": 1.49,
+      "p95": 3.9
+    },
+    "inside_gradient_error_vs_diff_image": 0.96,
+    "blend_shift_px": [
+      0.01,
+      -0.0
+    ],
+    "alpha_clear_at_crop_edges": true
+  },
+  "eyes-closed": {
+    "source": "pano-blink.png",
+    "mask_mode": "region",
+    "local_align": {
+      "matrix": [
+        [
+          0.9989,
+          0.0015,
+          0.2026
+        ],
+        [
+          0.0002,
+          1.0008,
+          0.0445
+        ]
+      ]
+    },
+    "patch_px_4x": [
+      4395,
+      627,
+      305,
+      154
+    ],
+    "feather_band_vs_pano": {
+      "mean": 2.15,
+      "p95": 5.7
+    },
+    "inside_gradient_error_vs_diff_image": 1.23,
+    "blend_shift_px": [
+      -0.0,
+      0.0
+    ],
+    "alpha_clear_at_crop_edges": true
+  },
+  "press": {
+    "source": "pano-press.png",
+    "mask_mode": "hands",
+    "local_align": {
+      "matrix": [
+        [
+          0.9995,
+          0.0025,
+          2.0839
+        ],
+        [
+          -0.0016,
+          0.9957,
+          -3.1842
+        ]
+      ]
+    },
+    "patch_px_4x": [
+      5218,
+      1971,
+      1033,
+      1010
+    ],
+    "feather_band_vs_pano": {
+      "mean": 2.01,
+      "p95": 4.9
+    },
+    "inside_gradient_error_vs_diff_image": 0.61,
+    "blend_shift_px": [
+      0.0,
+      -0.0
+    ],
+    "alpha_clear_at_crop_edges": true
+  },
+  "desk-mask": {
+    "wood_share": 0.595
+  }
+}

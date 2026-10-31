@@ -26,6 +26,7 @@ boot().catch(err => { console.error(err); api.error = String(err); });
 async function boot() {
   const load = f => fetch(f).then(r => { if (!r.ok) throw new Error(f + ' ' + r.status); return r.json(); });
   const [scene, anchors, mock, manifest] = await Promise.all(['scene.json', 'anchors.json', 'mock.json', 'img/tiles/manifest.json'].map(load));
+  const patches = await load('img/patches/patches.json').catch(() => ({}));
   const pano = makePano(manifest.pano);
   const cfgCam = scene.camera;
   const Rf = scene.layers.farRadius, Rn = scene.layers.nearRadius;
@@ -146,7 +147,13 @@ async function boot() {
   if (!flat) {
     try {
       host = await createHost($('#gl'), {
-        w: view.w, h: view.h, dpr, scene, anchors, manifest, baseUrl: base, reduced, fonts,
+        w: view.w, h: view.h, dpr, scene, anchors, manifest, baseUrl: base, reduced, fonts, patches,
+        details: {
+          user: mock.user.name,
+          banners: mock.delivered.slice(0, 2).map(d => ({ phrase: d.phrase, from: (mock.doctors.find(x => d.title.includes(x.name)) || mock.doctors[0]).name })),
+          yi: todayAlmanac(mock).yiShort || todayAlmanac(mock).yi,
+          treating: mock.treating.length,
+        },
         forceMain: qs.get('worker') === '0', preserve: qs.get('preserve') === '1',
       }, {
         onError: e => { console.error(e); goFlat('error'); },
@@ -194,7 +201,7 @@ async function boot() {
     const doorClosed = s.step === 'door' && host && host.ackCount >= 2 && !api.paused;
     const cap30 = renderScale < 1 && frameNo % 2 === 1;
     if (host && !flat && !doorClosed && !cap30) {
-      host.frame({ type: 'frame', cam: pose, tl: plainState(s), amb: amb(), w: view.w, h: view.h, yaw0: neutralYaw, slow });
+      host.frame({ type: 'frame', cam: pose, tl: plainState(s), amb: amb(), w: view.w, h: view.h, yaw0: neutralYaw, mouth: audio.mouthLevel ? audio.mouthLevel() : null, slow });
       if (!renderStart && host.acks.length) renderStart = now;
       checkLag(now);
     }
@@ -317,7 +324,7 @@ async function boot() {
         const c = document.createElement('canvas');
         c.width = c.height = 256;
         c.getContext('2d').drawImage(img, 0, 0, 256, 256);
-        out[id] = await createImageBitmap(c);
+        out[id] = await createImageBitmap(c, { premultiplyAlpha: 'premultiply' });
       } catch (e) { console.warn('图标', id, e); }
       await new Promise(r => setTimeout(r, 0));
     }
@@ -355,6 +362,12 @@ async function boot() {
   if (qs.get('debug') === '1') import('./debug.js').then(m => m.startDebug({ api, anchors, pano, scene, host: () => host, entries, door }));
   requestAnimationFrame(frame);
   resolveReady(true);
+}
+
+function todayAlmanac(mock) {
+  const d = new Date();
+  const day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+  return mock.almanac[day % mock.almanac.length];
 }
 
 function plainState(s) {

@@ -91,9 +91,27 @@ export class AudioScene {
     src.buffer = buf; src.loop = true;
     const g = this.ctx.createGain(); g.gain.value = 0;
     src.connect(g).connect(this.bus[key].gain);
+    if (key === 'leader') {
+      // 真实的说话声：按音量开合嘴
+      this.analyser = this.ctx.createAnalyser();
+      this.analyser.fftSize = 512;
+      g.connect(this.analyser);
+      this.levelBuf = new Float32Array(this.analyser.fftSize);
+    }
     src.start();
     this.loops = this.loops || {};
     this.loops[key] = g;
+  }
+
+  // 有说话声文件时返回 0/1（嘴闭/张），没有时返回 null（用节拍）
+  mouthLevel() {
+    if (!this.analyser) return null;
+    this.analyser.getFloatTimeDomainData(this.levelBuf);
+    let sum = 0;
+    for (const v of this.levelBuf) sum += v * v;
+    const rms = Math.sqrt(sum / this.levelBuf.length);
+    this.mouthState = this.mouthState ? rms > 0.02 : rms > 0.035;   // 两个阈值，免得抖
+    return this.mouthState ? 1 : 0;
   }
 
   setMuted(m) {
@@ -133,13 +151,17 @@ export class AudioScene {
     this.soupBed.gain.setTargetAtTime(this.buffers.soup ? 0 : 0.05 + 0.25 * soup, now, 0.2);
     this.stoveBed.gain.setTargetAtTime(this.buffers.stove ? 0 : 0.09, now, 0.3);
 
-    // 领导说话：一秒 4.6 个字，每个字一个带共振峰的短音，音高随句子起伏；说话停了就不排
+    // 领导说话：和嘴用同一套音节节拍（choreo 的 SYL_RATE、sylOpen），每个字一个带共振峰的短音；故事时间换算成音频时钟
     if (talking && !this.buffers.leader) {
-      if (!this.lastTalking) this.nextSyl = Math.max(this.nextSyl, now + 0.02);
-      while (this.nextSyl < ahead) {
-        const n = this.sylN++;
-        if (hash(n * 3 + 1) > 0.16) this._syllable(this.nextSyl, n);
-        this.nextSyl += 1 / 4.6 * (0.85 + 0.3 * hash(n * 7));
+      const first = Math.floor(s.now * C.SYL_RATE);
+      if (!this.lastTalking || this.sylN < first) this.sylN = first;
+      for (;;) {
+        const n = this.sylN;
+        const st = (n + C.SYL_ON) / C.SYL_RATE;          // 这个字开口的故事时间
+        if (st - s.now > 0.25) break;
+        const at = now + (st - s.now);
+        if (C.sylOpen(n) && at >= now - 0.01) this._syllable(Math.max(at, now), n, (C.SYL_OFF - C.SYL_ON) / C.SYL_RATE);
+        this.sylN++;
       }
     }
     this.lastTalking = talking;
@@ -164,9 +186,9 @@ export class AudioScene {
     }
   }
 
-  _syllable(t, n) {
+  _syllable(t, n, len) {
     const ctx = this.ctx;
-    const dur = 0.13 + 0.09 * hash(n * 5);
+    const dur = len || 0.14;
     const f0 = 118 * (1 + 0.18 * Math.sin(n * 0.37) + 0.08 * (hash(n) - 0.5));
     const osc = ctx.createOscillator(); osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(f0, t); osc.frequency.linearRampToValueAtTime(f0 * (0.92 + 0.12 * hash(n * 11)), t + dur);

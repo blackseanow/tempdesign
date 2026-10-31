@@ -203,14 +203,16 @@ export function sun(s) {
   return clamp(clockMinutes(s) / CLOCK_END, 0, 1.12);
 }
 
-// 嘴：说话时张合（返回 0 = 闭、1 = 张），一秒四五个字，字有大有小
+// 说话的音节：一秒 4.6 个字，第 n 个字从故事时间 n / 4.6 开始；偶尔空一拍换气。嘴和合成说话声都按这个来，所以对得上
+export const SYL_RATE = 4.6;
+export const sylOpen = n => hash(n) > 0.18;
+export const SYL_ON = 0.12, SYL_OFF = 0.78;      // 一拍里张嘴的那一段
+// 嘴：说话时张合（返回 0 = 闭、1 = 张）
 export function mouth(s, amb) {
   if (!talking(s)) return 0;
-  const t = s.now;
-  const syl = Math.floor(t * 4.6);
-  const ph = t * 4.6 - syl;
-  const open = hash(syl) > 0.18;              // 偶尔停一下换气
-  return open && ph > 0.12 && ph < 0.78 ? 1 : 0;
+  const x = s.now * SYL_RATE;
+  const n = Math.floor(x), ph = x - n;
+  return sylOpen(n) && ph > SYL_ON && ph < SYL_OFF ? 1 : 0;
 }
 
 // 眨眼：每 3–5 秒一次，闭眼 0.14 秒（领导说话时也眨）

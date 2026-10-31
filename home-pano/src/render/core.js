@@ -21,11 +21,15 @@ export async function createCore(canvas, init, env) {
   const base = init.baseUrl;
   const reduced = !!init.reduced;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: !!init.preserve });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, stencil: true, powerPreference: 'high-performance', preserveDrawingBuffer: !!init.preserve });
   renderer.setPixelRatio(init.dpr);
   renderer.setSize(init.w, init.h, false);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.setClearColor(new THREE.Color(manifest.far.ceilingColor || PAPER), 1);
+  // 颜色管线：贴图、画布、输出都不做 sRGB ⇄ 线性换算，像浏览器合成一样直接在 sRGB 值上做；
+  // 贴图都是预乘 alpha 的（ImageBitmap 用 premultiply 解码，画布上传时预乘），混合用 ONE, ONE_MINUS_SRC_ALPHA。
+  // 这样半透明的边（近层的羽化边、贴片、文字、热气）不会有亮边或暗边。
+  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+  const hex = (manifest.far.ceilingColor || PAPER).replace('#', '');
+  renderer.setClearColor(new THREE.Color().setRGB(parseInt(hex.slice(0, 2), 16) / 255, parseInt(hex.slice(2, 4), 16) / 255, parseInt(hex.slice(4, 6), 16) / 255, THREE.LinearSRGBColorSpace), 1);
   const gl = renderer.getContext();
   const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   // 显卡名称：认出软件渲染（没有 GPU 的机器）用
@@ -62,7 +66,8 @@ export async function createCore(canvas, init, env) {
   function texFrom(source, opts = {}) {
     const t = new THREE.Texture(source);
     t.flipY = false;
-    t.colorSpace = THREE.SRGBColorSpace;
+    t.colorSpace = THREE.NoColorSpace;
+    t.premultiplyAlpha = true;            // 画布上传时预乘；ImageBitmap 解码时已经预乘过了
     t.generateMipmaps = opts.mip !== false;
     t.minFilter = t.generateMipmaps ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter;
     t.magFilter = THREE.LinearFilter;
@@ -70,8 +75,19 @@ export async function createCore(canvas, init, env) {
     t.needsUpdate = true;
     return t;
   }
+  // 预乘 alpha 的材质：opacity 同时乘到颜色上（color = opacity），混合 ONE, ONE_MINUS_SRC_ALPHA；叠加光用 ONE, ONE
   function material(map, opts = {}) {
-    return new THREE.MeshBasicMaterial({ map, transparent: true, opacity: opts.opacity ?? 1, depthWrite: opts.depthWrite ?? false, depthTest: opts.depthTest ?? true, side: THREE.DoubleSide, blending: opts.blending ?? THREE.NormalBlending, toneMapped: false });
+    const add = opts.blending === THREE.AdditiveBlending;
+    const m = new THREE.MeshBasicMaterial({
+      map, transparent: true, depthWrite: opts.depthWrite ?? false, depthTest: opts.depthTest ?? true, side: THREE.DoubleSide, toneMapped: false,
+      blending: THREE.CustomBlending, blendEquation: THREE.AddEquation,
+      blendSrc: THREE.OneFactor, blendDst: add ? THREE.OneFactor : THREE.OneMinusSrcAlphaFactor,
+      blendSrcAlpha: THREE.OneFactor, blendDstAlpha: add ? THREE.OneFactor : THREE.OneMinusSrcAlphaFactor,
+    });
+    let op = 1;
+    Object.defineProperty(m, 'opacity', { get: () => op, set: v => { op = v; m.color.setScalar(v); }, configurable: true });
+    m.opacity = opts.opacity ?? 1;
+    return m;
   }
   // 1 × 1 的四边形，中心在原点，uv 按"第一行在上"
   function quad(w = 1, h = 1) {
@@ -194,7 +210,7 @@ export async function createCore(canvas, init, env) {
     addDecal('plaque', anchors.texts.plaque.rect, 'far', (g, w, h) => {
       textCanvas(g, w, h, cfg.text.plaque, { family: FONT_KAI, color: INK, size: h * 0.86, weight: 400, tracking: 0.16 });
     }, { res: 5, opacity: 0 });
-    details.build({ addDecal, anchors, cfg, textCanvas, FONT_KAI });
+    details.build({ addDecal, anchors, cfg, textCanvas, FONT_KAI, init });
   }
 
   // —— 挂钟指针 ——
@@ -429,7 +445,6 @@ export async function createCore(canvas, init, env) {
       d.mesh.position.copy(c).multiplyScalar(1 - pl.scale);
       d.mesh.scale.setScalar(pl.scale);
     }
-    details.update({ s, decals, state });
   }
 
   // —— 状态和每帧 ——
@@ -442,6 +457,10 @@ export async function createCore(canvas, init, env) {
   buildDecals();
   buildClock();
   buildFx(init.icons || {});
+  // 第二阶段的细节（贴片、热气、阳光、指示灯）：首帧之后再慢慢加载
+  const dctx = { THREE, anchors, pano, Rf, Rn, cylGeometry, material, texFrom, bitmap, quad, groups, env, init, camera };
+  let D = null;
+  details.init(dctx).then(d => { D = d; }).catch(e => { D = null; });
 
   function frame(f) {
     clock.now = f.amb;
@@ -463,6 +482,7 @@ export async function createCore(canvas, init, env) {
     updateClock(f.tl);
     updateDecals(f.tl);
     updateFx(f.tl, f.amb);
+    details.update(dctx, D, f.tl, f.amb, f.mouth);
     renderer.render(scene, camera);
     state.frames++;
   }

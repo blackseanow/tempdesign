@@ -15,6 +15,8 @@ const EXPORTS = [
   'LinearFilter', 'LinearMipmapLinearFilter', 'ClampToEdgeWrapping', 'Color', 'Vector3', 'Matrix4',
   'Quaternion', 'Euler', 'Object3D', 'DoubleSide', 'FrontSide', 'BackSide', 'NormalBlending',
   'AdditiveBlending', 'MathUtils', 'REVISION',
+  'AlwaysStencilFunc', 'EqualStencilFunc', 'ReplaceStencilOp', 'KeepStencilOp',
+  'CustomBlending', 'OneFactor', 'OneMinusSrcAlphaFactor', 'AddEquation', 'LinearSRGBColorSpace',
 ];
 // esbuild 和 three 从当前目录的 node_modules 里找
 const { build } = createRequire(join(process.cwd(), 'noop.js'))('esbuild');

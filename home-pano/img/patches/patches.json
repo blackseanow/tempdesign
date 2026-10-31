@@ -1,0 +1,57 @@
+{
+  "mouth-closed": {
+    "file": "img/patches/mouth-closed.webp",
+    "rect": {
+      "x": 53.3476,
+      "y": 26.071,
+      "w": 2.2911,
+      "h": 5.4217
+    },
+    "px4x": [
+      4494,
+      779,
+      193,
+      162
+    ]
+  },
+  "eyes-closed": {
+    "file": "img/patches/eyes-closed.webp",
+    "rect": {
+      "x": 52.1724,
+      "y": 20.9839,
+      "w": 3.6206,
+      "h": 5.1539
+    },
+    "px4x": [
+      4395,
+      627,
+      305,
+      154
+    ]
+  },
+  "press": {
+    "file": "img/patches/press.webp",
+    "rect": {
+      "x": 61.9421,
+      "y": 65.9639,
+      "w": 12.2626,
+      "h": 33.8019
+    },
+    "px4x": [
+      5218,
+      1971,
+      1033,
+      1010
+    ]
+  },
+  "desk-mask": {
+    "file": "img/patches/desk-mask.webp",
+    "rect": {
+      "x": 11.871,
+      "y": 58.902,
+      "w": 71.7,
+      "h": 40.161
+    },
+    "note": "2x 分辨率；alpha = 桌面木头"
+  }
+}
