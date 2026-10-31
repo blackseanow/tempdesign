@@ -266,17 +266,17 @@ async function main() {
   await page.waitForTimeout(1000)
   const mo = await page.evaluate(() => ({ src: document.querySelector('.hero-base').currentSrc, fx: getComputedStyle(document.querySelector('.hero-fx')).display, animated: heroMotion.animated, sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }))
   const moReq = page.requests.filter(u => /\.webp$/.test(u)).map(u => path.basename(u))
-  check('窄于 768px：直接显示 hero-static', mo.src.endsWith('/img/hero-static.webp') && mo.fx === 'none' && !mo.animated, `显示 ${path.basename(mo.src)}；下载的图：${moReq.join('、')}`)
+  check('不宽于 820px：直接显示 hero-static', mo.src.endsWith('/img/hero-static.webp') && mo.fx === 'none' && !mo.animated, `显示 ${path.basename(mo.src)}；下载的图：${moReq.join('、')}`)
   check('手机不横向滚动', mo.sw <= mo.cw, `scrollWidth ${mo.sw}，clientWidth ${mo.cw}`)
   await page.screenshot({ path: path.join(OUT, 'mobile-390@3x.png') })
   await page.context().close()
 
-  // 767 / 768 分界
-  for (const w of [767, 768]) {
+  // 820 / 821 分界（bamai10 的手机断点）
+  for (const w of [820, 821]) {
     page = await newPage(browser, { viewport: { width: w, height: 800 } })
     await open(page, `${base}/index.html`)
     const v = await page.evaluate(() => ({ src: document.querySelector('.hero-base').currentSrc, animated: heroMotion.animated }))
-    check(`${w} 宽`, (w < 768) === !v.animated && v.src.endsWith(w < 768 ? 'hero-static.webp' : 'base-before.webp'), `${path.basename(v.src)}，${v.animated ? '播动画' : '静态'}`)
+    check(`${w} 宽`, (w <= 820) === !v.animated && v.src.endsWith(w <= 820 ? 'hero-static.webp' : 'base-before.webp'), `${path.basename(v.src)}，${v.animated ? '播动画' : '静态'}`)
     await page.context().close()
   }
 

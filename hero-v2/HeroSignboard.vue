@@ -6,7 +6,7 @@
   锚点直接 import anchors.json，调好锚点只要替换 anchors.json，不用重新生成组件。
 
   动效播一次停在“把脉后”，点录音笔重播；招牌滚出视口时暂停，滚回来接着播。
-  系统设置了减少动态效果，或屏幕窄于 768px：直接显示 hero-static，不播动画（<picture> 按媒体查询换图）。
+  系统设置了减少动态效果，或屏幕不宽于 820px（bamai10 的手机断点）：直接显示 hero-static，不播动画（<picture> 按媒体查询换图）。
   依赖：全局已加载霞鹜文楷；颜色读 --paper --sheet --line --ink --ink-2 --ink-3 --indigo --indigo-2 --gold --brass --wood --cinnabar 和 --kai，
   未定义时用设计稿的值。样式不加 scoped：选择器都带 hero- / fx- 前缀。
 -->
@@ -36,7 +36,7 @@ onBeforeUnmount(() => { if (motion) motion.destroy() })
 function createHeroMotion(stage, anchors, opts = {}) {
   const W = 1916, H = 821, NS = 'http://www.w3.org/2000/svg'
   const END = 8, GATHER = 4, AFTER = 6, PREROLL = 0.45
-  const STATIC_QUERY = '(prefers-reduced-motion: reduce), (max-width: 767.98px)'
+  const STATIC_QUERY = '(prefers-reduced-motion: reduce), (max-width: 820px)'
   // 声浪中线的形状：从嘴边到笔记本的拱。每个点是 [沿“嘴边 → 笔记本”的比例, 往上抬多少（占图高）]
   const ARCH = [[0, 0], [0.227, 0.197], [0.533, 0.415], [0.797, 0.447], [0.921, 0.289], [0.963, 0.084], [1, 0]]
   const STEP = 9            // 声浪采样间距
@@ -462,7 +462,7 @@ function createHeroMotion(stage, anchors, opts = {}) {
     </div>
     <div ref="stage" class="hero-stage">
       <picture>
-        <source media="(prefers-reduced-motion: reduce), (max-width: 767.98px)" :srcset="img.static" type="image/webp">
+        <source media="(prefers-reduced-motion: reduce), (max-width: 820px)" :srcset="img.static" type="image/webp">
         <img class="hero-base" :src="img.before" :srcset="img.beforeSet" width="1916" height="821" alt="插画：领导靠在椅背上侃侃而谈，脸谱、宏图、大饼、鸡汤、棋盘和火箭顺着声浪飘向对面埋头狂记的员工，会议桌中间的录音笔正在收音。" fetchpriority="high">
       </picture>
       <img class="hero-after" :data-src="img.after" :data-srcset="img.afterSet" width="1916" height="821" alt="" aria-hidden="true" decoding="async">
@@ -589,7 +589,7 @@ function createHeroMotion(stage, anchors, opts = {}) {
    新图中间上方是道具飞过的路线，牌匾不再压在画上。类名都带 hero- 前缀，不和全站的 .plaque 冲突。 */
 .hero-signboard{max-width:1920px;margin:0 auto;container-type:inline-size}
 .hero-sign{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(22px,2.4cqi,44px) 16px clamp(14px,1.5cqi,26px)}
-.hero-plaque{display:inline-block;margin:0;padding:.41em 1.18em;background:var(--indigo,#1F3A4D);color:#F4F2EA;font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-weight:400;font-size:clamp(24px,2.1cqi,40px);line-height:1.7;white-space:nowrap;box-shadow:inset 0 0 0 5px var(--indigo,#1F3A4D),inset 0 0 0 6px #C9A86A}
+.hero-plaque{display:inline-block;margin:0;padding:.41em 1.18em;background:var(--indigo,#1F3A4D);color:var(--on-indigo,#F4F2EA);font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-weight:400;font-size:clamp(24px,2.1cqi,40px);line-height:1.7;white-space:nowrap;outline:1px solid var(--gold-line,#C9A86A);outline-offset:-6px}
 .hero-plaque span{letter-spacing:.35em;margin-right:-.35em}
 .hero-motto{margin:.8em 0 0;font-family:var(--kai,"LXGW WenKai","KaiTi","STKaiti","BiauKai",serif);font-size:clamp(15px,1.1cqi,21px);line-height:1.8;letter-spacing:.12em;color:var(--ink-2,#4E4C45)}
 .hero-motto span{display:inline-block;margin:0 .4em}
@@ -621,8 +621,8 @@ function createHeroMotion(stage, anchors, opts = {}) {
 .hero-stage.is-hot .fx-ripple{opacity:.55;transition:opacity .25s}
 .hero-fx .fx-seal{mix-blend-mode:multiply}
 
-/* 减少动态效果、或者屏幕窄于 768px：<picture> 换成 hero-static，这几层都不要 */
-@media (prefers-reduced-motion:reduce),(max-width:767.98px){
+/* 减少动态效果、或者屏幕不宽于 820px（bamai10 的手机断点）：<picture> 换成 hero-static，这几层都不要 */
+@media (prefers-reduced-motion:reduce),(max-width:820px){
   .hero-stage .hero-after,.hero-stage .hero-fx,.hero-stage .hero-replay{display:none}
 }
 @media (max-width:600px){

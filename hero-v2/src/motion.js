@@ -4,7 +4,7 @@
 function createHeroMotion(stage, anchors, opts = {}) {
   const W = 1916, H = 821, NS = 'http://www.w3.org/2000/svg'
   const END = 8, GATHER = 4, AFTER = 6, PREROLL = 0.45
-  const STATIC_QUERY = '(prefers-reduced-motion: reduce), (max-width: 767.98px)'
+  const STATIC_QUERY = '(prefers-reduced-motion: reduce), (max-width: 820px)'
   // 声浪中线的形状：从嘴边到笔记本的拱。每个点是 [沿“嘴边 → 笔记本”的比例, 往上抬多少（占图高）]
   const ARCH = [[0, 0], [0.227, 0.197], [0.533, 0.415], [0.797, 0.447], [0.921, 0.289], [0.963, 0.084], [1, 0]]
   const STEP = 9            // 声浪采样间距

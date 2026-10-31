@@ -78,7 +78,7 @@ function initHeroDebug(stage, motion, anchors, source) {
   $('.hd-src').textContent = source === 'anchors.json'
     ? '锚点读自 anchors.json（改了文件刷新页面即可）'
     : 'file:// 打开读不到 anchors.json，用的是页面里的内嵌副本。用 python3 -m http.server 打开，改文件刷新就能看到。'
-  if (!motion.animated) $('.hd-src').textContent += ' 现在是静态图（减少动态效果或窗口窄于 768px），动画不播。'
+  if (!motion.animated) $('.hd-src').textContent += ' 现在是静态图（减少动态效果或窗口不宽于 820px），动画不播。'
   const range = $('[data-act="seek"]'), out = $('output'), air = $('.hd-air')
   panel.addEventListener('input', e => {
     const t = e.target
