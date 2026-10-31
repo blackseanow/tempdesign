@@ -1,0 +1,250 @@
+{
+  "_说明": [
+    "场景参数。几何（全景横向 180°、视平线在第 300 行、底边补 48 行）以 img/tiles/manifest.json 为准，那是切图时写进去的。",
+    "layers：远层、近层圆柱面的半径（米）。近层越近，转头时比远层多移动得越明显。",
+    "camera：neutralPitch 是坐定时的俯仰；yawLimit / pitchUp / pitchDown 是转头范围；neck 是眼睛到转头轴的距离（米），景深错位从这里来；breath 是镜头静止时的呼吸感。",
+    "intro.mode：first = 第一次完整播放、之后推门一秒直接到落定；always = 每次都完整播放；quick = 每次都推门一秒到落定；off = 不要门和开场，直接坐在诊桌前。URL 里加 ?intro=off（或 first / always / quick）可以临时覆盖。",
+    "entries：每个入口的物件名、毛笔字标签、卡片文字和去处。数据（数量、列表）在 mock.json。"
+  ],
+  "layers": {
+    "farRadius": 4.0,
+    "nearRadius": 1.6,
+    "shoulderDeg": 45
+  },
+  "camera": {
+    "neutralPitch": -5,
+    "fovLandscape": 50,
+    "fovPortraitMax": 57,
+    "yawLimit": 80,
+    "pitchUp": 10,
+    "pitchDown": 5,
+    "neck": 0.07,
+    "breath": {
+      "y": 0.0022,
+      "pitch": 0.12,
+      "yaw": 0.05,
+      "period": 4.8
+    },
+    "introLook": {
+      "yaw": 12,
+      "pitch": 3
+    }
+  },
+  "intro": {
+    "mode": "first",
+    "durations": {
+      "push": 2.6,
+      "sit": 3.4,
+      "talk": 12,
+      "reverse": 4.2,
+      "settle": 3.2,
+      "quick": 1.0
+    }
+  },
+  "quality": {
+    "lagMedianMs": 55,
+    "lagWindowFrames": 40
+  },
+  "text": {
+    "plaque": "今天把脉了吗？",
+    "nameplate": "领导办公室",
+    "doorHint": "戴上耳机，推门"
+  },
+  "entries": [
+    {
+      "id": "recorder",
+      "name": "录音笔",
+      "label": "开始把脉",
+      "kicker": "主入口",
+      "title": "开始把脉",
+      "desc": "领导一开会就按下它。整场会录下来，每条要求都记进脉案，散会就能开方。",
+      "data": "lastPulse",
+      "go": {
+        "label": "进诊室",
+        "href": "#/pulse/new"
+      }
+    },
+    {
+      "id": "rx",
+      "name": "处方笺",
+      "label": "待签方",
+      "title": "待签方",
+      "desc": "把脉以后整理出来的要求清单，等你过目签字；签了才开始治疗（出材料）。",
+      "data": "pending",
+      "go": {
+        "label": "去签方",
+        "href": "#/rx"
+      }
+    },
+    {
+      "id": "book",
+      "name": "线装本",
+      "label": "脉案",
+      "title": "脉案 · 最近问诊",
+      "desc": "每次开会说了什么、定了什么、谁负责、哪天交，都记在这里。",
+      "data": "recent",
+      "go": {
+        "label": "翻脉案",
+        "href": "#/cases/recent"
+      }
+    },
+    {
+      "id": "cabinet",
+      "name": "百子柜",
+      "label": "病例库",
+      "title": "病例库",
+      "desc": "所有病例按会议归档，每一诊的处方和产物都按版本留存。",
+      "data": "cases",
+      "go": {
+        "label": "开柜",
+        "href": "#/cases"
+      }
+    },
+    {
+      "id": "dabing",
+      "name": "抽屉 · 大饼",
+      "label": "大饼",
+      "kind": "egg",
+      "figure": "../anatomy/dabing/dabing.html"
+    },
+    {
+      "id": "hongtu",
+      "name": "抽屉 · 宏图",
+      "label": "宏图",
+      "kind": "egg",
+      "figure": "../anatomy/hongtu/hongtu.html"
+    },
+    {
+      "id": "juben",
+      "name": "抽屉 · 剧本",
+      "label": "剧本",
+      "kind": "egg",
+      "figure": "../anatomy/juben/juben.html"
+    },
+    {
+      "id": "daqi",
+      "name": "抽屉 · 大棋",
+      "label": "大棋",
+      "kind": "egg",
+      "figure": "../anatomy/daqi/daqi.html"
+    },
+    {
+      "id": "huojian",
+      "name": "抽屉 · 火箭",
+      "label": "火箭",
+      "kind": "egg",
+      "figure": "../anatomy/huojian/huojian.html"
+    },
+    {
+      "id": "soup",
+      "name": "鸡汤炉",
+      "label": "鸡汤",
+      "kind": "egg",
+      "figure": "../anatomy/jitang/jitang.html"
+    },
+    {
+      "id": "stove",
+      "name": "药炉",
+      "label": "正在治疗",
+      "title": "正在治疗",
+      "desc": "在生成的材料都在炉上熬着。冒热气，就是还有药没出锅。",
+      "data": "treating",
+      "go": {
+        "label": "看药炉",
+        "href": "#/treating"
+      }
+    },
+    {
+      "id": "banners",
+      "name": "锦旗",
+      "label": "已交差",
+      "title": "已交差",
+      "desc": "每交一次差，挂一面锦旗。点开看成果和诊疗经过。",
+      "data": "delivered",
+      "go": {
+        "label": "看锦旗墙",
+        "href": "#/delivered"
+      }
+    },
+    {
+      "id": "board-doctor",
+      "name": "坐诊牌",
+      "label": "先生档案",
+      "title": "坐诊牌 · 先生档案",
+      "desc": "每位领导的声纹、口头禅、爱提的要求，把脉时自动认出是谁在说。",
+      "data": "doctors",
+      "go": {
+        "label": "看档案",
+        "href": "#/doctors"
+      }
+    },
+    {
+      "id": "board-order",
+      "name": "医嘱牌",
+      "label": "随访",
+      "title": "医嘱牌 · 随访",
+      "desc": "领导交代过的长期要求和到期提醒，到点了会来敲你。",
+      "data": "followups",
+      "go": {
+        "label": "看随访",
+        "href": "#/followups"
+      }
+    },
+    {
+      "id": "shelf-books",
+      "name": "书架 · 医书",
+      "label": "方剂",
+      "title": "方剂 · 提示词模板",
+      "desc": "写材料用的方子，按场合分好了；开方时直接抓药。",
+      "data": "formulas",
+      "go": {
+        "label": "翻方剂",
+        "href": "#/formulas"
+      }
+    },
+    {
+      "id": "shelf-boxes",
+      "name": "书架 · 档案盒",
+      "label": "材料库",
+      "title": "材料库",
+      "desc": "出过的所有 Word、PPT、Excel，每一版都在。",
+      "data": "materials",
+      "go": {
+        "label": "进材料库",
+        "href": "#/materials"
+      }
+    },
+    {
+      "id": "curtain",
+      "name": "门帘",
+      "label": "后堂",
+      "kind": "admin",
+      "title": "后堂 · 医馆后台",
+      "desc": "模型、语音、方剂、模板都在这里配。只有管理员能掀帘子进去。",
+      "data": "admin",
+      "go": {
+        "label": "进后堂",
+        "href": "#/admin"
+      }
+    },
+    {
+      "id": "calendar",
+      "name": "手撕日历",
+      "label": "今日宜忌",
+      "title": "今日宜忌",
+      "data": "almanac"
+    },
+    {
+      "id": "seal",
+      "name": "朱砂名章",
+      "label": "我的账号",
+      "title": "我的账号",
+      "data": "user",
+      "go": {
+        "label": "账号设置",
+        "href": "#/me"
+      },
+      "hud": true
+    }
+  ]
+}

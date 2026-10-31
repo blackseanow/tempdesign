@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>咸鱼把脉了</title>
+<meta name="description" content="坐在诊桌前，表面上是先生在给你把脉。">
+<meta name="theme-color" content="#24231F">
+<link rel="preload" href="img/door/wall-lq.webp" as="image" fetchpriority="high">
+<link rel="preload" href="img/door/leaf-lq.webp" as="image" fetchpriority="high">
+<link rel="preload" href="fonts/pano-kai.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="modulepreload" href="src/main.js">
+<link rel="stylesheet" href="css/pano.css">
+<style>
+/* 门外：首屏就要画出来的部分写在这里，不等外部样式表 */
+:root{--paper:#ECEAE1;--sheet:#F8F7F2;--ink:#24231F;--indigo:#1F3A4D;--gold:#C9A86A;--cinnabar:#B5382A;
+  --kai:"PanoKai","LXGW WenKai","KaiTi","STKaiti","BiauKai",serif;--brush:"PanoBrush","PanoKai","KaiTi","STKaiti",serif}
+html,body{margin:0;height:100%;background:var(--ink);overflow:hidden}
+body{color:var(--ink);font-family:var(--kai);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+#door{position:fixed;inset:0;z-index:40;overflow:hidden;background:#f1ece2}
+#door .door-zoom{position:absolute;inset:0;transform-origin:50.1% 44.3%;will-change:transform,opacity}
+#door .door-stage{position:absolute;left:50%;top:50%;width:max(100vw,177.68vh);height:max(100vh,56.28vw);transform:translate(-50%,-50%);perspective:2400px;transform-style:preserve-3d}
+#door .door-wall{position:absolute;inset:0;width:100%;height:100%;display:block;transform:translateZ(0)}
+#door .door-wall.hq{opacity:0;transition:none}
+#door .door-wall.hq.c0{left:0;width:50%}
+#door .door-wall.hq.c1{left:50%;width:50%}
+#door .door-leaf{position:absolute;left:var(--lx,39.683%);top:var(--ly,7.97%);width:var(--lw,20.843%);height:var(--lh,74.389%);transform-origin:100% 50%;transform:rotateY(0deg);will-change:transform}
+#door .door-leaf img{position:absolute;inset:0;width:100%;height:100%;display:block}
+#door .door-leaf img.hq{opacity:0}
+#door .nameplate{position:absolute;left:var(--nx,22.5%);top:var(--ny,22.3%);width:var(--nw,54.1%);height:var(--nh,8.29%);display:flex;align-items:center;justify-content:center;font-size:min(3.1vh,1.75vw);letter-spacing:.32em;text-indent:.32em;color:var(--ink);white-space:nowrap}
+#door .door-hint{position:absolute;left:var(--hx,50.12%);top:var(--hy,87.67%);transform:translate(-50%,-50%);margin:0;font-size:max(14px,min(2.1vh,1.25vw));letter-spacing:.24em;color:var(--ink);opacity:.82;white-space:nowrap}
+#door .door-btn{position:absolute;inset:0;width:100%;height:100%;border:0;margin:0;padding:0;background:transparent;cursor:pointer;z-index:2}
+#door .door-btn:focus-visible{outline:none}
+#door .door-btn:focus-visible + .door-focus{opacity:1}
+#door .door-focus{position:absolute;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 0 3px var(--gold)}
+</style>
+</head>
+<body>
+<!-- 门外（开场第一步）：门扇绕右边的合页往里开 -->
+<div id="door" aria-label="门外">
+  <div class="door-zoom">
+    <div class="door-stage">
+      <img class="door-wall lq" src="img/door/wall-lq.webp" alt="" width="836" height="470" elementtiming="door" fetchpriority="high">
+      <img class="door-wall hq c0" alt="" data-src="img/door/wall-c0.webp">
+      <img class="door-wall hq c1" alt="" data-src="img/door/wall-c1.webp">
+      <div class="door-leaf">
+        <img class="lq" src="img/door/leaf-lq.webp" alt="" fetchpriority="high">
+        <img class="hq" alt="" data-src="img/door/leaf.webp">
+        <span class="nameplate">领导办公室</span>
+      </div>
+      <p class="door-hint">戴上耳机，推门</p>
+    </div>
+  </div>
+  <button class="door-btn" type="button" aria-label="推门进入领导办公室（建议戴上耳机）"></button>
+  <div class="door-focus"></div>
+</div>
+
+<!-- 开场里可以跳过；"直接开始把脉"始终在屏幕一角（手机上是底部的大按钮） -->
+<button id="skip" class="hud-btn skip" type="button" hidden>跳过<kbd>空格</kbd></button>
+<a id="start" class="start" href="#/pulse/new" data-entry="start">直接开始把脉</a>
+
+<!-- 半全景：Three.js 画在这张画布上（默认交给 Worker 画） -->
+<main id="stage" aria-label="诊室：左右拖动可以转头看">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div id="hot" role="group" aria-label="诊室里的入口"></div>
+  <svg id="ink" aria-hidden="true"></svg>
+  <div id="tags" aria-hidden="true"></div>
+</main>
+
+<!-- 平面版：不支持 WebGL 或明显卡顿时用（一张图加点击区域） -->
+<section id="flat" hidden aria-label="诊室（平面版）">
+  <div class="flat-scroll" tabindex="-1"><div class="flat-strip"></div></div>
+</section>
+
+
+<!-- 右上角：声音开关、朱砂名章（我的账号） -->
+<div class="hud-tr">
+  <button id="sound" class="hud-btn sound" type="button" aria-pressed="true" aria-label="声音：开（点一下关掉）"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path class="wave" d="M15 9.2c1.1 1.6 1.1 4 0 5.6M17.6 7c2.1 2.9 2.1 7.1 0 10"/><path class="mute" d="M15.5 9.5l5 5m0-5l-5 5"/></svg></button>
+  <button id="seal" class="seal" type="button" data-entry="seal" aria-label="朱砂名章：我的账号"><span class="seal-face">张</span></button>
+</div>
+
+<!-- 字幕、脉搏线、提示 -->
+<div id="hud">
+  <div id="captions" aria-live="polite">
+    <p class="cap" data-cap="surface">表面上，是先生在给你把脉。</p>
+    <p class="cap" data-cap="actually">其实，是咸鱼在给先生把脉。</p>
+    <p class="cap cap-small" data-cap="tagline">你只管点头，剩下的我替你记着。</p>
+  </div>
+  <div id="pulse" aria-hidden="true"><svg class="pulse-svg"></svg></div>
+  <p id="cue" class="cue" aria-live="polite"></p>
+</div>
+
+<!-- 入口的小卡片 -->
+<div id="card" class="card" role="dialog" aria-modal="false" aria-labelledby="card-title" hidden>
+  <p class="card-kicker"></p>
+  <h2 id="card-title" class="card-title"></h2>
+  <div class="card-body"></div>
+  <div class="card-actions"><a class="card-go" href="#">前往</a><button type="button" class="card-close">再看看</button></div>
+</div>
+
+<!-- 解剖图 -->
+<div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-label="解剖图" hidden>
+  <iframe title="解剖图" loading="lazy"></iframe>
+  <button type="button" class="viewer-close">回到诊室</button>
+</div>
+
+
+<noscript><p class="noscript">这个页面需要打开 JavaScript。</p></noscript>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

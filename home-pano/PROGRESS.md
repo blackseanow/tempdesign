@@ -46,11 +46,11 @@
 - [x] 5 道具图标：`icons/` 六个 SVG（juben、hongtu、dabing、jitang、daqi、huojian），200 × 200 正方形、透明底、不带文字、只用五色。
   - 对比图 `checks/icons-compare.png`（上排图标，下排 pano.png 里的锅、药罐、盖碗、锦旗、脉案本、录音笔），规格自查 `checks/icons-check.json`，脚本 `tools/icons_sheet.cjs`。
   - 改过一轮：描边从 3 改到 2.5（和 pano.png 的细线一致），鸡腿、盘山路放大，棋墩居中。
-- [ ] 6 半全景（Three.js）
-- [ ] 7 开场主时间线
-- [ ] 8 入口、卡片、mock.json、彩蛋规则
+- [~] 6 半全景（Three.js）：能跑了。渲染在 Worker 里（OffscreenCanvas），主线程只做界面；远层（空房间）半径 4 m、近层半径 1.6 m 的圆柱面；先 1x 小图、进屋后换 2x/4x 高清（逐块淡入）；±90° 外渐暗，顶上天花板；眼睛在转头轴前 7 cm（景深错位）；呼吸感。拖动、陀螺仪、方向键、Tab 自动转头都接上了（`src/look.js`）。帧率差时先降分辨率（×0.75，最低 0.5），还不行才退平面版。
+- [~] 7 开场主时间线：`src/timeline.js`（步骤、两个"等"、跳过、seek）+ `src/choreo.js`（所有动画是时间的纯函数）。门（DOM 3D，门扇绕右边合页往里开）、推进、坐下字幕、声浪、道具、飘字、挂钟、脉搏线、录音笔墨线圈和提示、反转、横匾都有了，待逐张截图检查
+- [~] 8 入口、卡片、mock.json、彩蛋规则：`src/entries.js`（热区按钮、12 段墨线圈、毛笔字标签、卡片、解剖图查看器、彩蛋运行时 HEAD 检查），`scene.json` 里是入口文案，`mock.json` 是假数据
 - [ ] 9 anchors.json + ?debug=1
-- [ ] 10 可靠性：本地库和字体、平面版退路、减少动态效果、键盘和读屏
+- [~] 10 可靠性：Three.js 精简包 `vendor/three.pano.min.js`（`tools/build-three.mjs`）、字体子集 `fonts/`（`tools/subset.py`，霞鹜文楷 863 字 174 KB、马善政毛笔楷书 79 字 30 KB）、平面版 `src/flat.js`、减少动态效果（不播开场、不呼吸）、键盘 Tab 顺序和 aria-label
 - [ ] 11 Playwright 截图、intro.webm、长任务和门出现时间
 
 ## 第二阶段（让场景活起来）
@@ -63,6 +63,8 @@
 - [ ] 17 README
 
 ## 日志
+
+- 2026-10-31：页面第一版能跑通开场（`index.html` + `src/`）。这台机器没有 GPU（SwiftShader 软件渲染），1440×900 一帧约 90 ms，靠自适应分辨率降到约 30 fps；截图和录像用 seek + 暂停逐帧拍，不受影响。
 
 - 2026-10-31：第 4 步完成（切图），anchors.json 写好。下一步：页面（第 6–10 步）。
 
