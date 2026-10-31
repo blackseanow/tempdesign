@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 火箭：素笺白的三级火箭，函套青环带，古铜金尾焰，机头朝上。只用竹纸、素笺、松烟墨、函套青、古铜金。 -->
+  <g stroke="#24231F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+    <!-- 尾焰（古铜金）和焰心（素笺） -->
+    <path d="M86 158 C84 172 92 184 100 194 C108 184 116 172 114 158 Z" fill="#C9A86A"/>
+    <path d="M94 160 C94 170 97 176 100 182 C103 176 106 170 106 160 Z" fill="#F8F7F2" stroke-width="1.6"/>
+    <!-- 尾翼 -->
+    <path d="M80 126 C68 134 62 148 62 162 L82 152 Z" fill="#1F3A4D"/>
+    <path d="M120 126 C132 134 138 148 138 162 L118 152 Z" fill="#1F3A4D"/>
+    <!-- 喷口 -->
+    <path d="M88 152 L112 152 L108 160 L92 160 Z" fill="#24231F"/>
+    <!-- 第一级 -->
+    <path d="M80 124 H120 V154 H80 Z" fill="#F8F7F2"/>
+    <!-- 第二级 -->
+    <path d="M82 92 H118 V124 H82 Z" fill="#F8F7F2"/>
+    <!-- 第三级 + 机头 -->
+    <path d="M84 60 C84 40 92 22 100 10 C108 22 116 40 116 60 V92 H84 Z" fill="#F8F7F2"/>
+    <!-- 函套青环带 -->
+    <rect x="82" y="86" width="36" height="8" fill="#1F3A4D" stroke-width="2.4"/>
+    <rect x="80" y="118" width="40" height="8" fill="#1F3A4D" stroke-width="2.4"/>
+    <path d="M86 50 C92 47 108 47 114 50 L115 56 C108 53 92 53 85 56 Z" fill="#1F3A4D" stroke-width="2.2"/>
+    <!-- 舷窗 -->
+    <circle cx="100" cy="70" r="8" fill="#1F3A4D"/>
+    <path d="M96 66 A5 5 0 0 1 103 64.5" fill="none" stroke="#F8F7F2" stroke-width="1.8"/>
+    <!-- 机身的竖向高光 -->
+    <path d="M110 100 V116 M112 132 V146" fill="none" stroke="#ECEAE1" stroke-width="2.4"/>
+  </g>
+</svg>

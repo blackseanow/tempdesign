@@ -1,0 +1,150 @@
+{
+  "icons": {
+    "juben": {
+      "square": true,
+      "transparentCorners": true,
+      "noText": true,
+      "colors": [
+        "#24231F",
+        "#C9A86A",
+        "#F8F7F2",
+        "#1F3A4D"
+      ],
+      "offPalette": [],
+      "bbox": [
+        18,
+        4.3,
+        82,
+        91.3
+      ],
+      "center": [
+        50,
+        47.8
+      ],
+      "centered": true,
+      "pass": true
+    },
+    "hongtu": {
+      "square": true,
+      "transparentCorners": true,
+      "noText": true,
+      "colors": [
+        "#24231F",
+        "#F8F7F2",
+        "#ECEAE1",
+        "#1F3A4D",
+        "#C9A86A"
+      ],
+      "offPalette": [],
+      "bbox": [
+        10.3,
+        10,
+        94,
+        93
+      ],
+      "center": [
+        52.1,
+        51.5
+      ],
+      "centered": true,
+      "pass": true
+    },
+    "dabing": {
+      "square": true,
+      "transparentCorners": true,
+      "noText": true,
+      "colors": [
+        "#24231F",
+        "#C9A86A",
+        "#ECEAE1",
+        "#F8F7F2"
+      ],
+      "offPalette": [],
+      "bbox": [
+        10.3,
+        25.3,
+        89.5,
+        79.5
+      ],
+      "center": [
+        49.9,
+        52.4
+      ],
+      "centered": true,
+      "pass": true
+    },
+    "jitang": {
+      "square": true,
+      "transparentCorners": true,
+      "noText": true,
+      "colors": [
+        "#24231F",
+        "#C9A86A",
+        "#F8F7F2",
+        "#1F3A4D"
+      ],
+      "offPalette": [],
+      "bbox": [
+        11,
+        12.8,
+        86.8,
+        85.5
+      ],
+      "center": [
+        48.9,
+        49.1
+      ],
+      "centered": true,
+      "pass": true
+    },
+    "daqi": {
+      "square": true,
+      "transparentCorners": true,
+      "noText": true,
+      "colors": [
+        "#24231F",
+        "#C9A86A",
+        "#F8F7F2"
+      ],
+      "offPalette": [],
+      "bbox": [
+        10.3,
+        22.3,
+        89.5,
+        79.5
+      ],
+      "center": [
+        49.9,
+        50.9
+      ],
+      "centered": true,
+      "pass": true
+    },
+    "huojian": {
+      "square": true,
+      "transparentCorners": true,
+      "noText": true,
+      "colors": [
+        "#24231F",
+        "#C9A86A",
+        "#F8F7F2",
+        "#1F3A4D",
+        "#ECEAE1"
+      ],
+      "offPalette": [],
+      "bbox": [
+        30.3,
+        4.3,
+        69.5,
+        97.5
+      ],
+      "center": [
+        49.9,
+        50.9
+      ],
+      "centered": true,
+      "pass": true
+    }
+  },
+  "ok": true
+}

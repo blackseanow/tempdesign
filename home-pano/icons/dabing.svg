@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 大饼：一张完整的芝麻千层大饼，不切角，饼边看得出一层层。只用竹纸、素笺、松烟墨、函套青、古铜金。 -->
+  <g stroke="#24231F" stroke-linejoin="round" stroke-linecap="round">
+    <!-- 饼边：古铜金和竹纸相间的几层 -->
+    <path d="M22 92 A78 40 0 0 0 178 92 V118 A78 40 0 0 1 22 118 Z" fill="#C9A86A" stroke-width="2.5"/>
+    <path d="M22 97 A78 40 0 0 0 178 97 V101 A78 40 0 0 1 22 101 Z" fill="#ECEAE1" stroke-width="0.9"/>
+    <path d="M22 105 A78 40 0 0 0 178 105 V109 A78 40 0 0 1 22 109 Z" fill="#ECEAE1" stroke-width="0.9"/>
+    <path d="M22 113 A78 40 0 0 0 178 113 V116 A78 40 0 0 1 22 116 Z" fill="#ECEAE1" stroke-width="0.9"/>
+    <path d="M22 92 A78 40 0 0 0 178 92 V118 A78 40 0 0 1 22 118 Z" fill="none" stroke-width="2.5"/>
+    <!-- 饼面 -->
+    <ellipse cx="100" cy="92" rx="78" ry="40" fill="#C9A86A" stroke-width="2.5"/>
+    <!-- 鼓起的饼沿和中间的一圈压痕 -->
+    <ellipse cx="100" cy="90" rx="66" ry="32" fill="none" stroke-width="1.1"/>
+    <ellipse cx="100" cy="88" rx="30" ry="14" fill="none" stroke-width="0.9"/>
+    <!-- 芝麻 -->
+    <g fill="#F8F7F2" stroke="none">
+      <ellipse cx="56" cy="84" rx="2.8" ry="1.5" transform="rotate(-20 56 84)"/>
+      <ellipse cx="68" cy="74" rx="2.8" ry="1.5" transform="rotate(25 68 74)"/>
+      <ellipse cx="84" cy="66" rx="2.8" ry="1.5" transform="rotate(-35 84 66)"/>
+      <ellipse cx="101" cy="63" rx="2.8" ry="1.5" transform="rotate(10 101 63)"/>
+      <ellipse cx="118" cy="65" rx="2.8" ry="1.5" transform="rotate(-15 118 65)"/>
+      <ellipse cx="134" cy="72" rx="2.8" ry="1.5" transform="rotate(30 134 72)"/>
+      <ellipse cx="147" cy="82" rx="2.8" ry="1.5" transform="rotate(-25 147 82)"/>
+      <ellipse cx="62" cy="98" rx="2.8" ry="1.5" transform="rotate(15 62 98)"/>
+      <ellipse cx="76" cy="86" rx="2.8" ry="1.5" transform="rotate(-40 76 86)"/>
+      <ellipse cx="92" cy="78" rx="2.8" ry="1.5" transform="rotate(20 92 78)"/>
+      <ellipse cx="110" cy="76" rx="2.8" ry="1.5" transform="rotate(-10 110 76)"/>
+      <ellipse cx="126" cy="80" rx="2.8" ry="1.5" transform="rotate(35 126 80)"/>
+      <ellipse cx="140" cy="94" rx="2.8" ry="1.5" transform="rotate(-20 140 94)"/>
+      <ellipse cx="76" cy="106" rx="2.8" ry="1.5" transform="rotate(30 76 106)"/>
+      <ellipse cx="92" cy="104" rx="2.8" ry="1.5" transform="rotate(-25 92 104)"/>
+      <ellipse cx="110" cy="103" rx="2.8" ry="1.5" transform="rotate(15 110 103)"/>
+      <ellipse cx="126" cy="106" rx="2.8" ry="1.5" transform="rotate(-30 126 106)"/>
+      <ellipse cx="100" cy="116" rx="2.8" ry="1.5" transform="rotate(5 100 116)"/>
+      <ellipse cx="116" cy="117" rx="2.8" ry="1.5" transform="rotate(-15 116 117)"/>
+      <ellipse cx="84" cy="117" rx="2.8" ry="1.5" transform="rotate(25 84 117)"/>
+      <ellipse cx="156" cy="98" rx="2.8" ry="1.5" transform="rotate(10 156 98)"/>
+      <ellipse cx="44" cy="94" rx="2.8" ry="1.5" transform="rotate(-10 44 94)"/>
+      <ellipse cx="136" cy="112" rx="2.8" ry="1.5" transform="rotate(20 136 112)"/>
+      <ellipse cx="64" cy="112" rx="2.8" ry="1.5" transform="rotate(-30 64 112)"/>
+      <ellipse cx="148" cy="108" rx="2.8" ry="1.5" transform="rotate(-5 148 108)"/>
+      <ellipse cx="52" cy="106" rx="2.8" ry="1.5" transform="rotate(40 52 106)"/>
+    </g>
+    <g fill="#ECEAE1" stroke="none">
+      <ellipse cx="80" cy="72" rx="2.5" ry="1.4" transform="rotate(40 80 72)"/>
+      <ellipse cx="116" cy="70" rx="2.5" ry="1.4" transform="rotate(-30 116 70)"/>
+      <ellipse cx="102" cy="88" rx="2.5" ry="1.4" transform="rotate(30 102 88)"/>
+      <ellipse cx="68" cy="100" rx="2.5" ry="1.4" transform="rotate(-15 68 100)"/>
+      <ellipse cx="134" cy="88" rx="2.5" ry="1.4" transform="rotate(15 134 88)"/>
+      <ellipse cx="96" cy="110" rx="2.5" ry="1.4" transform="rotate(-40 96 110)"/>
+      <ellipse cx="150" cy="90" rx="2.5" ry="1.4" transform="rotate(25 150 90)"/>
+      <ellipse cx="58" cy="90" rx="2.5" ry="1.4" transform="rotate(20 58 90)"/>
+      <ellipse cx="122" cy="96" rx="2.5" ry="1.4" transform="rotate(-20 122 96)"/>
+    </g>
+  </g>
+</svg>

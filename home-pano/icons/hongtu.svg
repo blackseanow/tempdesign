@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 宏图：半展开的双轴长卷，画着远山和一条虚线盘山路。左边还卷着一大卷，右边只剩轴杆。只用竹纸、素笺、松烟墨、函套青、古铜金。 -->
+  <g stroke="#24231F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" transform="rotate(-9 100 100)">
+    <!-- 展开的画心 -->
+    <rect x="46" y="50" width="122" height="100" fill="#F8F7F2"/>
+    <!-- 远山（竹纸） -->
+    <path d="M56 116 L72 96 L82 104 L98 80 L112 98 L124 88 L140 102 L150 94 L162 112 V124 H56 Z" fill="#ECEAE1" stroke-width="1.5"/>
+    <!-- 近山（函套青） -->
+    <path d="M52 138 L70 110 L80 118 L100 88 L120 126 L132 112 L164 140 Z" fill="#1F3A4D" stroke-width="1.8"/>
+    <!-- 山头雪线（素笺） -->
+    <path d="M93 98 L100 88 L107 101 M65 118 L70 110 L75 115" fill="none" stroke="#F8F7F2" stroke-width="2"/>
+    <!-- 虚线盘山路：从左下角一路盘到山口 -->
+    <path d="M58 146 C80 146 98 140 90 132 C82 124 66 126 70 118 C74 110 92 114 102 108 C110 103 106 96 100 92" fill="none" stroke-width="2.4" stroke-dasharray="5 4"/>
+    <!-- 太阳（古铜金） -->
+    <circle cx="146" cy="70" r="8" fill="#C9A86A" stroke-width="1.8"/>
+    <!-- 画心上下的裱边 -->
+    <path d="M46 50 H168 M46 150 H168" fill="none" stroke-width="2.5"/>
+    <path d="M46 56 H168 M46 144 H168" fill="none" stroke-width="1.1"/>
+    <!-- 左轴：卷起来的一大卷纸 + 轴杆 -->
+    <rect x="28" y="44" width="24" height="112" rx="12" fill="#F8F7F2"/>
+    <path d="M35 52 V148 M44 48 V152" fill="none" stroke-width="1.1"/>
+    <rect x="36" y="32" width="8" height="136" rx="3" fill="#C9A86A"/>
+    <rect x="33" y="24" width="14" height="11" rx="4" fill="#24231F"/>
+    <rect x="33" y="165" width="14" height="11" rx="4" fill="#24231F"/>
+    <!-- 右轴：只剩轴杆 -->
+    <rect x="166" y="40" width="9" height="120" rx="3" fill="#C9A86A"/>
+    <rect x="163" y="32" width="15" height="11" rx="4" fill="#24231F"/>
+    <rect x="163" y="157" width="15" height="11" rx="4" fill="#24231F"/>
+  </g>
+</svg>

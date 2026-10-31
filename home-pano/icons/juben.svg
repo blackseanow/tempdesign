@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 剧本：函套青封面的线装本，封面一张古铜金京剧脸谱，垂一根书签。只用竹纸、素笺、松烟墨、函套青、古铜金。 -->
+  <g stroke="#24231F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" transform="rotate(-7 100 100)">
+    <!-- 书签：从书页顶上露出一截，底下垂出来 -->
+    <path d="M128 14 h9 v16 h-9 z" fill="#C9A86A"/>
+    <path d="M131 160 l1 26 l4 -5 l4 5 l-1 -26 z" fill="#C9A86A"/>
+    <!-- 书页（素笺），右边和底边露出页口 -->
+    <path d="M58 26 h94 a4 4 0 0 1 4 4 v130 a4 4 0 0 1 -4 4 h-94 z" fill="#F8F7F2"/>
+    <path d="M150 34 v124 M62 161 h86" fill="none" stroke-width="1.4"/>
+    <path d="M146 30 v126" fill="none" stroke-width="1"/>
+    <!-- 封面 -->
+    <rect x="46" y="22" width="98" height="136" rx="4" fill="#1F3A4D"/>
+    <!-- 线装：四个针眼，线绕过书脊 -->
+    <path d="M58 32 V148 M46 38 H58 M46 70 H58 M46 110 H58 M46 142 H58" fill="none" stroke="#F8F7F2" stroke-width="2.4"/>
+    <g fill="#24231F" stroke="none">
+      <circle cx="58" cy="38" r="2.2"/><circle cx="58" cy="70" r="2.2"/><circle cx="58" cy="110" r="2.2"/><circle cx="58" cy="142" r="2.2"/>
+    </g>
+    <!-- 脸谱：额头尖、下巴尖的椭圆脸 -->
+    <path d="M101 46 C121 46 130 62 130 82 C130 106 117 124 101 130 C85 124 72 106 72 82 C72 62 81 46 101 46 Z" fill="#C9A86A"/>
+    <!-- 额头的火焰纹 -->
+    <path d="M101 52 C97 60 97 66 101 72 C105 66 105 60 101 52 Z" fill="#24231F" stroke-width="1.2"/>
+    <!-- 眉：往两鬓挑起 -->
+    <path d="M78 70 C85 63 93 64 97 70 C91 68 85 69 80 74 Z" fill="#24231F" stroke-width="1.2"/>
+    <path d="M124 70 C117 63 109 64 105 70 C111 68 117 69 122 74 Z" fill="#24231F" stroke-width="1.2"/>
+    <!-- 眼窝（墨）+ 眼睛（素笺） -->
+    <path d="M77 82 C82 74 93 74 97 82 C92 90 83 91 77 82 Z" fill="#24231F" stroke-width="1.2"/>
+    <path d="M125 82 C120 74 109 74 105 82 C110 90 119 91 125 82 Z" fill="#24231F" stroke-width="1.2"/>
+    <path d="M83 82 C86 79 90 79 93 82 C90 84 86 84 83 82 Z" fill="#F8F7F2" stroke="none"/>
+    <path d="M119 82 C116 79 112 79 109 82 C112 84 116 84 119 82 Z" fill="#F8F7F2" stroke="none"/>
+    <!-- 鼻 -->
+    <path d="M101 84 L97 100 C99 103 103 103 105 100 Z" fill="#24231F" stroke-width="1.2"/>
+    <!-- 两颊的卷纹 -->
+    <path d="M80 98 c4 -4 10 -2 9 3 c-1 4 -6 3 -5 0" fill="none" stroke-width="1.6"/>
+    <path d="M122 98 c-4 -4 -10 -2 -9 3 c1 4 6 3 5 0" fill="none" stroke-width="1.6"/>
+    <!-- 嘴 -->
+    <path d="M91 110 C96 106 106 106 111 110 C106 117 96 117 91 110 Z" fill="#24231F" stroke-width="1.2"/>
+    <path d="M101 117 V124" fill="none" stroke-width="1.6"/>
+  </g>
+</svg>

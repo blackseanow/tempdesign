@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 鸡汤：函套青砂锅，锅盖掀开一条缝，伸出一根鸡腿；锅形照 pano.png 墙角那锅（矮圆肚、两只耳、盖钮、盖子斜搭在锅沿上）。只用竹纸、素笺、松烟墨、函套青、古铜金。 -->
+  <g stroke="#24231F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+    <!-- 锅口里面（墨）和汤面（古铜金），从掀开的缝里看得见 -->
+    <ellipse cx="98" cy="104" rx="62" ry="15" fill="#24231F"/>
+    <path d="M44 107 C64 116 132 116 152 107 C140 118 56 118 44 107 Z" fill="#C9A86A" stroke-width="1.2"/>
+    <!-- 鸡腿：腿肉（古铜金）从缝里斜伸出来，骨头（素笺）带两个圆头 -->
+    <path d="M64 108 C50 96 42 80 46 68 C50 56 66 56 72 68 C78 80 80 96 88 108 Z" fill="#C9A86A"/>
+    <path d="M52 70 C55 64 63 64 66 70" fill="none" stroke-width="1.2"/>
+    <path d="M56 84 C60 82 64 84 66 88" fill="none" stroke-width="1.1"/>
+    <path d="M52 62 L40 40" fill="none" stroke-width="10"/>
+    <path d="M52 62 L40 40" fill="none" stroke="#F8F7F2" stroke-width="5.5"/>
+    <circle cx="40" cy="33" r="6.2" fill="#F8F7F2"/>
+    <circle cx="32" cy="41" r="6.2" fill="#F8F7F2"/>
+    <path d="M39 36 L36 40" fill="none" stroke="#F8F7F2" stroke-width="7"/>
+    <!-- 锅身 -->
+    <path d="M36 104 C34 140 62 168 98 168 C134 168 162 140 160 104 C148 118 48 118 36 104 Z" fill="#1F3A4D"/>
+    <!-- 圈足 -->
+    <path d="M72 164 C74 172 122 172 124 164" fill="#1F3A4D" stroke-width="2.2"/>
+    <!-- 两只耳 -->
+    <path d="M37 114 C24 112 20 123 26 129 C30 133 37 131 39 126" fill="#1F3A4D"/>
+    <path d="M159 114 C172 112 176 123 170 129 C166 133 159 131 157 126" fill="#1F3A4D"/>
+    <!-- 锅沿 -->
+    <path d="M36 104 C48 118 148 118 160 104" fill="none" stroke-width="2.5"/>
+    <path d="M40 112 C56 124 140 124 156 112" fill="none" stroke-width="1.1"/>
+    <!-- 锅盖：右边搭在锅沿上，左边掀起，留出一条缝 -->
+    <g transform="rotate(-16 160 102)">
+      <path d="M40 102 C42 80 72 66 98 66 C124 66 156 80 158 102 C146 112 52 112 40 102 Z" fill="#1F3A4D"/>
+      <path d="M48 100 C62 108 134 108 150 100" fill="none" stroke-width="1.1"/>
+      <path d="M90 66 C90 58 106 58 106 66 Z" fill="#1F3A4D"/>
+      <ellipse cx="98" cy="57" rx="9" ry="4" fill="#1F3A4D"/>
+      <path d="M62 82 C70 75 82 71 92 70" fill="none" stroke="#F8F7F2" stroke-width="2.2"/>
+    </g>
+    <!-- 锅肚上的高光 -->
+    <path d="M52 128 C55 142 63 152 74 158" fill="none" stroke="#F8F7F2" stroke-width="2.4"/>
+  </g>
+</svg>
