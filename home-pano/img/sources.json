@@ -1,0 +1,9 @@
+{
+  "_说明": "img/src/ 里的原图是剪贴板文件名，原图不改名、不改动。这里记录每个文件对应的素材名；tools/ 里的脚本都按这张表读原图。",
+  "pano.png": "img/src/codex-clipboard-9607a18b-aa1f-46e3-ba7e-668dfd099d89.png",
+  "pano-room.png": "img/src/codex-clipboard-52a25eff-5f89-4387-a44c-1f1f8dce151a.png",
+  "pano-mouth.png": "img/src/codex-clipboard-471e30a7-dda6-4c22-a165-00ce36e26e48.png",
+  "pano-blink.png": "img/src/codex-clipboard-b8067871-d5b9-4968-a21e-af58d8ba6cd4.png",
+  "pano-press.png": "img/src/codex-clipboard-49b5b3f7-3e12-458a-8ed5-3b77f69d39d8.png",
+  "door.png": "img/src/codex-clipboard-95c2f523-6b2f-4406-a775-595d3b8f125b.png"
+}
