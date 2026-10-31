@@ -1,0 +1,96 @@
+{
+  "model": {
+    "name": "RealESRGAN_x4plus_anime_6B",
+    "sha256": "f872d837d3c90ed2e05227bed711af5671a6fd1c9f7d7e91c911a61f155e99da",
+    "arch": "RRDBNet(num_feat=64, num_block=6, num_grow_ch=32, scale=4)",
+    "device": "cpu",
+    "torch": "2.15.0+cpu",
+    "threads": 4
+  },
+  "tiles": {
+    "tile": 512,
+    "tile_pad": 32,
+    "pre_pad": 0,
+    "note": "照抄 RealESRGANer.tile_process"
+  },
+  "images": {
+    "pano.png": {
+      "input": "work/aligned/pano.png",
+      "input_size": [
+        2106,
+        747
+      ],
+      "output_size": [
+        8424,
+        2988
+      ],
+      "seconds": 166.4,
+      "bytes": 8865784
+    },
+    "pano-room.png": {
+      "input": "work/aligned/pano-room.png",
+      "input_size": [
+        2106,
+        747
+      ],
+      "output_size": [
+        8424,
+        2988
+      ],
+      "seconds": 153.0,
+      "bytes": 6838721
+    },
+    "pano-mouth.png": {
+      "input": "work/aligned/pano-mouth.png",
+      "input_size": [
+        2106,
+        747
+      ],
+      "output_size": [
+        8424,
+        2988
+      ],
+      "seconds": 145.3,
+      "bytes": 8913380
+    },
+    "pano-blink.png": {
+      "input": "work/aligned/pano-blink.png",
+      "input_size": [
+        2106,
+        747
+      ],
+      "output_size": [
+        8424,
+        2988
+      ],
+      "seconds": 151.3,
+      "bytes": 8964540
+    },
+    "pano-press.png": {
+      "input": "work/aligned/pano-press.png",
+      "input_size": [
+        2106,
+        747
+      ],
+      "output_size": [
+        8424,
+        2988
+      ],
+      "seconds": 157.0,
+      "bytes": 8494116
+    },
+    "door.png": {
+      "input": "img/src/codex-clipboard-95c2f523-6b2f-4406-a775-595d3b8f125b.png",
+      "input_size": [
+        1672,
+        941
+      ],
+      "output_size": [
+        3344,
+        1882
+      ],
+      "seconds": 166.6,
+      "bytes": 1577937
+    }
+  }
+}

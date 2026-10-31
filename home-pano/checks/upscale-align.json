@@ -1,0 +1,205 @@
+{
+  "scale_note": "位移单位：4x 像素（8424 宽）；括号里换算成 1x 像素",
+  "images": {
+    "pano-room.png": {
+      "size": [
+        8424,
+        2988
+      ],
+      "residual_4x_px": {
+        "cell_median_px": 0.268,
+        "cell_max_px": 3.238,
+        "pixel_median_px": 1.622,
+        "pixel_p95_px": 12.434
+      },
+      "residual_1x_px": {
+        "cell_median_px": 0.067,
+        "cell_max_px": 0.809,
+        "pixel_median_px": 0.406,
+        "pixel_p95_px": 3.108
+      },
+      "worst_cells_4x": [
+        {
+          "x": 4212,
+          "y": 746,
+          "dx": -0.34,
+          "dy": -3.22
+        },
+        {
+          "x": 6318,
+          "y": 1494,
+          "dx": 0.18,
+          "dy": -2.74
+        },
+        {
+          "x": 2106,
+          "y": 1494,
+          "dx": -0.42,
+          "dy": -1.78
+        },
+        {
+          "x": 2808,
+          "y": 1494,
+          "dx": -0.12,
+          "dy": 1.0
+        },
+        {
+          "x": 7722,
+          "y": 746,
+          "dx": 0.86,
+          "dy": 0.34
+        }
+      ]
+    },
+    "pano-mouth.png": {
+      "size": [
+        8424,
+        2988
+      ],
+      "residual_4x_px": {
+        "cell_median_px": 0.398,
+        "cell_max_px": 2.24,
+        "pixel_median_px": 1.46,
+        "pixel_p95_px": 11.984
+      },
+      "residual_1x_px": {
+        "cell_median_px": 0.1,
+        "cell_max_px": 0.56,
+        "pixel_median_px": 0.365,
+        "pixel_p95_px": 2.996
+      },
+      "worst_cells_4x": [
+        {
+          "x": 4212,
+          "y": 2240,
+          "dx": 1.7,
+          "dy": 1.46
+        },
+        {
+          "x": 6318,
+          "y": 2240,
+          "dx": -0.28,
+          "dy": 1.44
+        },
+        {
+          "x": 6318,
+          "y": 1494,
+          "dx": 0.16,
+          "dy": -0.76
+        },
+        {
+          "x": 3510,
+          "y": 0,
+          "dx": 0.54,
+          "dy": 0.4
+        },
+        {
+          "x": 7020,
+          "y": 1494,
+          "dx": -0.44,
+          "dy": -0.5
+        }
+      ]
+    },
+    "pano-blink.png": {
+      "size": [
+        8424,
+        2988
+      ],
+      "residual_4x_px": {
+        "cell_median_px": 0.376,
+        "cell_max_px": 1.638,
+        "pixel_median_px": 1.42,
+        "pixel_p95_px": 11.832
+      },
+      "residual_1x_px": {
+        "cell_median_px": 0.094,
+        "cell_max_px": 0.409,
+        "pixel_median_px": 0.355,
+        "pixel_p95_px": 2.958
+      },
+      "worst_cells_4x": [
+        {
+          "x": 4212,
+          "y": 2240,
+          "dx": 1.44,
+          "dy": 0.78
+        },
+        {
+          "x": 1404,
+          "y": 2240,
+          "dx": -1.22,
+          "dy": -0.6
+        },
+        {
+          "x": 3510,
+          "y": 0,
+          "dx": 0.52,
+          "dy": 0.34
+        },
+        {
+          "x": 1404,
+          "y": 1494,
+          "dx": -0.54,
+          "dy": -0.28
+        },
+        {
+          "x": 1404,
+          "y": 746,
+          "dx": -0.6,
+          "dy": -0.04
+        }
+      ]
+    },
+    "pano-press.png": {
+      "size": [
+        8424,
+        2988
+      ],
+      "residual_4x_px": {
+        "cell_median_px": 1.014,
+        "cell_max_px": 5.844,
+        "pixel_median_px": 2.388,
+        "pixel_p95_px": 12.67
+      },
+      "residual_1x_px": {
+        "cell_median_px": 0.254,
+        "cell_max_px": 1.461,
+        "pixel_median_px": 0.597,
+        "pixel_p95_px": 3.167
+      },
+      "worst_cells_4x": [
+        {
+          "x": 7722,
+          "y": 746,
+          "dx": 5.82,
+          "dy": 0.54
+        },
+        {
+          "x": 7020,
+          "y": 0,
+          "dx": 4.32,
+          "dy": -3.28
+        },
+        {
+          "x": 7722,
+          "y": 1494,
+          "dx": 5.08,
+          "dy": 0.68
+        },
+        {
+          "x": 2106,
+          "y": 2240,
+          "dx": -3.3,
+          "dy": -0.8
+        },
+        {
+          "x": 6318,
+          "y": 0,
+          "dx": 0.62,
+          "dy": -3.3
+        }
+      ]
+    }
+  }
+}

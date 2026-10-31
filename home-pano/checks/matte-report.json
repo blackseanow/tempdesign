@@ -1,0 +1,23 @@
+{
+  "thin_protrusions_removed_px": 132,
+  "cabinet_hardware_removed_px": 350,
+  "boundary_band_px": 14345,
+  "holes_kept": [],
+  "holes_filled": {
+    "count": 72,
+    "area": 93074
+  },
+  "mask_1x_share": 0.3416,
+  "missing_chunks_1x": {
+    "near_layer_zone": [],
+    "elsewhere_count": 0,
+    "elsewhere": []
+  },
+  "included_room_far_from_edge_4x": 750054,
+  "included_room_near_edge_4x": 31263,
+  "recomposite_vs_pano": {
+    "mean": 4.944,
+    "p99": 72,
+    "max": 255
+  }
+}
