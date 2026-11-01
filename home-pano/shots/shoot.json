@@ -1,5 +1,5 @@
 {
-  "when": "2026-10-31T23:00:54.393Z",
+  "when": "2026-11-01T01:30:29.811Z",
   "devices": {
     "desktop": {
       "shots": [
@@ -82,8 +82,5 @@
       ]
     }
   },
-  "console": [
-    "desktop error: Failed to load resource: the server responded with a status of 404 (Not Found)",
-    "mobile error: Failed to load resource: the server responded with a status of 404 (Not Found)"
-  ]
+  "console": []
 }
