@@ -221,11 +221,11 @@
   },
   "shoulder-l": {
    "file": "far/shoulder-l.webp",
-   "bytes": 3370
+   "bytes": 4290
   },
   "shoulder-r": {
    "file": "far/shoulder-r.webp",
-   "bytes": 2870
+   "bytes": 3826
   },
   "ceilingColor": "#e1cfba"
  },

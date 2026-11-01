@@ -71,9 +71,10 @@ def cut(im, cols, rows, layer, level, manifest_layer, skip_empty):
     return total
 
 
-def shoulder(far4, side):
-    """±90° 以外：最外边 12 列的颜色往外拉，渐暗到松烟墨。宽 256（拉伸着用），高同 2x。"""
-    cols = far4[:, :12] if side == "l" else far4[:, -12:]
+def shoulder(farp, side):
+    """±90° 以外：最外边 12 列的颜色往外拉，渐暗到松烟墨。宽 256（拉伸着用），高同 2x。
+    farp 必须是补过底边的那张（和远层小块同一个高度），否则贴到圆柱上会被拉长，墙上的横线在接缝处对不上。"""
+    cols = farp[:, :12] if side == "l" else farp[:, -12:]
     edge = cols.astype(np.float32).mean(axis=1)            # (H, 3)
     h = edge.shape[0] // 2
     edge = np.asarray(Image.fromarray(edge.round().astype(np.uint8)[:, None, :].repeat(4, 1)).resize((4, h), Image.LANCZOS)).astype(np.float32)[:, 0]
@@ -129,7 +130,7 @@ def main():
         print(f"级别 {level}: {size[0]}×{size[1]}，远层 {bf / 1e6:.2f} MB，近层 {bn / 1e6:.2f} MB")
     for side in ("l", "r"):
         rel = f"far/shoulder-{side}.webp"
-        manifest["far"][f"shoulder-{side}"] = {"file": rel, "bytes": save_webp(shoulder(far4, side), OUT / rel, 80)}
+        manifest["far"][f"shoulder-{side}"] = {"file": rel, "bytes": save_webp(shoulder(np.asarray(farp), side), OUT / rel, 86)}
     top = far4[:24].reshape(-1, 3).astype(np.float32)
     manifest["far"]["ceilingColor"] = "#%02x%02x%02x" % tuple(int(v) for v in np.median(top, axis=0))
     flat4 = Image.open(IMG / "pano.png").convert("RGB")

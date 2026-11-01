@@ -1,0 +1,52 @@
+{
+  "sides": {
+    "left": {
+      "junctionX": 379.2,
+      "lines": [
+        {
+          "pano": 397,
+          "shoulder": 397.5,
+          "diff": 0.5
+        },
+        {
+          "pano": 416.5,
+          "shoulder": 416.5,
+          "diff": 0
+        },
+        {
+          "pano": 656,
+          "shoulder": 658,
+          "diff": 2
+        },
+        {
+          "pano": 692,
+          "shoulder": 693.5,
+          "diff": 1.5
+        }
+      ],
+      "pass": true
+    },
+    "right": {
+      "junctionX": 781.8,
+      "lines": [
+        {
+          "pano": 395.5,
+          "shoulder": 395.5,
+          "diff": 0
+        },
+        {
+          "pano": 413.5,
+          "shoulder": 413.5,
+          "diff": 0
+        },
+        {
+          "pano": 656.5,
+          "shoulder": 656.5,
+          "diff": 0
+        }
+      ],
+      "pass": true
+    }
+  },
+  "pass": true
+}
