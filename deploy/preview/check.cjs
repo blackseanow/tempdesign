@@ -3,7 +3,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const fs=require('node:fs');
 const path=require('node:path');
 const assert=require('node:assert/strict');
-const base=(process.env.PREVIEW_URL || 'https://xianyu.182.61.30.47.sslip.io').replace(/\/$/,'');
+const base=(process.env.PREVIEW_URL || 'https://182.61.30.47').replace(/\/$/,'');
 const out=process.env.TEST_OUTPUT_DIR || '/tmp/tempdesign-preview-check';
 fs.mkdirSync(out,{recursive:true});
 const expected404=u=>/\/home-pano\/audio\/[^/]+\.mp3(?:\?|$)|\/anatomy\/(daqi|huojian|jitang)\//.test(u);

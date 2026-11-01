@@ -1,6 +1,8 @@
 # home-pano 静态预览部署
 
-预览：**https://xianyu.182.61.30.47.sslip.io/home-pano/**
+预览：**https://182.61.30.47/home-pano/**
+
+临时 sslip.io 域名在外部网络出现 TLS 连接重置，已不再作为默认入口。IP 入口的默认 TLS 证书选择已修复；详细记录见文末。
 
 这是公开预览，任何拿到网址的人都能打开，无登录或访问密码。内容是 main 的运行时静态文件，home-pano 源码没有改动，也没有引入其他项目的构建或后端。
 
@@ -9,8 +11,8 @@
 电脑、手机浏览器都打开同一网址，推门进入。手机横屏可看更宽的画面；iOS 若提示方向传感器权限，允许后才可用陀螺仪，也可以直接手指拖动。
 
 - 默认：第一次完整开场，之后推门约一秒到落定；记录保存在当前浏览器的 localStorage。
-- 再看完整开场：https://xianyu.182.61.30.47.sslip.io/home-pano/?intro=always
-- 显示锚点：https://xianyu.182.61.30.47.sslip.io/home-pano/?debug=1
+- 再看完整开场：https://182.61.30.47/home-pano/?intro=always
+- 显示锚点：https://182.61.30.47/home-pano/?debug=1
 - 无痕窗口、新浏览器或清除站点数据会重新算第一次。
 - 404 白名单：`home-pano/audio/*.mp3`、`anatomy/{daqi,huojian,jitang}/…`。这些素材尚未制作。
 
@@ -36,7 +38,7 @@
 - 主机：182.61.30.47，独立发布根 `/var/www/tempdesign-preview/`。
 - 每次上传到 `releases/<时间>-<Git短SHA>/`，完成后原子切换 `current` 符号链接。
 - Nginx 直接服务静态文件；不需要 Node、npm 或常驻页面服务器。
-- 主入口使用独立域名证书 `/etc/letsencrypt/live/tempdesign-preview/`，浏览器不需要忽略证书错误。原 IP 地址入口保留其既有证书。
+- 主 IP 入口使用 `/etc/letsencrypt/live/182.61.30.47/`；域名配置使用其独立证书。浏览器不需要忽略证书错误。
 - 既有 `xianyu-cert-renew.timer` 定期续期；其 deploy hook `xianyu-nginx` 会检查并重载 Nginx，因此 IP 和域名预览一起获得新证书。IP 证书为短周期，域名证书约 90 天，应保持这个定时器正常运行。
 - 没有加 COOP / COEP。ES 模块和 Worker 返回 `text/javascript`，JSON 返回 `application/json`。
 
@@ -77,7 +79,7 @@ PR 未合并时，可在 deploy-preview 分支用 `git merge origin/main` 更新
 `check.cjs` 是针对公网入口的 Playwright 冒烟检查，需要已有 Playwright 和 Chromium；它不属于发布包。可通过 `PLAYWRIGHT_MODULE`、`CHROMIUM_PATH` 指定已有安装，通过 `TEST_OUTPUT_DIR` 指定报告和截图输出目录。
 
 ```bash
-PREVIEW_URL=https://xianyu.182.61.30.47.sslip.io node deploy/preview/check.cjs
+PREVIEW_URL=https://182.61.30.47 node deploy/preview/check.cjs
 ```
 
 检查可信 HTTPS、安全上下文、各关键 URL 状态及 MIME、电脑 1440×900 / 手机 390×844、首次开场和录音笔、再次快速入室、大饼 iframe、JS 错误、非预期 HTTP 错误，以及原图路径没有被发布。门图 Element Timing 单独记录 `doorWithin1s`；它是含实际网络等待的冷启动结果，不用本地测试数据替代。
@@ -101,3 +103,19 @@ PREVIEW_URL=https://xianyu.182.61.30.47.sslip.io node deploy/preview/check.cjs
 原 `https://182.61.30.47/home-pano/` 保留作备用。后续部署脚本输出及检查默认 URL 已更新为域名。
 
 域名入口已验证五个关键 URL 均 200、MIME 正确，可信 HTTPS 下 `isSecureContext=true`，390×844 Chrome 模拟可推门到自由状态且无 JS 异常。用户同时确认真实手机现在能打开。
+
+## 后续故障修复：临时域名握手被重置，固定 IP 默认 TLS 站点
+
+外部对 sslip.io 域名的 TLS 握手没有收到服务器证书即被重置；服务器本地访问该域名仍为 200。指定相同 IP、其他测试 SNI 可完成握手，说明问题与域名/网络路径有关，不能归因为页面文件或证书过期。尝试另一家临时域名服务时，CA 的 HTTP 验证同样被连接重置，未签发证书，因此不再继续轮换临时域名。
+
+另发现增加域名 HTTPS server 后，Nginx 按配置排序选中的默认 TLS 站点可能变成域名站点。IP 地址 TLS 客户端通常不发送域名 SNI，因而可能收到域名证书、报证书不匹配。**主机 IP 地址的 HTTPS server 必须明确设为默认站点**：
+
+```nginx
+# In the existing server for 182.61.30.47, with the IP certificate:
+listen 443 ssl default_server;
+server_name 182.61.30.47;
+ssl_certificate /etc/letsencrypt/live/182.61.30.47/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/182.61.30.47/privkey.pem;
+```
+
+不要新建第二个抢占默认监听的 server；这是在既有 IP server 上修改 listen。已备份原配置、通过 nginx -t 后重载，并验证不带 SNI 的 IP HTTPS 再次通过系统证书验证、返回 200。部署脚本和检查脚本默认 URL 已恢复 IP 入口。home-pano 和 anatomy 源码未改动。

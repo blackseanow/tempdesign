@@ -34,4 +34,4 @@ mv -Tf "$base/current.next" "$base/current"
 rm "$base/releases/$release.tgz"
 printf 'Activated %s\n' "$release"
 REMOTE
-printf 'Preview: https://xianyu.182.61.30.47.sslip.io/home-pano/\n'
+printf 'Preview: https://182.61.30.47/home-pano/\n'
