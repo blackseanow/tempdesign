@@ -1,6 +1,6 @@
 # home-pano 静态预览部署
 
-预览：**https://182.61.30.47/home-pano/**
+预览：**https://xianyu.182.61.30.47.sslip.io/home-pano/**
 
 这是公开预览，任何拿到网址的人都能打开，无登录或访问密码。内容是 main 的运行时静态文件，home-pano 源码没有改动，也没有引入其他项目的构建或后端。
 
@@ -9,8 +9,8 @@
 电脑、手机浏览器都打开同一网址，推门进入。手机横屏可看更宽的画面；iOS 若提示方向传感器权限，允许后才可用陀螺仪，也可以直接手指拖动。
 
 - 默认：第一次完整开场，之后推门约一秒到落定；记录保存在当前浏览器的 localStorage。
-- 再看完整开场：https://182.61.30.47/home-pano/?intro=always
-- 显示锚点：https://182.61.30.47/home-pano/?debug=1
+- 再看完整开场：https://xianyu.182.61.30.47.sslip.io/home-pano/?intro=always
+- 显示锚点：https://xianyu.182.61.30.47.sslip.io/home-pano/?debug=1
 - 无痕窗口、新浏览器或清除站点数据会重新算第一次。
 - 404 白名单：`home-pano/audio/*.mp3`、`anatomy/{daqi,huojian,jitang}/…`。这些素材尚未制作。
 
@@ -36,8 +36,8 @@
 - 主机：182.61.30.47，独立发布根 `/var/www/tempdesign-preview/`。
 - 每次上传到 `releases/<时间>-<Git短SHA>/`，完成后原子切换 `current` 符号链接。
 - Nginx 直接服务静态文件；不需要 Node、npm 或常驻页面服务器。
-- 使用主机现有的 Let's Encrypt IP 地址证书 `/etc/letsencrypt/live/182.61.30.47/`，浏览器不需要忽略证书错误。
-- 既有 `xianyu-cert-renew.timer` 定期续期；其 deploy hook `xianyu-nginx` 会检查并重载 Nginx，因此预览一起获得新证书。证书为短周期 IP 证书，应保持这个定时器正常运行。
+- 主入口使用独立域名证书 `/etc/letsencrypt/live/tempdesign-preview/`，浏览器不需要忽略证书错误。原 IP 地址入口保留其既有证书。
+- 既有 `xianyu-cert-renew.timer` 定期续期；其 deploy hook `xianyu-nginx` 会检查并重载 Nginx，因此 IP 和域名预览一起获得新证书。IP 证书为短周期，域名证书约 90 天，应保持这个定时器正常运行。
 - 没有加 COOP / COEP。ES 模块和 Worker 返回 `text/javascript`，JSON 返回 `application/json`。
 
 ### 8000 与公网入口
@@ -77,7 +77,7 @@ PR 未合并时，可在 deploy-preview 分支用 `git merge origin/main` 更新
 `check.cjs` 是针对公网入口的 Playwright 冒烟检查，需要已有 Playwright 和 Chromium；它不属于发布包。可通过 `PLAYWRIGHT_MODULE`、`CHROMIUM_PATH` 指定已有安装，通过 `TEST_OUTPUT_DIR` 指定报告和截图输出目录。
 
 ```bash
-PREVIEW_URL=https://182.61.30.47 node deploy/preview/check.cjs
+PREVIEW_URL=https://xianyu.182.61.30.47.sslip.io node deploy/preview/check.cjs
 ```
 
 检查可信 HTTPS、安全上下文、各关键 URL 状态及 MIME、电脑 1440×900 / 手机 390×844、首次开场和录音笔、再次快速入室、大饼 iframe、JS 错误、非预期 HTTP 错误，以及原图路径没有被发布。门图 Element Timing 单独记录 `doorWithin1s`；它是含实际网络等待的冷启动结果，不用本地测试数据替代。
@@ -89,3 +89,15 @@ PREVIEW_URL=https://182.61.30.47 node deploy/preview/check.cjs
 - 再次打开推门到自由状态约 1050ms / 1051ms。JS 异常 0、非预期 HTTP 错误 0、非预期控制台错误 0。音频缺失 404 属于白名单。
 - **门图冷启动未达到 1 秒目标**：Element Timing 电脑 1892ms、手机 1844ms。文档/子资源请求存在网络等待；这是实际公网测试结果。保持源码不变，未用本地结果冒充公网指标，也未调整页面来绕过测试。
 - `check.cjs` 将功能结果与门图时延分开记录；门图超时会让总 `pass` 为 false 并返回非零退出码。
+
+## 手机连接问题后的独立域名入口
+
+用户反馈手机在加载页面前就无法连接；服务器日志未看到真实手机的页面请求，新增域名后，用户在同一手机确认已经能打开；原 IP 入口的具体网络原因未进一步确定。
+
+新增 `xianyu.182.61.30.47.sslip.io`：使用公共 DNS 将域名解析到同一服务器，并复用已有 ACME 账户签发独立的可信域名证书，没有注册托管账号。`nginx-domain.conf` 是其独立 80/443 虚拟主机，直接服务原发布目录，不修改页面。域名方式也方便 IPv6-only 网络通过运营商 DNS64 进行地址合成；本次已由用户在真实手机上确认可访问。
+
+把 `nginx-domain.conf` 安装为 `/etc/nginx/sites-available/tempdesign-preview-domain` 并启用 sites-enabled，执行 `nginx -t && systemctl reload nginx`。首次证书通过 webroot `/opt/xianyu-bamai/shared/acme` 验证；原有定时续期覆盖新证书。该域名依赖 sslip.io 的公共 DNS 服务，正式长期使用建议替换为自有域名。
+
+原 `https://182.61.30.47/home-pano/` 保留作备用。后续部署脚本输出及检查默认 URL 已更新为域名。
+
+域名入口已验证五个关键 URL 均 200、MIME 正确，可信 HTTPS 下 `isSecureContext=true`，390×844 Chrome 模拟可推门到自由状态且无 JS 异常。用户同时确认真实手机现在能打开。
